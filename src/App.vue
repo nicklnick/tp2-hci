@@ -7,17 +7,19 @@
 
         <v-spacer></v-spacer>
 
-        <v-autocomplete
-          id="search-bar"
-          class="search-bar"
+        <v-text-field
+          class="search-bar mt-6"
           label="Search"
           background-color="quaternary"
-          item-color="black"
+          color="black"
+          append-icon="mdi-magnify"
+          transition="none"
+          hide-no-data
           dense
-          filled
           rounded
+          filled
           solo-inverted
-        ></v-autocomplete>
+        ></v-text-field>
 
         <v-spacer></v-spacer>
 
@@ -44,7 +46,6 @@ export default {
 <style>
 .search-bar {
   width: 35%;
-  display: flex;
-  align-self: baseline;
+  align-self: center;
 }
 </style>
