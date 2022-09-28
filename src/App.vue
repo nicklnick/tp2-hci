@@ -1,29 +1,29 @@
 <template>
   <v-app>
-    <v-main class="pa-5">
-      <v-row>
-        <BigButton button_text="Create New Routine"></BigButton>
-        <ButtonWithIcon button_text="Arms"
-                        button_icon="muscles/muscle.png"></ButtonWithIcon>
-        <RoutineButton routine_author="Saul" routine_name="Core Strength"
-        routine_stars="4.75"></RoutineButton>
-      </v-row>
+    <v-main>
+      <v-card id="create-routine" class="create-routine" color="quaternary" raised>
+        <v-flex class="d-flex centered-input">
+          <v-card class="flex-grow-1" color="secondary" outlined>Warmup</v-card>
+
+          <!-- TODO: vincular el for a la cantidad de Add Series que haya tocado la persona -->
+          <v-card v-for="n in 3" :key="n" class="flex-grow-1" color="secondary" outlined>Series {{n}}</v-card>
+
+          <v-card width="23%" color="secondary" outlined>Cooldown</v-card>
+        </v-flex>
+
+        <v-btn color="black--text primary" rounded>+ Add Routine</v-btn>
+
+      </v-card>
+
     </v-main>
   </v-app>
 </template>
 <script>
 
-import BigButton from "@/components/BigButton";
-import ButtonWithIcon from "@/components/ButtonWithIcon";
-import RoutineButton from "@/components/RoutineButton";
-
 export default {
   name: "App",
 
   components: {
-    BigButton,
-    ButtonWithIcon,
-    RoutineButton,
   },
   data: () => ({
     //
@@ -32,8 +32,12 @@ export default {
 </script>
 
 <style>
-.search-bar {
-  width: 35%;
-  align-self: center;
+.create-routine {
+  height: 46%;
+  width: 37%;
+}
+
+.centered-input {
+  text-align: center;
 }
 </style>
