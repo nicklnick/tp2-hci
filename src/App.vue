@@ -1,54 +1,36 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary">
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-main class="pa-5">
+      <v-row>
+        <BigButton button_text="Create New Routine"></BigButton>
+        <ButtonWithIcon button_text="Arms"
+                        button_icon="muscles/muscle.png"></ButtonWithIcon>
+        <RoutineButton routine_author="Saul" routine_name="Core Strength"
+        routine_stars="4.75"></RoutineButton>
+        <RoutineButton2 routine_author="Saul" routine_name="Core Strength"
+                       routine_stars="4.75"></RoutineButton2>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+      </v-row>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <HelloWorld />
     </v-main>
   </v-app>
 </template>
-
 <script>
-import HelloWorld from "./components/HelloWorld";
+
+import BigButton from "@/components/BigButton";
+import ButtonWithIcon from "@/components/ButtonWithIcon";
+import RoutineButton from "@/components/RoutineButton";
+import RoutineButton2 from "@/components/RoutineButton2";
 
 export default {
   name: "App",
 
   components: {
-    HelloWorld,
+    BigButton,
+    ButtonWithIcon,
+    RoutineButton,
+    RoutineButton2
   },
-
   data: () => ({
     //
   }),
