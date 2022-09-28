@@ -30,3 +30,10 @@ export default {
   }),
 };
 </script>
+
+<style>
+.search-bar {
+  width: 35%;
+  align-self: center;
+}
+</style>
