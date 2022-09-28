@@ -1,41 +1,50 @@
 <template>
 
-    <v-btn color="quaternary" height="150px" width="200px" >
+    <v-btn color="quaternary" height="150px" width="200px">
+      <v-card color="quaternary" height="150px" width="200px">
 
-      <v-card color="quaternary" height="150px" width="200px"
-      class="justify-space-between">
+        <div class="custom_card card_size">
 
-        <v-card-text align="start" class="text-h6 pb-0 pt-2">
-          {{routine_name}}</v-card-text>
+            <div>
+              <h3 class="card_text ml-4 pb-0 pt-3">
+                {{routine_name}}
+              </h3 >
+              <h5  class="card_text ml-4 pt-0">
+                By: {{routine_author}}
+              </h5>
+              <v-divider class="mx-4 mt-1 mb-4"></v-divider>
+            </div>
 
-        <v-card-subtitle align="start" class="pt-0">
-          By: {{routine_author}}</v-card-subtitle>
-
-        <v-card-text class="mt-2">
-          <v-row class="justify-space-between mx-1">
-            <v-card color="secondary" class="px-1 text-caption rounded-pill"
-            >arms</v-card>
-            <v-card color="secondary" class="px-1  text-caption rounded-pill"
-            >chest</v-card>
-            <v-card color="secondary" class="px-1 text-caption rounded-pill"
-            >glutes</v-card>
-          </v-row>
-        </v-card-text>
+            <div>
+              <v-row class="ml-2">
+                <v-card color="secondary" class="px-1 mx-1 text-caption rounded-pill"
+                >arms</v-card>
+                <v-card color="secondary" class="px-1 mx-1  text-caption rounded-pill"
+                >chest</v-card>
+                <v-card color="secondary" class="px-1 mx-1 text-caption rounded-pill"
+                >glutes</v-card>
+              </v-row>
+            </div>
 
 
-        <v-card-actions class="align-self-center justify-space-between">
+            <div class="justify-end">
+              <v-card-actions  class="py-0 justify-space-between">
 
-          <div>
-            <v-icon small class="pr-2" color="primary">mdi-star</v-icon>
-            <span>{{routine_stars}}/5</span>
-          </div>
+                <div>
+                  <v-icon small class="pr-2" color="primary">mdi-star</v-icon>
+                  <span>{{routine_stars}}/5</span>
+                </div>
 
-            <v-btn @click="switchColor()" icon >
-              <v-icon :color="heart_color_comp"
-              >mdi-heart</v-icon>
-            </v-btn>
+                <v-btn @click="switchColor()" icon >
+                  <v-icon :color="heart_color_comp"
+                  >mdi-heart</v-icon>
+                </v-btn>
 
-        </v-card-actions>
+              </v-card-actions>
+            </div>
+
+        </div>
+
       </v-card>
     </v-btn>
 
@@ -76,5 +85,27 @@ export default {
 };
 </script>
 
+<!-- TODO: fix color!!! -->
 <style scoped>
+
+.card_text {
+  text-align: left;
+}
+
+.button_card {
+  background-color: green;
+  height: 150px;
+  width: 200px;
+}
+
+.card_size {
+  height: 150px;
+  width: 200px;
+}
+
+.custom_card {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
 </style>
