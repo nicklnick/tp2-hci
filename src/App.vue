@@ -1,22 +1,21 @@
 <template>
   <v-app>
     <v-main>
-      <CreateRoutinePanel></CreateRoutinePanel>
+      <CreateRoutinePanel2></CreateRoutinePanel2>
 
     </v-main>
   </v-app>
 </template>
 <script>
 
-import CreateRoutinePanel from "@/components/CreateRoutinePanel";
+import CreateRoutinePanel2 from "@/components/CreateRoutinePanel2";
 export default {
   name: "App",
 
   components: {
-    CreateRoutinePanel
+    CreateRoutinePanel2
   },
   data: () => ({
-    //
   }),
 };
 </script>
