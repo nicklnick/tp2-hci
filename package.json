@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "husky": "^7.0.4",
     "vue": "^2.6.14",
     "vuetify": "^2.6.0"
   },
