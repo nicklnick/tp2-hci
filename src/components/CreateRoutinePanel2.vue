@@ -1,15 +1,16 @@
 <template>
   <v-card id="create-routine" class="cwidth cheight rounded-lg" color="quaternary" raised>
-    <div class="cwidth cheight ccol" >
+    <div class="cwidth cheight space-between-col" >
 
       <div>
-        <v-card class="rounded-b-0 rounded-t-lg cwidth crow" color="secondary">
-          <v-tabs class="tab-size rounded-tl-lg" background-color="secondary" show-arrows>
+        <v-card class="rounded-b-0 rounded-t-lg cwidth row-start" color="secondary">
+          <v-tabs class="tab-size-width rounded-tl-lg" background-color="secondary" show-arrows>
 
             <v-tabs-slider color="tertiary"></v-tabs-slider>
 
-            <v-tab v-for="(serie, index) in series" :key="serie.name"
+            <v-tab v-for="(serie, index) in series" :key="index"
                     @click="updateSeries(index)">
+
               <div class="flex-row justify-space-between">
                 {{ serie.name}}
                 <v-btn text fab x-small color="dark-grey"
@@ -21,41 +22,47 @@
 
           </v-tabs>
 
-          <v-tab class="add-tab rounded-tr-lg"
+          <v-tab class="add-tab-width rounded-tr-lg"
                  @click="addSeries"><v-icon>mdi-plus</v-icon></v-tab>
         </v-card>
 
 
       </div>
 
-      <div class="general-area-width general-area overflow-auto">
-
-        <div>
-          <li  v-for="(activity, index) in currentSeries.activities"
+      <div class="cwidth row-center overflow-auto">
+        <div class="general-area-width general-area-height">
+          <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in currentSeries.activities"
                :key="index">
-            {{activity}}
-          </li>
+            <span class="pl-3 pt-1">{{activity}}</span>
+
+            <v-btn text fab x-small color="dark-grey"
+              @click="removeActivity(index)"
+            ><v-icon>mdi-close</v-icon></v-btn>
+
+          </v-card>
         </div>
-
-
       </div>
 
-
-
-      <div class="cwidth general-area">
+      <div class="cwidth row-center">
 
         <div class="general-area-width">
-          <div class="crow2">
-            <div class="pb-5 pr-5">
-              <v-btn color="primary" rounded @click="addActivity('New Activity')">add</v-btn>
+          <div class="end-row">
+            <div class="pb-3 pr-3">
+              <v-btn color="primary" rounded small @click="addActivity('New Activity')">add activity</v-btn>
             </div>
           </div>
 
           <v-divider></v-divider>
 
-          <div>
-            <p class="pl-3 pt-2"> Repeat 3 times</p>
+          <div class="row-start">
+            <p class="pl-3 pt-2"> Repeat </p>
+            <div class="repeat">
+              <v-text-field class="text-field" hide-details
+              single-line  :rules="reprules" ></v-text-field>
+            </div>
+             <p class="pt-2"> times</p>
           </div>
+
         </div>
       </div>
 
@@ -77,12 +84,16 @@ class Activity {
 
 class Serie {
   name;
-  activities = ['Stretch', 'Rest','Jumping Jacks'];
+  activities = [];
+  repeat = 0;
   constructor(name) {
     this.name = name;
   }
   add_activity(activity){
       this.activities.push(activity);
+  }
+  remove_activiy(index){
+    this.activities.splice(index,1);
   }
 }
 
@@ -90,31 +101,46 @@ class Serie {
 export default {
   name: "CreateRoutinePanel",
   data: () => ({
-    series: [new Serie("Warmup"), new Serie("Serie 1")],
+    series: [new Serie("Serie 1")],
     index: 0,
     counter: 1,
+    reprules: [
+      value => !!value || 'Required'
+    ],
   }),
   methods: {
-      updateSeries(index){
-          this.index = index;
-      },
-      addActivity(activity){
-          this.series[this.index].add_activity(activity)
-      },
-      addSeries(){
-          this.series.push(new Serie("Serie " + this.counter));
-          this.counter += 1
-      },
+    updateSeries(index) {
+      this.index = index;
+    },
+    addActivity(activity) {
+      this.series[this.index].add_activity(activity);
+    },
+    addSeries() {
+      this.counter += 1;
+      this.series.push(new Serie("Serie " + this.counter));
+    },
       removeSeries(index){
-        if(this.series.length > 1)
-            this.series.splice(index,1);
-      }
+        if(this.series.length > 1) {
+
+          if(index === this.series.length - 1)
+              this.updateSeries(index - 1);
+          else
+              this.updateSeries(index + 1);
+
+          this.series.splice(index, 1);
+        }
+      },
+      removeActivity(index){
+          this.series[this.index].remove_activiy(index);
+      },
   },
   computed: {
       currentSeries() {
-        return this.series[this.index];
-      },
-  },
+        if(this.series.length > this.index)
+          return this.series[this.index];
+        return 0;
+      }
+  }
 
 };
 </script>
@@ -122,11 +148,15 @@ export default {
 
 
 <style scoped>
+.general-area-height {
+  height: 90%;
+}
+
 .general-area-width {
   width: 90%;
 }
 
-.general-area {
+.row-center {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -139,26 +169,35 @@ export default {
   height: 400px;
 }
 
-.ccol{
+.space-between-col{
   display: flex;
   justify-content: space-between;
   flex-direction: column;
 }
 
-.crow2 {
+.end-row {
   display: flex;
   justify-content: end;
   flex-direction: row;
 }
-.crow {
+.row-start {
   display: flex;
   flex-direction: row;
 }
-.tab-size{
+
+.tab-size-width{
   width: 85%;
 }
-.add-tab {
+.add-tab-width {
   width: 5%;
+}
+.repeat{
+  width: 5%;
+}
+.text-field {
+  padding: 0;
+  margin-left: 5px;
+  margin-right: 3px;
 }
 
 </style>
