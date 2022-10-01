@@ -1,39 +1,32 @@
 <template>
-  <v-app>
-    <v-main class="pa-5">
-      <v-row>
-        <BigButton button_text="Create New Routine"></BigButton>
-        <ButtonWithIcon button_text="Arms"
-                        button_icon="muscles/muscle.png"></ButtonWithIcon>
-        <RoutineButton routine_author="Saul" routine_name="Core Strength"
-        routine_stars="4.75"></RoutineButton>
-      </v-row>
-    </v-main>
-  </v-app>
+  <div id="app">
+    <nav>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </nav>
+    <router-view/>
+  </div>
 </template>
-<script>
 
-import BigButton from "@/components/BigButton";
-import ButtonWithIcon from "@/components/ButtonWithIcon";
-import RoutineButton from "@/components/RoutineButton";
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 
-export default {
-  name: "App",
+nav {
+  padding: 30px;
 
-  components: {
-    BigButton,
-    ButtonWithIcon,
-    RoutineButton,
-  },
-  data: () => ({
-    //
-  }),
-};
-</script>
+  a {
+    font-weight: bold;
+    color: #2c3e50;
 
-<style>
-.search-bar {
-  width: 35%;
-  align-self: center;
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
 }
 </style>
