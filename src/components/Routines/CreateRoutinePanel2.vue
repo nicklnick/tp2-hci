@@ -1,10 +1,10 @@
 <template>
-  <v-card id="create-routine" class="cwidth cheight rounded-lg" color="quaternary" raised>
+  <v-card id="create-routine" class="cwidth cheight rounded-xl" color="quaternary" raised>
     <div class="cwidth cheight space-between-col" >
 
       <div>
-        <v-card class="rounded-b-0 rounded-t-lg cwidth row-start" color="secondary">
-          <v-tabs class="tab-size-width rounded-tl-lg" background-color="secondary" show-arrows>
+        <v-card class="rounded-b-0 rounded-t-xl cwidth row-start" color="secondary">
+          <v-tabs class="tab-size-width rounded-tl-xl" background-color="secondary" show-arrows>
 
             <v-tabs-slider color="tertiary"></v-tabs-slider>
 
@@ -22,7 +22,7 @@
 
           </v-tabs>
 
-          <v-tab class="add-tab-width rounded-tr-lg"
+          <v-tab class="add-tab-width rounded-tr-xl"
                  @click="addSeries"><v-icon>mdi-plus</v-icon></v-tab>
         </v-card>
 
@@ -166,10 +166,10 @@ export default {
 }
 
 .cwidth {
-  width: 600px;
+  width: 800px;
 }
 .cheight {
-  height: 400px;
+  height: 600px;
 }
 
 .space-between-col{
