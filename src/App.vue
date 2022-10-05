@@ -1,10 +1,16 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <v-app>
+<!--    <nav>-->
+<!--      <router-link to="/">Home</router-link> |-->
+<!--      <router-link to="/about">About</router-link>-->
+<!--    </nav>-->
+<!--    <HomeView/>-->
+<!--    <router-view/>-->
+<!--      <HomeView></HomeView>-->
+<!--      <LandingView></LandingView>-->
+      <LoginView/>
+    </v-app>
   </div>
 </template>
 
@@ -30,3 +36,9 @@ nav {
   }
 }
 </style>
+<script>
+import LoginView from "@/views/LoginView";
+export default {
+  components: { LoginView  }
+}
+</script>

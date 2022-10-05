@@ -1,6 +1,6 @@
 <template>
-  <v-card class="navDrawer" height="100%" width="20%">
-    <v-navigation-drawer permanent color="primary">
+  <v-card class="navDrawer" width="20%">
+    <v-navigation-drawer permanent color="primary" width="100%">
       <v-list class="navbar" dense nav height="70%">
         <v-list-item-group class="button" v-model="selectedItem">
           <v-list-item v-for="item in items" :key="item.title" link>
@@ -58,6 +58,10 @@ export default {
 </script>
 
 <style>
+.navDrawer {
+  height: 100%;
+}
+
 .navbar {
   display: flex;
   align-items: center;

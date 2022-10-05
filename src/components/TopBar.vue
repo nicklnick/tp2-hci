@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="secondary">
+  <v-toolbar color="primary">
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
     <HomeButton></HomeButton>
 
