@@ -48,7 +48,7 @@
         <div class="general-area-width">
           <div class="end-row">
             <div class="pb-3 pr-3">
-              <v-btn color="primary" rounded small @click="addActivity('New Activity')">add activity</v-btn>
+              <v-btn color="primary" rounded small @click="addActivity('New Activity', 0)">add exercise</v-btn>
             </div>
           </div>
 
@@ -58,7 +58,7 @@
             <p class="pl-3 pt-2"> Repeat </p>
             <div class="repeat">
               <v-text-field class="text-field" hide-details
-              single-line  :rules="reprules" ></v-text-field>
+              single-line v-model="currentSeries.repeat" :rules="reprules" ></v-text-field>
             </div>
              <p class="pt-2"> times</p>
           </div>
@@ -85,9 +85,11 @@ class Activity {
 class Serie {
   name;
   activities = [];
-  repeat = 0;
-  constructor(name) {
+  repeat = "1";
+  immortal = 0;
+  constructor(name, immortal) {
     this.name = name;
+    this.immortal = immortal;  // si una serie se puede remover o no. Warmup, serie 1 y cooldown son obligatorios
   }
   add_activity(activity){
       this.activities.push(activity);
@@ -101,26 +103,27 @@ class Serie {
 export default {
   name: "CreateRoutinePanel",
   data: () => ({
-    series: [new Serie("Serie 1")],
+    series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
     index: 0,
     counter: 1,
     reprules: [
-      value => !!value || 'Required'
+      value => !!value || 'Required',
+      value => !(/[^0-9]/.test(value)) || 'Only numbers'
     ],
   }),
   methods: {
     updateSeries(index) {
       this.index = index;
     },
-    addActivity(activity) {
-      this.series[this.index].add_activity(activity);
+    addActivity(activity, immortal) {
+      this.series[this.index].add_activity(activity, immortal);
     },
     addSeries() {
       this.counter += 1;
-      this.series.push(new Serie("Serie " + this.counter));
+      this.series.splice(this.series.length -1,0,new Serie("Serie " + this.counter));
     },
       removeSeries(index){
-        if(this.series.length > 1) {
+        if(!this.currentSeries.immortal && this.series.length > 1) {
 
           if(index === this.series.length - 1)
               this.updateSeries(index - 1);
@@ -192,7 +195,7 @@ export default {
   width: 5%;
 }
 .repeat{
-  width: 5%;
+  width: 7%;
 }
 .text-field {
   padding: 0;
