@@ -10,25 +10,41 @@
 
       <div class="cwidth row-center overflow-auto">
         <div class="general-area-width">
-          <!-- Create new exercise -->
 
-          <v-card raised class="new-activity" v-if="mode === 1" color="quaternary" >
-            <div>
-              <h3 >New exercise</h3>
-              <v-text-field rounded outlined color="secondary"  hide-details
+
+          <!-- Create new exercise -->
+          <v-card elevation="20" class="general-area new-activity" v-if="mode === 1" color="quaternary" >
+            <div class="space-between-col general-area-width general-area-height">
+
+              <h2>New exercise</h2>
+              <v-spacer></v-spacer>
+              <v-divider></v-divider>
+
+              <v-text-field rounded outlined color="secondary"
                             background-color="tertiary" label="Exercise name"
-                            class="py-2"></v-text-field>
-              <v-text-field rounded outlined color="secondary"  hide-details
-                            background-color="tertiary" label="Exercise length (s)"
-                            class="py-2"></v-text-field>
-              <v-text-field rounded outlined color="secondary"  hide-details
-                            background-color="tertiary" label="Number of series"
-                            class="py-2"></v-text-field>
+                            class="py-2" :rules="titleRules" v-model="newActivityTitle"
+              ></v-text-field>
+              <div class="row-center">
+                <v-text-field rounded outlined color="secondary"
+                              background-color="tertiary" label="Exercise length (s)"
+                              class="py-2" :rules="numberRules" v-model="newActivityTime"
+                ></v-text-field>
+                <v-spacer></v-spacer>
+                <v-text-field rounded outlined color="secondary"
+                              background-color="tertiary" label="Number of series"
+                              class="py-2" :rules="numberRules" v-model="newActivitySeries"
+                              ></v-text-field>
+              </div>
+
               <div class="end-row">
-                  <v-btn fab color="secondary"
-                  @click="changeMode">
+                  <v-btn class="mb-2 mr-3"  color="secondary"
+                  @click="checkAndDismiss">
                     <v-icon>check</v-icon>
                   </v-btn>
+                <v-btn class="mb-2"  color="secondary"
+                       @click="stopCreationMode">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
               </div>
             </div>
 
@@ -37,9 +53,11 @@
           <!-- View existing exercises -->
           <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in activities"
                   :key="index">
+
             <div class="pl-3 pt-1">
               <p class="pa-0 ma-0">Name: {{activity.name}}</p>
-              <p class="pa-0 ma-0">Details: {{activity.details}}</p>
+              <p class="pa-0 ma-0">Time: {{activity.time}}</p>
+              <p class="pa-0 ma-0">Series: {{activity.series}}</p>
             </div>
 
             <v-btn text fab x-small color="dark-grey"
@@ -52,7 +70,7 @@
 
 
       <v-btn class="mb-10" fab absolute right bottom color="secondary"
-      @click="changeMode()"
+      @click="setCreationMode"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -63,27 +81,70 @@
 <script>
 class Activity {
   name;
-  details = "";
-  constructor(name) {
+  time;
+  series;
+  constructor(name, time, series) {
     this.name = name;
+    this.time = time;
+    this.series = series;
   }
 }
+
 export default {
   name: "ManageExercises",
 
   data: () => ({
     mode: 0,
-    activities: [ new Activity("chau"),new Activity("chau"), new Activity("chau"), new Activity("chau"), new Activity("chau"), new Activity("chau"), new Activity("chau"),  ]
+    activities: [ ],
+    newActivityTitle: "",
+    newActivityTime: "0",
+    newActivitySeries: "0",
+
+    numberRules: [
+      value => !(/[^0-9]/.test(value)) || 'Only numbers',
+      value => (/^[1-9][0-9]*/.test(value)) || 'Only numbers > 0'
+    ],
+    titleRules: [
+      value => !!value || 'Required',
+    ],
   }),
   methods: {
     removeActivity(index){
       this.activities.splice(index,1);
     },
-    addActivity(name) {
-      this.activities.push(new Activity(name));
+    addActivity(name, time, series) {
+      this.activities.push(new Activity(name, time, series));
     },
-    changeMode() {
-      this.mode = this.mode === 0 ? 1 : 0;
+    setCreationMode() {
+      this.mode =  1;
+    },
+    stopCreationMode(){
+      this.resetNewActivity();
+      this.mode = 0;
+    },
+    resetNewActivity(){
+      this.newActivityTitle  = "";
+      this.newActivityTime = this.newActivitySeries = 0;
+    },
+    checkNewActivity(){
+      if(this.newActivityTitle === "")
+        return false;
+      if ( (/[^0-9]/.test(this.newActivitySeries)) || (/[^0-9]/.test(this.newActivityTime)) )
+        return false;
+      if (!(/^[1-9][0-9]*/.test(this.newActivitySeries)) && !(/^[1-9][0-9]*/.test(this.newActivityTime)) )
+        return false;
+
+      // TODO: check if title already exists
+
+      return true;
+    },
+    checkAndDismiss(){
+        if(this.checkNewActivity()){
+
+          this.addActivity(this.newActivityTitle, this.newActivityTime, this.newActivitySeries)
+
+          this.stopCreationMode()
+        }
     }
   },
 };
@@ -113,6 +174,11 @@ export default {
   justify-content: start;
   flex-direction: column;
 }
+.space-between-col{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
 .new-activity{
   margin-bottom: 20px;
   margin-top: 20px;
@@ -120,6 +186,11 @@ export default {
 
 .general-area-width {                /* !!!! COMMON !!!! */
   width: 90%;
+}
+.general-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .end-row {                /* !!!! COMMON !!!! */
    display: flex;
