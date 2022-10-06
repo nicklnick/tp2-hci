@@ -3,7 +3,7 @@
     <div class="cwidth cheight space-start-col" >
       <div>
         <v-card class="rounded-b-0 rounded-t-xl cwidth top-bar-height row-center" color="secondary">
-          <h2 >Exercises</h2>
+          <h2 class="mt-2">Exercises</h2>
         </v-card>
       </div>
 
@@ -152,7 +152,7 @@ export default {
 
 <style scoped>
 .top-bar-height{
-  height: 35px;
+  height: 49px;
 }
 
 .cwidth {

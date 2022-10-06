@@ -1,7 +1,7 @@
 <template>
   <v-card class="cwidth cheight rounded-xl" color="quaternary">
-    <v-card class="rounded-b-0 rounded-t-xl cwidth top-area" color="secondary">
-      <h2>Overview</h2>
+    <v-card class="rounded-b-0 rounded-t-xl cwidth top-area row-center" color="secondary">
+      <h2 class="mt-2">Overview</h2>
     </v-card>
     <div class="bottom-area">
       <div class="general-area">
@@ -101,5 +101,10 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.row-center {                 /* !!!! COMMON !!!! */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>
