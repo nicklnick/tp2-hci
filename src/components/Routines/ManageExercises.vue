@@ -1,81 +1,72 @@
 <template>
-  <v-card  class="cwidth cheight rounded-xl" color="quaternary" raised>
-    <div class="cwidth cheight space-start-col" >
-      <div>
-        <v-card class="rounded-b-0 rounded-t-xl cwidth top-bar-height row-center" color="secondary">
-          <h2 class="mt-2">Exercises</h2>
-        </v-card>
-      </div>
+  <CustomCard card-title="Exercises" card-height="600" card-width="800" >
+    <div class="cwidth row-center overflow-auto">
+      <div class="general-area-width">
 
 
-      <div class="cwidth row-center overflow-auto">
-        <div class="general-area-width">
+        <!-- Create new exercise -->
+        <v-card elevation="20" class="general-area new-activity" v-if="mode === 1" color="quaternary" >
+          <div class="space-between-col general-area-width general-area-height">
 
+            <h2>New exercise</h2>
+            <v-spacer></v-spacer>
+            <v-divider></v-divider>
 
-          <!-- Create new exercise -->
-          <v-card elevation="20" class="general-area new-activity" v-if="mode === 1" color="quaternary" >
-            <div class="space-between-col general-area-width general-area-height">
-
-              <h2>New exercise</h2>
-              <v-spacer></v-spacer>
-              <v-divider></v-divider>
-
+            <v-text-field rounded outlined color="secondary"
+                          background-color="tertiary" label="Exercise name"
+                          class="py-2" :rules="titleRules" v-model="newActivityTitle"
+            ></v-text-field>
+            <div class="row-center">
               <v-text-field rounded outlined color="secondary"
-                            background-color="tertiary" label="Exercise name"
-                            class="py-2" :rules="titleRules" v-model="newActivityTitle"
+                            background-color="tertiary" label="Exercise length (s)"
+                            class="py-2" :rules="numberRules" v-model="newActivityTime"
               ></v-text-field>
-              <div class="row-center">
-                <v-text-field rounded outlined color="secondary"
-                              background-color="tertiary" label="Exercise length (s)"
-                              class="py-2" :rules="numberRules" v-model="newActivityTime"
-                ></v-text-field>
-                <v-spacer></v-spacer>
-                <v-text-field rounded outlined color="secondary"
-                              background-color="tertiary" label="Number of series"
-                              class="py-2" :rules="numberRules" v-model="newActivitySeries"
-                              ></v-text-field>
-              </div>
-
-              <div class="end-row">
-                  <v-btn class="mb-2 mr-3"  color="secondary"
-                  @click="checkAndDismiss">
-                    <v-icon>check</v-icon>
-                  </v-btn>
-                <v-btn class="mb-2"  color="secondary"
-                       @click="stopCreationMode">
-                  <v-icon>mdi-close</v-icon>
-                </v-btn>
-              </div>
+              <v-spacer></v-spacer>
+              <v-text-field rounded outlined color="secondary"
+                            background-color="tertiary" label="Number of series"
+                            class="py-2" :rules="numberRules" v-model="newActivitySeries"
+              ></v-text-field>
             </div>
 
-          </v-card>
-
-          <!-- View existing exercises -->
-          <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in activities"
-                  :key="index">
-
-            <div class="pl-3 pt-1">
-              <p class="pa-0 ma-0">Name: {{activity.name}}</p>
-              <p class="pa-0 ma-0">Time: {{activity.time}}</p>
-              <p class="pa-0 ma-0">Series: {{activity.series}}</p>
+            <div class="end-row">
+              <v-btn class="mb-2 mr-3"  color="secondary"
+                     @click="checkAndDismiss">
+                <v-icon>check</v-icon>
+              </v-btn>
+              <v-btn class="mb-2"  color="secondary"
+                     @click="stopCreationMode">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
             </div>
+          </div>
 
-            <v-btn text fab x-small color="dark-grey"
-                   @click="removeActivity(index)"
-            ><v-icon>mdi-close</v-icon></v-btn>
-          </v-card>
+        </v-card>
 
-        </div>
+        <!-- View existing exercises -->
+        <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in activities"
+                :key="index">
+
+          <div class="pl-3 pt-1">
+            <p class="pa-0 ma-0">Name: {{activity.name}}</p>
+            <p class="pa-0 ma-0">Time: {{activity.time}}</p>
+            <p class="pa-0 ma-0">Series: {{activity.series}}</p>
+          </div>
+
+          <v-btn text fab x-small color="dark-grey"
+                 @click="removeActivity(index)"
+          ><v-icon>mdi-close</v-icon></v-btn>
+        </v-card>
+
       </div>
-
-
-      <v-btn class="mb-10" fab absolute right bottom color="secondary"
-      @click="setCreationMode"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
     </div>
-  </v-card>
+
+
+    <v-btn class="mb-10" fab absolute right bottom color="secondary"
+           @click="setCreationMode">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+
+  </CustomCard>
 </template>
 
 <script>
@@ -89,9 +80,11 @@ class Activity {
     this.series = series;
   }
 }
-
+import CustomCard from "@/components/CommonComponents/CustomCard";
 export default {
   name: "ManageExercises",
+  components: { CustomCard},
+
 
   data: () => ({
     mode: 0,
@@ -151,9 +144,7 @@ export default {
 </script>
 
 <style scoped>
-.top-bar-height{
-  height: 49px;
-}
+
 
 .cwidth {
   width: 800px;
@@ -197,10 +188,6 @@ export default {
    justify-content: end;
    flex-direction: row;
  }
-.row-start {
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-}
+
 
 </style>

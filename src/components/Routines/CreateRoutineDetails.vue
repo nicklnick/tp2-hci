@@ -1,77 +1,93 @@
 <template>
-  <v-card id="create-routine" class="cwidth cheight rounded-xl" color="quaternary" raised>
-    <div class="cwidth cheight space-between-col" >
+  <div :width="width" class=" row-start">
 
-      <div>
-        <v-card class="rounded-b-0 rounded-t-xl cwidth row-start" color="secondary">
-          <v-tabs class="tab-size-width rounded-tl-xl" background-color="secondary" show-arrows>
+    <!-- Main Section -->
+    <v-card id="create-routine" :width="width" class="cheight rounded-xl" color="quaternary" raised>
+      <div  class=" cheight space-between-col" >
 
-            <v-tabs-slider color="tertiary"></v-tabs-slider>
+        <div>
+          <v-card :width="width" class="rounded-b-0 rounded-t-xl row-start" color="secondary">
+            <v-tabs class="tab-size-width rounded-tl-xl" background-color="secondary" show-arrows>
 
-            <v-tab v-for="(serie, index) in series" :key="index"
-                    @click="updateSeries(index)">
+              <v-tabs-slider color="tertiary"></v-tabs-slider>
 
-              <div class="flex-row justify-space-between">
-                {{ serie.name}}
-                <v-btn text fab x-small color="dark-grey"
-                       @click="removeSeries(index)"
-                ><v-icon>mdi-close</v-icon></v-btn>
-              </div>
+              <v-tab v-for="(serie, index) in series" :key="index"
+                     @click="updateSeries(index)">
 
-            </v-tab>
+                <div class="flex-row justify-space-between">
+                  {{ serie.name}}
+                  <v-btn text fab x-small color="dark-grey"
+                         @click="removeSeries(index)"
+                  ><v-icon>mdi-close</v-icon></v-btn>
+                </div>
 
-          </v-tabs>
+              </v-tab>
 
-          <v-tab class="add-tab-width rounded-tr-xl"
-                 @click="addSeries"><v-icon>mdi-plus</v-icon></v-tab>
-        </v-card>
+            </v-tabs>
 
-
-      </div>
-
-      <div class="cwidth row-center overflow-auto">
-        <div class="general-area-width general-area-height">
-          <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in currentSeries.activities"
-               :key="index">
-            <span class="pl-3 pt-1">{{activity}}</span>
-
-            <v-btn text fab x-small color="dark-grey"
-              @click="removeActivity(index)"
-            ><v-icon>mdi-close</v-icon></v-btn>
-
+            <v-tab class="add-tab-width rounded-tr-xl"
+                   @click="addSeries"><v-icon>mdi-plus</v-icon></v-tab>
           </v-card>
-        </div>
-      </div>
 
-      <div class="cwidth row-center">
-
-        <div class="general-area-width">
-          <div class="end-row">
-            <div class="pb-3 pr-3">
-              <v-btn color="primary" rounded small @click="addActivity('New Activity', 0)">add exercise</v-btn>
-            </div>
-          </div>
-
-          <v-divider></v-divider>
-
-          <div class="row-start">
-            <p class="pl-3 pt-2"> Repeat </p>
-            <div class="repeat">
-              <v-text-field class="text-field" hide-details
-              single-line v-model="currentSeries.repeat" :rules="reprules" ></v-text-field>
-            </div>
-             <p class="pt-2"> times</p>
-          </div>
 
         </div>
+
+        <div  class=" row-center overflow-auto">
+          <div class="general-area-width general-area-height">
+            <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in currentSeries.activities"
+                    :key="index">
+              <span class="pl-3 pt-1">{{activity}}</span>
+
+              <v-btn text fab x-small color="dark-grey"
+                     @click="removeActivity(index)"
+              ><v-icon>mdi-close</v-icon></v-btn>
+
+            </v-card>
+          </div>
+        </div>
+
+        <div  class=" row-center">
+
+          <div class="general-area-width">
+            <div class="end-row">
+              <div class="pb-3 pr-3">
+                <v-btn color="primary" rounded small @click="addActivity('New Activity')">add exercise</v-btn>
+              </div>
+            </div>
+
+            <v-divider></v-divider>
+
+            <div class="row-start">
+              <p class="pl-3 pt-2"> Repeat </p>
+              <div class="repeat">
+                <v-text-field class="text-field" hide-details
+                              single-line v-model="currentSeries.repeat" :rules="reprules" ></v-text-field>
+              </div>
+              <p class="pt-2"> times</p>
+            </div>
+
+          </div>
+        </div>
+
+
       </div>
+    </v-card>
 
+    <!-- Select exercise -->
+    <div>
+      <CustomCard v-if="mode === 1" card-width="300" card-height="600" card-title="Select Exercise">
 
+      </CustomCard>
     </div>
-  </v-card>
+  </div>
+
+
+
 </template>
 
 <script>
+
+import CustomCard from "@/components/CommonComponents/CustomCard";
 
 // eslint-disable-next-line no-unused-vars
 class Activity {
@@ -102,7 +118,10 @@ class Serie {
 
 export default {
   name: "CreateRoutinePanel",
+  components: {CustomCard, },
   data: () => ({
+    width: 800,
+    mode: 0,
     series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
     index: 0,
     counter: 1,
@@ -115,12 +134,14 @@ export default {
     updateSeries(index) {
       this.index = index;
     },
-    addActivity(activity, immortal) {
-      this.series[this.index].add_activity(activity, immortal);
+    addActivity(activity) {
+      this.mode = 1;
+      this.width = 499;
+      this.series[this.index].add_activity(activity);
     },
     addSeries() {
       this.counter += 1;
-      this.series.splice(this.series.length -1,0,new Serie("Serie " + this.counter));
+      this.series.splice(this.series.length -1,0,new Serie("Serie " + this.counter, 0));
     },
       removeSeries(index){
         if(!this.currentSeries.immortal && this.series.length > 1) {
@@ -166,7 +187,7 @@ export default {
 }
 
 .cwidth {
-  width: 800px;
+  width: 500px;
 }
 .cheight {
   height: 600px;
