@@ -1,7 +1,11 @@
 <template>
   <v-card height="100%" width="100%"  color="secondary">
     <div class="bar">
-      <HomeButton class="ml-4"></HomeButton>
+
+      <router-link class="button-link" to="/home">
+
+        <HomeButton class="ml-4"></HomeButton>
+      </router-link>
 
       <v-spacer></v-spacer>
 
@@ -10,9 +14,12 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn class="mr-4" id="profile" color="tertiary" fab small>
-        <v-icon>account_circle</v-icon>
-      </v-btn>
+      <router-link class="button-link" to="/user">
+
+        <v-btn class="mr-4" id="profile" color="tertiary" fab small>
+          <v-icon>account_circle</v-icon>
+        </v-btn>
+      </router-link>
     </div>
   </v-card>
 
