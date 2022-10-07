@@ -1,14 +1,9 @@
 <template>
-  <div class="d-flex flex-column align-center justify-center" flat tile>
-    <v-container class="pa-1">
-      <InfoBar>
-        Full Name
-      </InfoBar>
-      <InfoBar class="my-3" >
-        Birthday Date
-      </InfoBar>
-      <InfoBar>
-        E-mail
+  <div class="d-flex flex-column align-center justify-center">
+    <v-container class="ma-2">
+      <InfoBar label_text="Full Name"></InfoBar>
+      <InfoBar class="my-3" label_text="Birthday Date"></InfoBar>
+      <InfoBar label_text="Email">
         <v-btn icon color="black" small>
           <v-icon size=15px>edit</v-icon>
         </v-btn>
@@ -29,8 +24,5 @@ export default {
   }),
 };
 </script>
-.pa-1 {
-width: 50%;
-}
-<style scoped>
-</style>
+
+<style scoped></style>

@@ -1,16 +1,23 @@
 <template>
-  <v-card
-      class="d-flex text-center justify-center align-center"
-      rounded-lg
-      color="tertiary"
-      height="35px"
+  <v-text-field
+      dense
+      solo
+      rounded
+      hide-details
+      background-color="tertiary"
+      color="secondary"
+      append-icon="edit"
+      :label="label_text"
   >
-  </v-card>
+  </v-text-field>
 </template>
 
 <script>
 export default {
   name: "InfoBar",
+  props: {
+    label_text:String
+  }
 };
 </script>
 
