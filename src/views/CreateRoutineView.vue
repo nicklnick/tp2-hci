@@ -13,12 +13,15 @@
 
 
 
-        <!-- Overview -->
+        <!-- General -->
         <div class="space-between-col total-height py-10">
           <div class="space-between-row width">
+            <router-link class="button-link" to="/routines">
               <v-btn fab color="tertiary">
                 <v-icon>chevron-left</v-icon>
               </v-btn>
+
+            </router-link>
               <h1>Create Routine</h1>
             <v-card></v-card>
 
@@ -74,7 +77,7 @@ export default {
     TopBar
   },
   data: () => ({
-    mode: 1,
+    mode: 0,
 
   }),
   methods: {
