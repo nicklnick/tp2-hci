@@ -3,7 +3,6 @@
     <div class="bar">
 
       <router-link class="button-link" to="/home">
-
         <HomeButton class="ml-4"></HomeButton>
       </router-link>
 

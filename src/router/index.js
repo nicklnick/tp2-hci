@@ -6,6 +6,7 @@ import LoginView from "@/views/LoginView";
 import ManageExercisesView from "@/views/ManageExercisesView";
 import CreateRoutineView from "@/views/CreateRoutineView";
 import CategoryView from "@/views/CategoryView";
+import UserProfileView from "@/views/UserProfileView";
 
 Vue.use(VueRouter)
 
@@ -53,8 +54,12 @@ const routes = [
     name: 'CategoryView',
     component: CategoryView,
     props: true
+  },
+  {
+  path: '/user',
+    name: 'User Profile',
+    component: UserProfileView
   }
-
 ]
 
 const router = new VueRouter({
