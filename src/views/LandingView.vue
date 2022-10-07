@@ -1,13 +1,21 @@
 <template>
   <div class="screen">
     <div class="d-flex justify-end">
-      <v-btn class="button black--text" color="quaternary" rounded>LogIn</v-btn>
-      <v-btn class="button black--text" color="primary" rounded>Sign Up</v-btn>
+      <router-link to="/login" tag="button">
+        <v-btn class="button black--text" color="quaternary" rounded>LogIn</v-btn>
+      </router-link>
+      <router-link to="/signup" tag="button">
+        <v-btn class="button black--text" color="primary" rounded>Sign Up</v-btn>
+      </router-link>
     </div>
     <div class="body">
-      <h1 class="text ml-6">Welcome to Fitness First</h1>
-      <h2 class="ml-6">A place where you can get workout routines made for you or make your own!</h2>
-    </div>
+      <div class="Header">
+        <h1 class="text">Welcome to Fitness First</h1>
+      </div>
+      <div class="Subtext">
+        <h2 class="text2 ml-6">A place where you can get workout routines made for you or make your own!</h2>
+      </div>
+      </div>
     <div>
       <h3>Get Routines Now!</h3>
       <v-btn class="button black--text" color="primary" rounded>Enter as a Guest</v-btn>
@@ -34,14 +42,26 @@ export default {
 }
 
 .text {
+  font-size: 4rem;
+}
 
+.text2 {
+  font-size: 2.5rem;
 }
 
 .body {
-  display: flex;
+  flex: auto;
   flex-direction: column;
   justify-content: start;
   height: 60%;
+}
+
+.Subtext {
+  width: 70%;
+}
+
+.Header {
+  width: 65%;
 }
 
 </style>

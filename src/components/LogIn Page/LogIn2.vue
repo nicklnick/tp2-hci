@@ -1,6 +1,6 @@
 <template>
   <v-card class="login">
-    <v-tabs v-model="tab" align-with-title color="secondary">
+    <v-tabs v-model="tab" color="secondary">
       <v-tabs-slider color="secondary"></v-tabs-slider>
       <v-tab class="section"> Log In </v-tab>
       <v-tab-item>
@@ -38,7 +38,7 @@
       <v-tab class="section">Sign Up</v-tab>
       <v-tab-item>
         <div class="details">
-          <v-form class="prueba2">
+          <v-form>
             <v-container>
               <v-col align="center">
                 <v-text-field
@@ -88,7 +88,7 @@
                   outlined
                   color="secondary"
                 ></v-text-field>
-                <v-btn class="button prueba2" color="secondary">
+                <v-btn class="button" color="secondary">
                   Continuar
                 </v-btn>
               </v-col>
@@ -103,13 +103,23 @@
 <script>
 export default {
   name: "LogIn2",
+  created() {
+    if(this.path==='/login'){
+      this.tab= 0
+    }
+    else{
+      this.tab = 1
+    }
+  },
   data() {
     return {
       show1: false,
+      tab: '',
       title: "Preliminary report",
       email: "",
       password: "",
       ConfirmPassword: "",
+      path: this.$route.path,
       rules: {
         required: (value) => !!value || "Required.",
         confirmPasswordRules: [
