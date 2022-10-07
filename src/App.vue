@@ -14,6 +14,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-image: url('~@/assets/Background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+
 }
 
 nav {
@@ -30,8 +34,8 @@ nav {
 }
 </style>
 <script>
-import LoginView from "@/views/LoginView";
+
 export default {
-  components: { LoginView  }
+  components: { }
 }
 </script>
