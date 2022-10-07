@@ -6,7 +6,6 @@
     color="black"
     append-icon="mdi-magnify"
     hide-no-data
-    hide-details
     dense
     rounded
     filled

@@ -3,6 +3,7 @@
     id="home-button"
     class="logo-top-bar"
     color="tertiary"
+    cols="auto"
     raised
   >
     <v-img :src="require('@/assets/FF_logo_small.png')" contains></v-img>
@@ -17,6 +18,6 @@ export default {
 
 <style scoped>
 .logo-top-bar {
-  width: 100px;
+  width: 7%;
 }
 </style>
