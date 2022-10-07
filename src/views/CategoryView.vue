@@ -4,38 +4,42 @@
       <TopBar></TopBar>
     </div>
 
-
     <div class="bottom-heigh d-flex  width">
       <div class="w2" >
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-          <BigButton button_text="Create Routine"/>
-          <div class="text">
-            <h1>Search Routines by Category</h1>
-          </div>
-          <MuscleCarousel/>
+        <h1>{{muscles.name}}</h1>
         <!-- CONTENT GOES HERE -->
       </div>
     </div>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
 
+<script>
+import store from "@/store/MuscleGroups"
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
-import MuscleCarousel from "@/components/MuscleCarousel";
-import BigButton from "@/components/BigButton";
 export default {
-  name: 'HomeView',
+  name:"CategoryView",
   components: {
-    BigButton,
-    MuscleCarousel,
     SideMenu,
     TopBar
-  }
+  },
+  props: {
+    slug: {
+      type: String,
+      required: true,
+    },
+  },
+  computed: {
+    muscles() {
+      return store.muscles.find(
+        (muscles) => muscles.slug === this.slug
+      );
+    },
+  },
 }
 </script>
 
@@ -63,11 +67,6 @@ export default {
   align-items: center;
   height: 100%;
   zoom: 80%;
-}
-.text {
-  width: 90%;
-  display: flex;
-  justify-content: start;
 }
 
 </style>

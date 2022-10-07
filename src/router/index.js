@@ -5,6 +5,7 @@ import LandingView from "@/views/LandingView";
 import LoginView from "@/views/LoginView";
 import ManageExercisesView from "@/views/ManageExercisesView";
 import CreateRoutineView from "@/views/CreateRoutineView";
+import CategoryView from "@/views/CategoryView";
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,12 @@ const routes = [
     path: '/create-routine',
     name: 'Create Routine',
     component: CreateRoutineView
+  },
+  {
+    path: '/category/:slug',
+    name: 'CategoryView',
+    component: CategoryView,
+    props: true
   }
 
 ]

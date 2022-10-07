@@ -1,25 +1,29 @@
 <template>
   <div class="carousel">
   <v-carousel hide-delimiters height="100%">
-    <template v-for="(item, index) in slider">
+    <template v-for="(item, index) in muscles ">
       <v-carousel-item v-if="(index + 1) % columns === 1 || columns === 1"
                        :key="index"
       >
         <v-row class="flex-nowrap" style="height:100%">
           <template v-for="(n,i) in columns">
-            <template v-if="(+index + i) < slider.length">
+            <template v-if="(+index + i) < muscles.length">
               <v-col :key="i">
-<!--                      <v-sheet v-if="(+index + i) < slider.length"-->
-<!--                               height="100%"-->
-<!--                      >-->
                     <v-row align="center"
                            justify="center"
                     >
                       <div class="display-3">
-                        <ButtonWithIcon :button_icon="slider[+index + i].button_icon" :button_text="slider[+index + i].button_text"></ButtonWithIcon>
+                        <router-link
+                          :to="{
+                            name: 'CategoryView',
+                            params: { slug: muscles[+index + i].slug },
+                          }"
+                          tag="button"
+                        >
+                        <ButtonWithIcon :button_icon="muscles[+index + i].image" :button_text="muscles[+index + i].name"></ButtonWithIcon>
+                        </router-link>
                       </div>
                     </v-row>
-<!--                      </v-sheet>-->
               </v-col>
             </template>
           </template>
@@ -32,6 +36,7 @@
 
 <script>
 import ButtonWithIcon from "@/components/CommonComponents/ButtonWithIcon";
+import store from "@/store/MuscleGroups";
 export default {
   name: 'MuscleCarousel',
   components: { ButtonWithIcon },
@@ -42,7 +47,8 @@ export default {
         {button_text: 'Chest', button_icon: 'muscles/torso.png'},
         {button_text: 'Bicep', button_icon: 'muscles/muscle.png'},
         {button_text: 'Back', button_icon: 'muscles/body-part.png'}
-      ]
+      ],
+      muscles: store.muscles
     }
   },
   computed: {
@@ -60,7 +66,7 @@ export default {
       }
 
       return 1;
-    }
+    },
   },
 }
 </script>
