@@ -56,7 +56,7 @@
 import CustomCard from "@/components/CommonComponents/CustomCard";
 
 export default {
-  name: "RoutineOverview2",
+  name: "CreateRoutineOverview",
   components: {
     CustomCard
   },

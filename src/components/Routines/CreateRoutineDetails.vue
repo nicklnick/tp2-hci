@@ -117,7 +117,7 @@ class Serie {
 
 
 export default {
-  name: "CreateRoutinePanel",
+  name: "CreateRoutineDetails",
   components: {CustomCard, },
   data: () => ({
     width: 800,
