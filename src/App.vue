@@ -8,6 +8,7 @@
 </template>
 
 <style lang="scss">
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -32,6 +33,41 @@ nav {
     }
   }
 }
+
+.space-between-col{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.space-between-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.space-evenly-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.row-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.row-end {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+
+.center-row-col{               /* !!!! COMMON !!!! */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
 </style>
 <script>
 

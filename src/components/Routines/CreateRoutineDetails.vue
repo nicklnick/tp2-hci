@@ -120,7 +120,7 @@ export default {
   name: "CreateRoutineDetails",
   components: {CustomCard, },
   data: () => ({
-    width: 800,
+    width: 1000,
     mode: 0,
     series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
     index: 0,
@@ -190,7 +190,7 @@ export default {
   width: 500px;
 }
 .cheight {
-  height: 600px;
+  height: 500px;
 }
 
 .space-between-col{

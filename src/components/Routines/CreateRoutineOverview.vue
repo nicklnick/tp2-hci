@@ -1,5 +1,5 @@
 <template>
-    <CustomCard card-title="Overview" card-width="800" card-height="600">
+    <CustomCard card-title="Overview" card-width="1000" card-height="500">
 
       <div class="bottom-area">
         <div class="general-area">
@@ -77,11 +77,7 @@ export default {
 
 <style scoped>
 
-.space-between-col{
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
+
 .top-area{
   height: 8%;
 }
@@ -89,7 +85,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 550px;
+  height: 450px;
 }
 .general-area{               /* !!!! COMMON !!!! */
   width: 90%;
@@ -103,9 +99,5 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
-.row-center {                 /* !!!! COMMON !!!! */
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
+
 </style>

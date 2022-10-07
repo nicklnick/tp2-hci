@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LandingView from "@/views/LandingView";
 import LoginView from "@/views/LoginView";
+import ManageExercisesView from "@/views/ManageExercisesView";
+import CreateRoutineView from "@/views/CreateRoutineView";
 
 Vue.use(VueRouter)
 
@@ -34,6 +36,16 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: LoginView
+  },
+  {
+    path: '/exercises',
+    name: 'Manage Exercises',
+    component: ManageExercisesView
+  },
+  {
+    path: '/create-routine',
+    name: 'Create Routine',
+    component: CreateRoutineView
   }
 
 ]

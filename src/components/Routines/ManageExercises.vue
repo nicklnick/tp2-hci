@@ -1,5 +1,5 @@
 <template>
-  <CustomCard card-title="Exercises" card-height="600" card-width="800" >
+  <CustomCard card-title="Exercises" card-height="600" card-width="1000" >
     <div class="cwidth row-center overflow-auto">
       <div class="general-area-width">
 
@@ -147,7 +147,7 @@ export default {
 
 
 .cwidth {
-  width: 800px;
+  width: 1000px;
 }
 .cheight {
   height: 600px;
