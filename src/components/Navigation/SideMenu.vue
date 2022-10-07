@@ -43,6 +43,7 @@ export default {
     return {
       items: [
         { title: "Home", icon: "mdi-home" },
+        { title: "Exercises", icon: "mdi-run" },
         { title: "Routines", icon: "mdi-book" },
         { title: "Favourites", icon: "mdi-heart" },
       ],

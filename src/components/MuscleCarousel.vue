@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import ButtonWithIcon from "@/components/ButtonWithIcon";
+import ButtonWithIcon from "@/components/CommonComponents/ButtonWithIcon";
 export default {
   name: 'MuscleCarousel',
   components: { ButtonWithIcon },
@@ -52,7 +52,7 @@ export default {
       }
 
       if (this.$vuetify.breakpoint.lg) {
-        return 5;
+        return 4;
       }
 
       if (this.$vuetify.breakpoint.md) {
@@ -67,7 +67,7 @@ export default {
 
 <style scoped>
 .carousel {
-  width: 70%;
+  width: 90%;
   height: 30%;
 }
 </style>

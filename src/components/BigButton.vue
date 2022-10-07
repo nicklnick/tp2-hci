@@ -4,7 +4,7 @@
   color="primary"
   height="150px"
   width="200px"
-  >{{ button_text }}</v-btn>
+  ><h4>{{ button_text }}</h4></v-btn>
   <!-- por alguna razon tengo que setear el height -->
 
 </template>
