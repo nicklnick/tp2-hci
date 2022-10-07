@@ -14,3 +14,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.home {
+  height: 100%;
+}
+
+.prueba {
+  height: 88.5%;
+}
+</style>
