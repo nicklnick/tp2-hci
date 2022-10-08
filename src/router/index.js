@@ -7,6 +7,7 @@ import ManageExercisesView from "@/views/ManageExercisesView";
 import CreateRoutineView from "@/views/CreateRoutineView";
 import CategoryView from "@/views/CategoryView";
 import UserProfileView from "@/views/UserProfileView";
+import MyRoutines from "@/views/MyRoutines";
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,11 @@ const routes = [
     path: '/exercises',
     name: 'Manage Exercises',
     component: ManageExercisesView
+  },
+  {
+    path: '/routines',
+    name: 'My Routines',
+    component: MyRoutines
   },
   {
     path: '/create-routine',

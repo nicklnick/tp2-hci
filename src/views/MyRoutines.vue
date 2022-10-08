@@ -10,16 +10,13 @@
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-        <div class="width row-center">
-
-          <BigButton button_text="Create Routine"/>
-          <div class="px-7"></div>
-          <BigButton button_text="Manage Exercises"/>
+        <BigButton button_text="Create Routine"/>
+        <div class="text">
+          <h1>Search Routines by Category</h1>
         </div>
-          <div class="text">
-            <h1>Search Routines by Category</h1>
-          </div>
-          <MuscleCarousel/>
+        <div>
+          <RoutineButton></RoutineButton>
+        </div>
         <!-- CONTENT GOES HERE -->
       </div>
     </div>
@@ -31,13 +28,13 @@
 
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
-import MuscleCarousel from "@/components/MuscleCarousel";
+import RoutineButton from "@/components/Routines/RoutineButton";
 import BigButton from "@/components/BigButton";
 export default {
   name: 'HomeView',
   components: {
     BigButton,
-    MuscleCarousel,
+    RoutineButton,
     SideMenu,
     TopBar
   }
