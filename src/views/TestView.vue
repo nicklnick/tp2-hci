@@ -5,7 +5,7 @@
       </div>
 
 
-      <div class="bottom-heigh d-flex  width">
+      <div class="bottom-height d-flex  width">
         <div class="w2" >
           <SideMenu></SideMenu>
         </div>
@@ -44,7 +44,7 @@ export default {
 .top-height{
   height: 10%;
 }
-.bottom-heigh{
+.bottom-height{
   height: 90%;
 }
 .width{

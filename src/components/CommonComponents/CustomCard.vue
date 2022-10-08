@@ -22,8 +22,8 @@
 export default {
   name: "CustomCard",
   props: {
-    cardWidth: { type: Number, required: true },
-    cardHeight: { type: Number, required: true },
+    cardWidth: { type: String, required: true },
+    cardHeight: { type: String, required: true },
     cardTitle: { type: String, required: true },
   }
 };

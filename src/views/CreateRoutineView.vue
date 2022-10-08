@@ -14,8 +14,8 @@
 
 
         <!-- General -->
-        <div class="space-between-col total-height py-10">
-          <div class="space-between-row width">
+        <div class="space-between-col total-height py-10 width">
+          <div class="space-between-row width px-10">
             <router-link class="button-link" to="/routines">
               <v-btn fab color="tertiary">
                 <v-icon>chevron-left</v-icon>
@@ -29,8 +29,12 @@
 
 
           <!-- Routine details-->
-          <CreateRoutineDetails v-if="mode===0"></CreateRoutineDetails>
-          <div v-if="mode===0" class="row-end">
+          <div v-if="mode===0" class="row-center width">
+            <CreateRoutineDetails class="pr-7"></CreateRoutineDetails>
+            <SelectExercise ></SelectExercise>
+          </div>
+
+          <div v-if="mode===0" class="row-end px-10">
             <v-btn @click="changeMode" fab color="primary">
               <v-icon>chevron-right</v-icon>
             </v-btn>
@@ -38,13 +42,17 @@
 
 
           <!-- Routine overview -->
-          <CreateRoutineOverview v-if="mode===1"></CreateRoutineOverview>
-          <div v-if="mode===1" class="space-between-row width ">
+          <div class="row-evenly width">
+            <CreateRoutineOverview v-if="mode===1"></CreateRoutineOverview>
+          </div>
+
+
+          <div v-if="mode===1" class="space-between-row width px-10">
             <v-btn @click="changeMode" fab color="primary">
               <v-icon>chevron-left</v-icon>
             </v-btn>
 
-            <v-btn   color="primary">finish</v-btn>
+            <v-btn  class="align-self-center" color=" primary">finish</v-btn>
           </div>
 
         </div>
@@ -66,10 +74,12 @@ import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
 import CreateRoutineOverview from "@/components/Routines/CreateRoutineOverview";
 import CreateRoutineDetails from "@/components/Routines/CreateRoutineDetails";
+import SelectExercise from "@/components/Routines/SelectExercise";
 
 export default {
   name: "CreateRoutineView",
   components: {
+    SelectExercise,
     CreateRoutineDetails,
     CreateRoutineOverview,
 

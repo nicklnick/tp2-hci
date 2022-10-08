@@ -1,12 +1,12 @@
 <template>
-  <div :width="width" class=" row-start">
+  <div  class="cwidth row-start">
 
     <!-- Main Section -->
-    <v-card id="create-routine" :width="width" class="cheight rounded-xl" color="quaternary" raised>
+    <v-card id="create-routine" class="cwidth cheight rounded-xl" color="quaternary" raised>
       <div  class=" cheight space-between-col" >
 
         <div>
-          <v-card :width="width" class="rounded-b-0 rounded-t-xl row-start" color="secondary">
+          <v-card  class="cwidth rounded-b-0 rounded-t-xl row-start" color="secondary">
             <v-tabs class="tab-size-width rounded-tl-xl" background-color="secondary" show-arrows>
 
               <v-tabs-slider color="tertiary"></v-tabs-slider>
@@ -34,7 +34,7 @@
 
         <div  class=" row-center overflow-auto">
           <div class="general-area-width general-area-height">
-            <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in currentSeries.activities"
+            <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in currentSeries.activities"
                     :key="index">
               <span class="pl-3 pt-1">{{activity}}</span>
 
@@ -49,11 +49,7 @@
         <div  class=" row-center">
 
           <div class="general-area-width">
-            <div class="end-row">
-              <div class="pb-3 pr-3">
-                <v-btn color="primary" rounded small @click="addActivity('New Activity')">add exercise</v-btn>
-              </div>
-            </div>
+
 
             <v-divider></v-divider>
 
@@ -72,13 +68,6 @@
 
       </div>
     </v-card>
-
-    <!-- Select exercise -->
-    <div>
-      <CustomCard v-if="mode === 1" card-width="300" card-height="600" card-title="Select Exercise">
-
-      </CustomCard>
-    </div>
   </div>
 
 
@@ -87,7 +76,6 @@
 
 <script>
 
-import CustomCard from "@/components/CommonComponents/CustomCard";
 
 // eslint-disable-next-line no-unused-vars
 class Activity {
@@ -118,10 +106,9 @@ class Serie {
 
 export default {
   name: "CreateRoutineDetails",
-  components: {CustomCard, },
+  components: { },
   data: () => ({
-    width: 1000,
-    mode: 0,
+
     series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
     index: 0,
     counter: 1,
@@ -135,8 +122,6 @@ export default {
       this.index = index;
     },
     addActivity(activity) {
-      this.mode = 1;
-      this.width = 499;
       this.series[this.index].add_activity(activity);
     },
     addSeries() {
@@ -169,41 +154,21 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
 .general-area-height {
   height: 90%;
 }
-
 .general-area-width {
   width: 90%;
 }
 
-.row-center {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
 .cwidth {
-  width: 500px;
+  width: 800px;
 }
 .cheight {
   height: 500px;
 }
 
-.space-between-col{
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-.end-row {
-  display: flex;
-  justify-content: end;
-  flex-direction: row;
-}
 .row-start {
   display: flex;
   flex-direction: row;

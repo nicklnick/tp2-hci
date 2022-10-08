@@ -44,6 +44,10 @@ nav {
   flex-direction: row;
   justify-content: space-between;
 }
+.row-start {
+  display: flex;
+  flex-direction: row;
+}
 .space-evenly-row{
   display: flex;
   flex-direction: row;
@@ -59,16 +63,19 @@ nav {
   flex-direction: row;
   justify-content: end;
 }
-
-.center-row-col{               /* !!!! COMMON !!!! */
+.center-row-col{
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-
 .button-link{
   text-decoration: none;
+}
+.row-evenly{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 

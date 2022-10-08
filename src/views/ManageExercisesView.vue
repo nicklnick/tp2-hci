@@ -41,7 +41,7 @@
                     ></v-text-field>
                   </div>
 
-                  <div class="end-row">
+                  <div class="row-end">
                     <v-btn class="mb-2 mr-3"  color="secondary"
                            @click="checkAndDismiss">
                       <v-icon>check</v-icon>
@@ -234,7 +234,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.end-row {                /* !!!! COMMON !!!! */
+.row-end {                /* !!!! COMMON !!!! */
   display: flex;
   justify-content: end;
   flex-direction: row;
