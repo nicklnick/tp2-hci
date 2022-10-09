@@ -5,7 +5,7 @@
         <v-tabs-slider color="secondary"></v-tabs-slider>
 
         <!-- Login -->
-        <v-tab class="section"> Log In </v-tab>
+        <v-tab class="section" color="primary"> Log In </v-tab>
         <v-tab-item>
           <div class="details">
             <v-form>
@@ -37,7 +37,15 @@
                     ></v-text-field>
                   </v-form>
 
-                  <v-btn @click="login" class="button" color="secondary"> Continuar </v-btn>
+                  <div>
+                    <v-btn @click="login(rememberMe)" class="button" color="secondary"> Continue </v-btn>
+                    <v-checkbox
+                        label="Remember me"
+                        color="secondary"
+                        hide-details
+                        @click="rememberMe = !rememberMe"
+                    ></v-checkbox>
+                  </div>
 
                   <p class="error-msg">{{errorMessage}}</p>
                   <LoadingImage v-if="loading===1"></LoadingImage>
@@ -153,6 +161,7 @@ export default {
       ConfirmPassword: "",
       username: "",
       validUsername: "",
+      rememberMe: false,
 
       //messaging
       errorMessage: "",
@@ -212,7 +221,7 @@ export default {
   clearResult() {
     this.errorMessage = null
   },
-  async login() {
+  async login(rememberMe) {
     try {
       if(!this.validUsername || !this.validPassword){
         this.errorMessage = "Invalid username or password"
@@ -222,7 +231,7 @@ export default {
       const credentials = new Credentials(this.username, this.password)
 
       this.loading = 1
-      await this.$login(credentials, true)
+      await this.$login(credentials, rememberMe? rememberMe : false)
       this.clearResult()
 
     } catch (e) {
@@ -277,7 +286,6 @@ export default {
 
 .section {
   width: 50%;
-  color: rebeccapurple;
 }
 
 .details {
