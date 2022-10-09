@@ -29,10 +29,13 @@
 <script>
 // @ is an alias to /src
 
+import { useSecurityStore } from "@/stores/SecurityStore";
+
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import MuscleCarousel from "@/components/MuscleCarousel";
 import BigButton from "@/components/BigButton";
+import { mapState } from "pinia";
 export default {
   name: 'HomeView',
   components: {
@@ -40,6 +43,23 @@ export default {
     MuscleCarousel,
     SideMenu,
     TopBar
+  },
+  computed: {
+    ...mapState(useSecurityStore, {
+      $isLoggedIn: 'isLoggedIn'
+    })},
+  watch: {
+
+  },
+  async created() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+
+    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
+      console.log("aaaaaa");
+      this.$router.push("/login");
+    }
+
   }
 }
 </script>
