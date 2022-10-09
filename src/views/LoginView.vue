@@ -157,7 +157,7 @@ export default {
       //messaging
       errorMessage: "",
       msg: "LOADING...",
-      loading: 1  ,
+      loading: 0 ,
 
       path: this.$route.path,
       rules: {
@@ -188,7 +188,7 @@ export default {
   watch: {
     $isLoggedIn(newValue){
       if(newValue === true)
-        this.$router.push("/home")
+        this.$router.push({name: "Home"})
     }
   },
   methods: {
@@ -196,7 +196,18 @@ export default {
       $login: 'login',
     }),
   setResult(result){
-    this.errorMessage = result.details[0]
+    switch(result.code ){
+      case 4:
+        this.errorMessage = result.description
+        break;
+      case 2:
+        if(result.details[0].localeCompare("\"UNIQUE constraint failed: User.email\""))
+          this.errorMessage = "Email already in use"
+        else
+          this.errorMessage = "Username already in use"
+    }
+
+
   },
   clearResult() {
     this.errorMessage = null
@@ -212,13 +223,13 @@ export default {
 
       this.loading = 1
       await this.$login(credentials, true)
-      this.loading = 0;
-
       this.clearResult()
+
     } catch (e) {
       this.setResult(e)
     }
-    },
+    this.loading = 0;
+  },
   async signup(){
     try {
       if(!this.validUsername || !this.validPassword || !this.validEmail){
@@ -229,11 +240,11 @@ export default {
 
       this.loading = 1;
       await UserApi.signup(this.username,this.password,this.email);
-      this.loading = 0;
-      this.$router.push("/verify-email")
+      this.$router.push({name: "Verify Email"})
     } catch (e) {
       this.setResult(e);
     }
+    this.loading = 0;
   },
     abort() {
         this.controller.abort()

@@ -12,9 +12,14 @@
       <div class="general-area width ">
         <div class="width row-center">
 
-          <BigButton button_text="Create Routine"/>
+          <router-link link to="/create-routine">
+            <BigButton button_text="Create Routine"/>
+          </router-link>
           <div class="px-7"></div>
-          <BigButton button_text="Manage Exercises"/>
+          <router-link link to="/exercises">
+
+            <BigButton button_text="Manage Exercises"/>
+          </router-link>
         </div>
           <div class="text">
             <h1>Search Routines by Category</h1>
@@ -56,8 +61,7 @@ export default {
     await securityStore.initialize();
 
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      console.log("aaaaaa");
-      this.$router.push("/login");
+      this.$router.push({name: "login"});
     }
 
   }

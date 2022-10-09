@@ -73,7 +73,7 @@ export default {
         await UserApi.verifyEmail(this.email,this.code);
         this.loading = 0
 
-        this.$router.push("/login")
+        this.$router.push({name: "Login"})
 
       } catch (e) {
           this.setResult(e);

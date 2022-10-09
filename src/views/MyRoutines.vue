@@ -10,7 +10,10 @@
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-        <BigButton button_text="Create Routine"/>
+        <router-link link to="/create-routine">
+
+          <BigButton button_text="Create Routine"/>
+        </router-link>
         <div class="text">
           <h1>Search Routines by Category</h1>
         </div>
