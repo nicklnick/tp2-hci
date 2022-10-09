@@ -23,6 +23,7 @@
 
         <v-btn @click="verify()" class="button" color="secondary"> Continuar </v-btn>
         <p class="error-msg">{{errorMessage}}</p>
+        <LoadingImage class="align-self-center" v-if="loading===1"/>
       </div>
     </v-card>
   </div>
@@ -31,9 +32,11 @@
 <script>
 
 import { UserApi } from "@/api/user"
+import LoadingImage from "@/components/CommonComponents/LoadingImage";
 
 export default {
   name: "VerifyEmail",
+  components: { LoadingImage },
   data() {
     return {
       email: "",
@@ -41,6 +44,8 @@ export default {
       code: "",
       validCode: "",
       errorMessage: "",
+
+      loading: 0,
 
       rules: {
         required: (value) => !!value || "Required.",
@@ -63,7 +68,10 @@ export default {
           return;
         }
         this.errorMessage = "";
+
+        this.loading = 1
         await UserApi.verifyEmail(this.email,this.code);
+        this.loading = 0
 
         this.$router.push("/login")
 
@@ -86,6 +94,8 @@ export default {
 
 .verify {
   width: 50%;
-  height: 300px;
+  height: 400px;
 }
+
+
 </style>

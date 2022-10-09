@@ -40,6 +40,7 @@
                   <v-btn @click="login" class="button" color="secondary"> Continuar </v-btn>
 
                   <p class="error-msg">{{errorMessage}}</p>
+                  <LoadingImage v-if="loading===1"></LoadingImage>
                 </v-col>
               </v-container>
             </v-form>
@@ -115,6 +116,7 @@
                     Continuar
                   </v-btn>
                   <p class="error-msg">{{errorMessage}}</p>
+                  <LoadingImage v-if="loading===1"/>
                 </v-col>
               </v-container>
             </v-form>
@@ -132,10 +134,11 @@ import { mapState, mapActions } from "pinia"
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { Credentials } from "@/api/user";
 import { UserApi } from "@/api/user"
+import LoadingImage from "@/components/CommonComponents/LoadingImage";
 
 export default {
   name: 'LoginView',
-  components: {  },
+  components: { LoadingImage  },
   data() {
     return {
       show1: false,
@@ -151,8 +154,12 @@ export default {
       username: "",
       validUsername: "",
 
-      path: this.$route.path,
+      //messaging
       errorMessage: "",
+      msg: "LOADING...",
+      loading: 1  ,
+
+      path: this.$route.path,
       rules: {
         required: (value) => !!value || "Required.",
         confirmPasswordRules: [
@@ -202,21 +209,27 @@ export default {
       }
       this.errorMessage = "";
       const credentials = new Credentials(this.username, this.password)
+
+      this.loading = 1
       await this.$login(credentials, true)
+      this.loading = 0;
+
       this.clearResult()
     } catch (e) {
       this.setResult(e)
     }
     },
   async signup(){
-    console.log(this.username + " " + this.password + " " + this.email )
     try {
       if(!this.validUsername || !this.validPassword || !this.validEmail){
         this.errorMessage = "Invalid username, password or email"
         return;
       }
       this.errorMessage = "";
+
+      this.loading = 1;
       await UserApi.signup(this.username,this.password,this.email);
+      this.loading = 0;
       this.$router.push("/verify-email")
     } catch (e) {
       this.setResult(e);
@@ -257,10 +270,11 @@ export default {
 }
 
 .details {
-  height: 60vh;
+  height: 75vh;
 }
 
 .error-msg{
   color: red;
 }
+
 </style>
