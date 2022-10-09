@@ -1,6 +1,6 @@
 <template>
   <div class="screen">
-    <v-card class="login">
+    <v-card class="verify">
       <v-tabs v-model="tab" color="secondary">
         <v-tabs-slider color="secondary"></v-tabs-slider>
 
@@ -53,56 +53,68 @@
             <v-form>
               <v-container>
                 <v-col align="center">
-                  <v-text-field
-                    v-model="email"
-                    :rules="[rules.required, rules.email]"
-                    label="Email"
-                    outlined
-                    color="secondary"
-                  ></v-text-field>
+                  <v-form v-model="validEmail">
 
+                    <v-text-field
+                      v-model="email"
+                      :rules="[rules.required, rules.email]"
+                      label="Email"
+                      outlined
+                      color="secondary"
+                    ></v-text-field>
+                  </v-form>
+
+                  <v-form v-model="validUsername">
                   <v-text-field
                     v-model="username"
                     label="Username"
                     outlined
                     color="secondary"
                   ></v-text-field>
+                  </v-form>
 
-                  <v-text-field
-                    v-model="password"
-                    label="Password"
-                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required, rules.min]"
-                    :type="show1 ? 'text' : 'password'"
-                    name="password"
-                    hint="At least 8 characters"
-                    counter
-                    @click:append="show1 = !show1"
-                    outlined
-                    color="secondary"
-                  ></v-text-field>
+                  <v-form v-model="validPassword">
 
-                  <v-text-field
-                    v-model="ConfirmPassword"
-                    name="confirmpassword"
-                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[
+                    <v-text-field
+                      v-model="password"
+                      label="Password"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :rules="[rules.required, rules.min]"
+                      :type="show1 ? 'text' : 'password'"
+                      name="password"
+                      hint="At least 8 characters"
+                      counter
+                      @click:append="show1 = !show1"
+                      outlined
+                      color="secondary"
+                    ></v-text-field>
+                  </v-form>
+
+                  <v-form v-model="validPassword">
+                    <v-text-field
+                      v-model="ConfirmPassword"
+                      name="confirmpassword"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :rules="[
                     rules.required,
                     !!ConfirmPassword || 'type confirm password',
                     password === ConfirmPassword ||
                       'The password confirmation does not match.',
                   ]"
-                    :type="show1 ? 'text' : 'password'"
-                    hint="Same password"
-                    counter
-                    @click:append="show1 = !show1"
-                    label="Re Enter Password"
-                    outlined
-                    color="secondary"
-                  ></v-text-field>
-                  <v-btn class="button" color="secondary">
+                      :type="show1 ? 'text' : 'password'"
+                      hint="Same password"
+                      counter
+                      @click:append="show1 = !show1"
+                      label="Re Enter Password"
+                      outlined
+                      color="secondary"
+                    ></v-text-field>
+                  </v-form>
+
+                  <v-btn @click="signup()" class="button" color="secondary">
                     Continuar
                   </v-btn>
+                  <p class="error-msg">{{errorMessage}}</p>
                 </v-col>
               </v-container>
             </v-form>
@@ -119,6 +131,7 @@
 import { mapState, mapActions } from "pinia"
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { Credentials } from "@/api/user";
+import { UserApi } from "@/api/user"
 
 export default {
   name: 'LoginView',
@@ -195,6 +208,20 @@ export default {
       this.setResult(e)
     }
     },
+  async signup(){
+    console.log(this.username + " " + this.password + " " + this.email )
+    try {
+      if(!this.validUsername || !this.validPassword || !this.validEmail){
+        this.errorMessage = "Invalid username, password or email"
+        return;
+      }
+      this.errorMessage = "";
+      await UserApi.signup(this.username,this.password,this.email);
+      this.$router.push("/verify-email")
+    } catch (e) {
+      this.setResult(e);
+    }
+  },
     abort() {
         this.controller.abort()
       }
@@ -220,7 +247,7 @@ export default {
   align-content: center;
   padding-top: 50px;
 }
-.login {
+.verify {
   width: 50%;
 }
 

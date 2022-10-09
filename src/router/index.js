@@ -8,6 +8,7 @@ import CreateRoutineView from "@/views/CreateRoutineView";
 import CategoryView from "@/views/CategoryView";
 import UserProfileView from "@/views/UserProfileView";
 import MyRoutines from "@/views/MyRoutines";
+import VerifyEmail from "@/views/VerifyEmail";
 
 Vue.use(VueRouter)
 
@@ -65,6 +66,11 @@ const routes = [
   path: '/user',
     name: 'User Profile',
     component: UserProfileView
+  },
+  {
+    path: '/verify-email',
+    name: 'Verify Email',
+    component: VerifyEmail
   }
 ]
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="login">
+  <v-card class="verify">
     <v-tabs v-model="tab" color="secondary">
       <v-tabs-slider color="secondary"></v-tabs-slider>
       <v-tab class="section"> Log In </v-tab>
@@ -141,7 +141,7 @@ export default {
 </script>
 
 <style>
-.login {
+.verify {
   width: 50%;
 }
 
