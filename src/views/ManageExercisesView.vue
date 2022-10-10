@@ -18,7 +18,7 @@
 
 
               <!-- Create new exercise -->
-              <v-card elevation="20" class="general-area new-activity" v-if="mode === 1" color="quaternary" >
+              <v-card elevation="20" class="general-area new-activity" v-if="mode !== 0" color="quaternary" >
                 <div class="space-between-col general-area-width general-area-height">
 
                   <h2>New exercise</h2>
@@ -56,18 +56,23 @@
               </v-card>
 
               <!-- View existing exercises -->
-              <v-card color="d-flex justify-space-between my-2 quaternary" v-for="(activity, index) in activities"
+              <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(sport, index) in $items"
                       :key="index">
 
-                <div class="pl-3 pt-1">
-                  <p class="pa-0 ma-0">Name: {{activity.name}}</p>
-                  <p class="pa-0 ma-0">Time: {{activity.time}}</p>
-                  <p class="pa-0 ma-0">Series: {{activity.series}}</p>
+                <div class="col-start pl-3 pt-1">
+                  <p class="pa-0 ma-0">Name: {{sport.name}}</p>
+                  <p class="pa-0 ma-0">Details: {{sport.detail}}</p>
                 </div>
 
-                <v-btn text fab x-small color="dark-grey"
-                       @click="removeActivity(index)"
-                ><v-icon>mdi-close</v-icon></v-btn>
+                <div class="space-evenly-col">
+                  <v-btn text fab x-small color="dark-grey"
+                         @click="removeSport(sport)"
+                  ><v-icon>mdi-close</v-icon></v-btn>
+                  <v-btn text fab x-small color="dark-grey"
+                  @click="setEditingMode(sport)"
+                  ><v-icon>mdi-pencil</v-icon></v-btn>
+                </div>
+
               </v-card>
 
             </div>
@@ -94,17 +99,13 @@
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
 import CustomCard from "@/components/CommonComponents/CustomCard";
+import { useSportStore } from "@/stores/SportStore";
+import { Sport } from "@/api/sport";
+import { mapActions, mapState } from "pinia";
 
-class Activity {
-  name;
-  time;
-  series;
-  constructor(name, time, series) {
-    this.name = name;
-    this.time = time;
-    this.series = series;
-  }
-}
+import { useSecurityStore } from "@/stores/SecurityStore";
+
+
 
 export default {
   name: "ManageExercisesView",
@@ -115,11 +116,14 @@ export default {
     TopBar
   },
   data: () => ({
-    mode: 0,
+    mode: 0,        // 0: normal mode, 1: creation mode, 2: editing mode
     activities: [ ],
     newActivityTitle: "",
     newActivityTime: "0",
     newActivitySeries: "0",
+    editingId: null,
+
+    sportStore: null,
 
     numberRules: [
       value => !(/[^0-9]/.test(value)) || 'Only numbers',
@@ -129,12 +133,50 @@ export default {
       value => !!value || 'Required',
     ],
   }),
+  computed: {
+    ...mapState(useSecurityStore, {
+      $isLoggedIn: 'isLoggedIn'
+    }),
+    ...mapState(useSportStore,{
+      $items: 'items',
+    }),
+  },
+  async created() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+
+    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
+      this.$router.push({name: "login"});
+    }
+
+    this.sportStore = useSportStore();
+    await this.sportStore.updateCache();
+  },
   methods: {
-    removeActivity(index){
-      this.activities.splice(index,1);
+    ...mapActions(useSportStore, {
+      $createSport: 'create',
+      $modifySport: 'modify',
+      $deleteSport: 'delete',
+      $getSport: 'get',
+      $getAllSports: 'getAll',
+      $updateCache: 'updateCache',
+    }),
+    setEditingMode(sport){
+      this.mode =  2;
+      this.editingId = sport.id;
+      this.newActivityTitle = sport.name;
+      this.newActivityTime = sport.detail.split(" ")[2]
+      this.newActivitySeries = sport.detail.split(" ")[5]
+    },
+    editSport(sportId, name, time, series){
+      console.log(sportId)
+      this.$modifySport(new Sport(sportId, name, `Time (s): ${time} | Series: ${series}`));
+    },
+    removeSport(sport){
+      this.$deleteSport(sport)
     },
     addActivity(name, time, series) {
-      this.activities.push(new Activity(name, time, series));
+      this.$createSport(new Sport(null, name, `Time (s): ${time} | Series: ${series}`))
     },
     setCreationMode() {
       this.mode =  1;
@@ -160,10 +202,14 @@ export default {
       return true;
     },
     checkAndDismiss(){
+
       if(this.checkNewActivity()){
-
-        this.addActivity(this.newActivityTitle, this.newActivityTime, this.newActivitySeries)
-
+        if(this.mode ===1){
+          this.addActivity(this.newActivityTitle, this.newActivityTime, this.newActivitySeries)
+        }
+        else{
+            this.editSport(this.editingId, this.newActivityTitle, this.newActivityTime, this.newActivitySeries)
+        }
         this.stopCreationMode()
       }
     }
@@ -187,58 +233,29 @@ export default {
 .w2{
   width: 15%;
 }
-
 .general-area{               /* !!!! COMMON !!!! */
   display: flex;
   justify-content: center;
   align-items: center;
   zoom:90%;
 }
-
-
-
 .cwidth {
   width: 1000px;
 }
 .cheight {
   height: 600px;
 }
-.row-center {                 /* !!!! COMMON !!!! */
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 .general-area-height {                /* !!!! COMMON !!!! */
   height: 90%;
-}
-.space-start-col{
-  display: flex;
-  justify-content: start;
-  flex-direction: column;
-}
-.space-between-col{
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
 }
 .new-activity{
   margin-bottom: 20px;
   margin-top: 20px;
 }
-
 .general-area-width {                /* !!!! COMMON !!!! */
   width: 90%;
 }
-.general-area {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.row-end {                /* !!!! COMMON !!!! */
-  display: flex;
-  justify-content: end;
-  flex-direction: row;
-}
+
 
 
 </style>

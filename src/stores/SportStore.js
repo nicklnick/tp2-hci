@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
-import { SportApi } from "@/api/sport";
+import { Sport, SportApi } from "@/api/sport";
 
 export const useSportStore = defineStore("sport", {
-    state: () => ({ items: [] }),
+    state: () => ({
+        items: [],
+    }),
     getters: {
+        getItems: (state) =>{ return state.items},
         findIndex() {
             return (sport) => {
                 return this.items.findIndex(item => item.id === sport.id)
@@ -54,6 +57,18 @@ export const useSportStore = defineStore("sport", {
         async getAll(controller) {
             const result = await SportApi.getAll(controller);
             return result;
+        },
+        async updateCache(controller){
+            try{
+                const res = await SportApi.getAll(controller);
+                for(const newSport in res.content){
+                    this.push(new Sport(res.content[newSport].id,
+                      res.content[newSport].name, res.content[newSport].detail))
+                }
+            }
+            catch (e){
+                console.log(e)
+            }
         }
     },
 });

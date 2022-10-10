@@ -58,6 +58,11 @@ nav {
   flex-direction: column;
   justify-content: space-evenly;
 }
+.col-start{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
 .row-center {
   display: flex;
   flex-direction: row;
