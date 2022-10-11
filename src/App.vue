@@ -88,6 +88,10 @@ nav {
   align-items: center;
 }
 
+.error-msg{
+  color: red;
+}
+
 
 </style>
 <script>

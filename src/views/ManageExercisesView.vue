@@ -4,7 +4,6 @@
       <TopBar></TopBar>
     </div>
 
-
     <div class="bottom-height d-flex  width">
       <div class="w2" >
         <SideMenu></SideMenu>
@@ -13,8 +12,8 @@
 
         <!-- CONTENT GOES HERE -->
         <CustomCard card-title="Your Exercises" card-height="600" card-width="1000" >
-          <div class="cwidth row-center overflow-auto">
-            <div class="general-area-width">
+          <div class="cheight cwidth row-center ">
+            <div  class="cheight general-area-width overflow-auto">
 
 
               <!-- Create new exercise -->
@@ -42,6 +41,8 @@
                   </div>
 
                   <div class="row-end">
+                    <span class="error-msg">{{errorMessage}}</span>
+                    <v-spacer></v-spacer>
                     <v-btn class="mb-2 mr-3"  color="secondary"
                            @click="checkAndDismiss">
                       <v-icon>check</v-icon>
@@ -89,7 +90,6 @@
       </div>
     </div>
 
-
   </div>
 </template>
 
@@ -121,9 +121,13 @@ export default {
     newActivityTitle: "",
     newActivityTime: "0",
     newActivitySeries: "0",
+    errorMessage: null,
+
     editingId: null,
 
     sportStore: null,
+
+
 
     numberRules: [
       value => !(/[^0-9]/.test(value)) || 'Only numbers',
@@ -135,7 +139,11 @@ export default {
   }),
   computed: {
     ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn'
+      $isLoggedIn: 'isLoggedIn',
+      $online: 'online'
+    }),
+    ...mapActions(useSecurityStore, {
+      $checkApiOnline: 'checkApiOnline',
     }),
     ...mapState(useSportStore,{
       $items: 'items',
@@ -145,8 +153,14 @@ export default {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
 
+    await this.$checkApiOnline;
+
+    if(!this.$online){
+      console.log("redirecting")
+      await this.$router.push({ name: "Error" });
+    }
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      this.$router.push({name: "login"});
+      await this.$router.push({name: "Login"});
     }
 
     this.sportStore = useSportStore();
@@ -168,15 +182,8 @@ export default {
       this.newActivityTime = sport.detail.split(" ")[2]
       this.newActivitySeries = sport.detail.split(" ")[5]
     },
-    editSport(sportId, name, time, series){
-      console.log(sportId)
-      this.$modifySport(new Sport(sportId, name, `Time (s): ${time} | Series: ${series}`));
-    },
     removeSport(sport){
       this.$deleteSport(sport)
-    },
-    addActivity(name, time, series) {
-      this.$createSport(new Sport(null, name, `Time (s): ${time} | Series: ${series}`))
     },
     setCreationMode() {
       this.mode =  1;
@@ -197,20 +204,34 @@ export default {
       if (!(/^[1-9][0-9]*/.test(this.newActivitySeries)) && !(/^[1-9][0-9]*/.test(this.newActivityTime)) )
         return false;
 
-      // TODO: check if title already exists
-
       return true;
     },
-    checkAndDismiss(){
-
+    errorHandling(result){
+      switch(result.code ){
+        case 4:
+          this.errorMessage = result.description
+          break;
+        case 2:
+          if(result.details[0].localeCompare("\"UNIQUE constraint failed: Sport.name\""))
+            this.errorMessage = "Sport name already exists"
+        }
+      },
+    async checkAndDismiss(){
       if(this.checkNewActivity()){
-        if(this.mode ===1){
-          this.addActivity(this.newActivityTitle, this.newActivityTime, this.newActivitySeries)
+        try{
+          if(this.mode ===1){
+            await this.$createSport(new Sport(null, this.newActivityTitle, `Time (s): ${this.newActivityTime} | Series: ${this.newActivitySeries}`))
+          }
+          else{
+            await this.$modifySport(new Sport(this.editingId, this.newActivityTitle, `Time (s): ${this.newActivityTime} | Series: ${this.newActivitySeries}`));
+          }
         }
-        else{
-            this.editSport(this.editingId, this.newActivityTitle, this.newActivityTime, this.newActivitySeries)
+        catch (e) {
+            this.errorHandling(e)
+            return;
         }
-        this.stopCreationMode()
+        this.errorMessage = null;
+        this.stopCreationMode();
       }
     }
   },
@@ -243,7 +264,7 @@ export default {
   width: 1000px;
 }
 .cheight {
-  height: 600px;
+  height: 540px;
 }
 .general-area-height {                /* !!!! COMMON !!!! */
   height: 90%;

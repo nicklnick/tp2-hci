@@ -304,8 +304,4 @@ export default {
   height: 75vh;
 }
 
-.error-msg{
-  color: red;
-}
-
 </style>
