@@ -1,5 +1,10 @@
 <template>
+  <!-- hacer variable de si se esta descargando datos de la api-->
+  <!-- loading arranca en true, y una vez que carguen todos se desactiva -->
+  <!-- lo que puede pasar es que cargue el componente del front pero no la conexion con la api
+  entonces hay un null pointer y se puede romper -->
   <v-text-field
+    v-model="InputText" @keyup.enter="search"
     class="search-bar mt-6"
     label="Search"
     background-color="quaternary"
@@ -17,6 +22,16 @@
 <script>
 export default {
   name: "SearchBar",
+  data() {
+    return{
+      InputText: ''
+    }
+  },
+  methods: {
+    search(){
+      this.$router.push({name: 'SearchView', params:{input: this.InputText}})
+    }
+  }
 };
 </script>
 

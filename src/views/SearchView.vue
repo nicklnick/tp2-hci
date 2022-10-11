@@ -9,16 +9,13 @@
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-        <div class="header">
-          <router-link to="/home" tag="button">
-          <v-btn
-          color="secondary"
-          >
-            Go Back
-          </v-btn>
-          </router-link>
-
-        <h1 class="text">{{muscles.name}}</h1>
+        <div class="flex-container">
+          <div class="content">
+            <h1 class="PageTitle">Search Result:</h1>
+          </div>
+          <div class="content2">
+            <h1 class="PageTitle">{{$route.params.input}}</h1>
+          </div>
         </div>
         <!-- CONTENT GOES HERE -->
       </div>
@@ -28,27 +25,13 @@
 
 
 <script>
-import store from "@/store/MuscleGroups"
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 export default {
-  name:"CategoryView",
+  name:"SearchView",
   components: {
     SideMenu,
     TopBar
-  },
-  props: {
-    slug: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    muscles() {
-      return store.muscles.find(
-        (muscles) => muscles.slug === this.slug
-      );
-    },
   },
 }
 </script>
@@ -78,14 +61,31 @@ export default {
   height: 100%;
   zoom: 80%;
 }
-.header {
-  display: flex;
-  width: 30%;
+
+.content {
   margin-top: 3%;
+  width: 30%;
+  display: flex;
   justify-content: space-evenly;
-}
-.text{
-  font-size: 3rem;
+  align-content: center;
 }
 
+.content2 {
+  width: 70%;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+}
+
+.flex-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: start;
+}
+
+.PageTitle {
+  font-size: 3rem;
+}
 </style>

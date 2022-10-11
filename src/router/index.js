@@ -10,6 +10,7 @@ import UserProfileView from "@/views/UserProfileView";
 import MyRoutines from "@/views/MyRoutines";
 import VerifyEmail from "@/views/VerifyEmail";
 import ApiErrorView from "@/views/ApiErrorView";
+import SearchView from "@/views/SearchView";
 
 Vue.use(VueRouter)
 
@@ -77,6 +78,12 @@ const routes = [
     path: '/error',
     name: 'Error',
     component: ApiErrorView
+  },
+  {
+    path: '/search/:input',
+    name: 'SearchView',
+    component: SearchView,
+    props: true
   }
 ]
 
