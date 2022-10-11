@@ -192,8 +192,11 @@ export default {
     }),
     ...mapState(useSecurityStore, {
       $isLoggedIn: 'isLoggedIn',
-      $checkApiOnline: 'checkApiOnline'
+      $online: 'online'
     }),
+    ...mapActions(useSecurityStore, {
+      $checkApiOnline: 'checkApiOnline'
+    })
   },
   watch: {
     $isLoggedIn(newValue){
