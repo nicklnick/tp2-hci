@@ -2,12 +2,14 @@ import { defineStore } from "pinia";
 import { UserApi } from "@/api/user";
 import { Api } from "@/api/api";
 
+
 const SECURITY_TOKEN_KEY = "security-token";
 
 export const useSecurityStore = defineStore("security", {
     state: () => ({
         token: null,
-        user: null
+        user: null,
+        online: true,
     }),
     getters: {
         isLoggedIn() {
@@ -51,6 +53,20 @@ export const useSecurityStore = defineStore("security", {
 
             const result = await UserApi.get();
             this.setUser(result);
+        },
+        async checkApiOnline(){
+            console.log("checking")
+            try{
+                await UserApi.get();
+            }
+            catch (e) {
+                if(e.code === 98){
+                    this.online = false;
+                }
+                else if(e.code === 99){
+                    this.online = false;
+                }
+            }
         }
     },
 });

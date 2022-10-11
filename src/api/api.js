@@ -33,9 +33,9 @@ class Api {
     } catch (error) {
       if (error.code)
         throw error;
-      if (error.name === "AbortError")
+      if (error.name === "AbortError")                // se aborto el fetch pq tardo demasiado
         throw { "code": 98, "description": error.message.toLowerCase() };
-      else if (error.name === "TypeError")
+      else if (error.name === "TypeError")            // problema de conexion
         throw { "code": 99, "description": error.message.toLowerCase() };
     } finally {
       clearTimeout(timer);

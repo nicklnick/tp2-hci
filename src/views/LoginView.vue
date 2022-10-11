@@ -191,7 +191,8 @@ export default {
       $user: state => state.user,
     }),
     ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn'
+      $isLoggedIn: 'isLoggedIn',
+      $checkApiOnline: 'checkApiOnline'
     }),
   },
   watch: {
@@ -268,6 +269,17 @@ export default {
       }
       const securityStore = useSecurityStore();
       await securityStore.initialize();
+
+      await this.$checkApiOnline;
+
+      if(!this.$online){
+        console.log("error, redirecting")
+        await this.$router.push({ name: "Error" });
+      }
+      if(this.$isLoggedIn){   // TODO: !!!! check !!!!
+        await this.$router.push({ name: "Home" });
+      }
+
     }
 }
 </script>

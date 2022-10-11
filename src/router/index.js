@@ -9,6 +9,7 @@ import CategoryView from "@/views/CategoryView";
 import UserProfileView from "@/views/UserProfileView";
 import MyRoutines from "@/views/MyRoutines";
 import VerifyEmail from "@/views/VerifyEmail";
+import ApiErrorView from "@/views/ApiErrorView";
 
 Vue.use(VueRouter)
 
@@ -71,6 +72,11 @@ const routes = [
     path: '/verify-email',
     name: 'Verify Email',
     component: VerifyEmail
+  },
+  {
+    path: '/error',
+    name: 'Error',
+    component: ApiErrorView
   }
 ]
 
