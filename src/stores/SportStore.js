@@ -28,7 +28,7 @@ export const useSportStore = defineStore("sport", {
         },
         async create(sport) {
             const result = await SportApi.add(sport);
-            if (!this.findIndex(result))
+            //if (!this.findIndex(result))   por alguna razon esto rompe el auto update
                 this.push(result);
             return result;
         },
@@ -61,6 +61,7 @@ export const useSportStore = defineStore("sport", {
         async updateCache(controller){
             try{
                 const res = await SportApi.getAll(controller);
+                this.items = [];
                 for(const newSport in res.content){
                     this.push(new Sport(res.content[newSport].id,
                       res.content[newSport].name, res.content[newSport].detail))
