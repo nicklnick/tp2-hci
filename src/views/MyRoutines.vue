@@ -15,10 +15,10 @@
           <BigButton button_text="Create Routine"/>
         </router-link>
         <div class="text">
-          <h1>Search Routines by Category</h1>
+          <h1>Your Routines</h1>
         </div>
         <div>
-          <RoutineButton></RoutineButton>
+
         </div>
         <!-- CONTENT GOES HERE -->
       </div>
@@ -31,13 +31,13 @@
 
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
-import RoutineButton from "@/components/Routines/RoutineButton";
 import BigButton from "@/components/BigButton";
+
 export default {
   name: 'HomeView',
   components: {
     BigButton,
-    RoutineButton,
+
     SideMenu,
     TopBar
   }
