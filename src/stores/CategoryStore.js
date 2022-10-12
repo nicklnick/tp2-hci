@@ -26,8 +26,8 @@ export const useCategoryStore = defineStore("sport", {
         replaceAll(categories) {
             this.items = categories;
         },
-        async create(category) {
-            const result = await CategoryApi.add(category);
+        async create(categoryData) {
+            const result = await CategoryApi.add(categoryData);
 
             this.push(result);
             return result;
@@ -39,14 +39,14 @@ export const useCategoryStore = defineStore("sport", {
                 this.replace(index, result);
             return result;
         },
-        async delete(category) {
-            await CategoryApi.delete(category.id);
-            const index = this.findIndex(category);
+        async delete(categoryId) {
+            await CategoryApi.delete(categoryId);
+            const index = this.findIndex(categoryId);
             if(index >= 0)
                 this.splice(index);
         },
-        async get(category) {
-            const index = this.findIndex(category);
+        async get(categoryId) {
+            const index = this.findIndex(categoryId);
             if(index >= 0)
                 return this.items[index];
 
