@@ -22,23 +22,17 @@
 
                   <h2>New exercise</h2>
                   <v-spacer></v-spacer>
-                  <v-divider></v-divider>
+                  <v-divider class="py-3"></v-divider>
 
                   <v-text-field rounded outlined color="secondary"
                                 background-color="tertiary" label="Exercise name"
                                 class="py-2" :rules="titleRules" v-model="newActivityTitle"
                   ></v-text-field>
-                  <div class="row-center">
-                    <v-text-field rounded outlined color="secondary"
-                                  background-color="tertiary" label="Exercise length (s)"
-                                  class="py-2" :rules="numberRules" v-model="newActivityTime"
-                    ></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-text-field rounded outlined color="secondary"
-                                  background-color="tertiary" label="Number of series"
-                                  class="py-2" :rules="numberRules" v-model="newActivitySeries"
-                    ></v-text-field>
-                  </div>
+                  <v-text-field rounded outlined color="secondary"
+                                background-color="tertiary" label="Exercise details"
+                                class="py-2" :rules="titleRules" v-model="newActivityDetails"
+                  ></v-text-field>
+
 
                   <div class="row-end">
                     <span class="error-msg">{{errorMessage}}</span>
@@ -57,22 +51,24 @@
               </v-card>
 
               <!-- View existing exercises -->
-              <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(sport, index) in $items"
-                      :key="index">
+              <v-card class="my-2 quaternary" v-for="(exercise, index) in $items"
+                      :key="index" >
+                <div v-if="exercise.id !== editing" class="d-flex justify-space-between ">
+                  <div  class="col-start pl-3 pt-1">
+                    <p class="pa-0 ma-0">Name: {{exercise.name}}</p>
+                    <p class="pa-0 ma-0">Details: {{exercise.detail}}</p>
+                  </div>
 
-                <div class="col-start pl-3 pt-1">
-                  <p class="pa-0 ma-0">Name: {{sport.name}}</p>
-                  <p class="pa-0 ma-0">Details: {{sport.detail}}</p>
+                  <div class="space-evenly-col">
+                    <v-btn text fab x-small color="dark-grey"
+                           @click="removeSport(exercise)"
+                    ><v-icon>mdi-close</v-icon></v-btn>
+                    <v-btn text fab x-small color="dark-grey"
+                           @click="setEditingMode(exercise)"
+                    ><v-icon>mdi-pencil</v-icon></v-btn>
+                  </div>
                 </div>
 
-                <div class="space-evenly-col">
-                  <v-btn text fab x-small color="dark-grey"
-                         @click="removeSport(sport)"
-                  ><v-icon>mdi-close</v-icon></v-btn>
-                  <v-btn text fab x-small color="dark-grey"
-                  @click="setEditingMode(sport)"
-                  ><v-icon>mdi-pencil</v-icon></v-btn>
-                </div>
 
               </v-card>
 
@@ -99,11 +95,12 @@
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
 import CustomCard from "@/components/CommonComponents/CustomCard";
-import { useSportStore } from "@/stores/SportStore";
-import { Sport } from "@/api/sport";
+
 import { mapActions, mapState } from "pinia";
 
 import { useSecurityStore } from "@/stores/SecurityStore";
+import { useExerciseStore } from "@/stores/ExerciseStore";
+import { Exercise } from "@/api/exercise";
 
 
 
@@ -119,20 +116,13 @@ export default {
     mode: 0,        // 0: normal mode, 1: creation mode, 2: editing mode
     activities: [ ],
     newActivityTitle: "",
-    newActivityTime: "0",
-    newActivitySeries: "0",
-    errorMessage: null,
+    newActivityDetails: "",
 
+    errorMessage: null,
     editingId: null,
 
     sportStore: null,
 
-
-
-    numberRules: [
-      value => !(/[^0-9]/.test(value)) || 'Only numbers',
-      value => (/^[1-9][0-9]*/.test(value)) || 'Only numbers > 0'
-    ],
     titleRules: [
       value => !!value || 'Required',
     ],
@@ -145,9 +135,13 @@ export default {
     ...mapActions(useSecurityStore, {
       $checkApiOnline: 'checkApiOnline',
     }),
-    ...mapState(useSportStore,{
+    ...mapState(useExerciseStore,{
       $items: 'items',
     }),
+    editing(){
+      console.log("hola")
+      return this.editingId;
+    }
   },
   async created() {
     const securityStore = useSecurityStore();
@@ -156,34 +150,30 @@ export default {
     await this.$checkApiOnline;
 
     if(!this.$online){
-      console.log("redirecting")
       await this.$router.push({ name: "Error" });
     }
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({name: "Login"});
     }
 
-    this.sportStore = useSportStore();
-    await this.sportStore.updateCache();
+    this.exerciseStore = useExerciseStore();
+    await this.exerciseStore.updateCache();
   },
   methods: {
-    ...mapActions(useSportStore, {
-      $createSport: 'create',
-      $modifySport: 'modify',
-      $deleteSport: 'delete',
-      $getSport: 'get',
-      $getAllSports: 'getAll',
+    ...mapActions(useExerciseStore, {
+      $createExercise: 'create',
+      $modifyExercise: 'modify',
+      $deleteExercise: 'delete',
       $updateCache: 'updateCache',
     }),
-    setEditingMode(sport){
+    setEditingMode(exercise){
       this.mode =  2;
-      this.editingId = sport.id;
-      this.newActivityTitle = sport.name;
-      this.newActivityTime = sport.detail.split(" ")[2]
-      this.newActivitySeries = sport.detail.split(" ")[5]
+      this.editingId = exercise.id;
+      this.newActivityTitle = exercise.name;
+      this.newActivityDetails = exercise.detail;
     },
-    removeSport(sport){
-      this.$deleteSport(sport)
+    removeSport(exercise){
+      this.$deleteExercise(exercise)
     },
     setCreationMode() {
       this.mode =  1;
@@ -194,16 +184,11 @@ export default {
     },
     resetNewActivity(){
       this.newActivityTitle  = "";
-      this.newActivityTime = this.newActivitySeries = 0;
+      this.newActivityDetails = "";
     },
     checkNewActivity(){
-      if(this.newActivityTitle === "")
+      if(this.newActivityTitle === "" || this.newActivityDetails === "")
         return false;
-      if ( (/[^0-9]/.test(this.newActivitySeries)) || (/[^0-9]/.test(this.newActivityTime)) )
-        return false;
-      if (!(/^[1-9][0-9]*/.test(this.newActivitySeries)) && !(/^[1-9][0-9]*/.test(this.newActivityTime)) )
-        return false;
-
       return true;
     },
     errorHandling(result){
@@ -213,17 +198,17 @@ export default {
           break;
         case 2:
           if(result.details[0].localeCompare("\"UNIQUE constraint failed: Sport.name\""))
-            this.errorMessage = "Sport name already exists"
+            this.errorMessage = "Exercise name already exists"
         }
       },
     async checkAndDismiss(){
       if(this.checkNewActivity()){
         try{
           if(this.mode ===1){
-            await this.$createSport(new Sport(null, this.newActivityTitle, `Time (s): ${this.newActivityTime} | Series: ${this.newActivitySeries}`))
+            await this.$createExercise(new Exercise(null, this.newActivityTitle, this.newActivityDetails))
           }
           else{
-            await this.$modifySport(new Sport(this.editingId, this.newActivityTitle, `Time (s): ${this.newActivityTime} | Series: ${this.newActivitySeries}`));
+            await this.$modifyExercise(new Exercise(this.editingId, this.newActivityTitle, this.newActivityDetails));
           }
         }
         catch (e) {
@@ -231,6 +216,7 @@ export default {
             return;
         }
         this.errorMessage = null;
+        this.editingId = null;
         this.stopCreationMode();
       }
     }
