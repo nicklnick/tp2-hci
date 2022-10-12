@@ -20,6 +20,7 @@
           <div class="info-fields">
             <div class="d-flex flex-column align-center justify-center ma-2">
               <v-container class="ma-2">
+                <v-form v-model="areFieldsValid">
                 <div class="flex-horizontal-container">
                   <v-text-field
                       dense
@@ -85,6 +86,8 @@
                       @change="this.save"
                   ></v-date-picker>
                 </v-menu>
+                </v-form>
+                <p>{{areFieldsValid}}</p>
                 <!-- -->
                 <v-text-field
                       dense
@@ -96,11 +99,16 @@
                       background-color="tertiary"
                       color="secondary"
                       label="Email"
-                      :value="this.$user.email"
+                      :value="this.$user?.email"
                   ></v-text-field>
-                <v-btn @click="modifyUser" class="button mt-3" color="secondary">
-                 Save Changes
-                </v-btn>
+                <div>
+                  <v-btn v-if="areFieldsValid" @click="modifyUser" class="button mt-3" color="secondary">
+                    Save Changes
+                  </v-btn>
+                  <v-btn v-else disabled @click="modifyUser" outlined class="button mt-3" color="secondary">
+                    Save Changes
+                  </v-btn>
+                </div>
               </v-container>
             </div>
           </div>
@@ -126,6 +134,7 @@ export default {
   },
   data() {
     return {
+      areFieldsValid: true,
       errorMsg: null,
       // fields
       currFirstName: null,
@@ -137,7 +146,7 @@ export default {
       date: null,
       menu: false,
       rules: {
-        max: (value) => value.length < 32 || "Max 32 characters",
+        max: (value) => value?.length < 32 || "Max 32 characters",
         invalidChar: (value) => {
           // checks that given string only contains characters
           const pattern = /^(?!.*(\W|\d)).*$/
@@ -170,8 +179,11 @@ export default {
     },
     async modifyUser() {
       try {
+        if(this.errorInFields)
+          console.log("Error")
+
         // TODO: negate saving changes if firstName and lastName aren't valid
-        await this.$modifyUser({"firstName": this.currFirstName, "lastName": this.currLastName, "birthdate": parseInt(this.currBirthdate), "email": this.$user.email})
+        await this.$modifyUser({"firstName": this.currFirstName, "lastName": this.currLastName, "birthdate": parseInt(this.currBirthdate)})
 
         await this.$getCurrentUser()
         this.setLocalFields()
