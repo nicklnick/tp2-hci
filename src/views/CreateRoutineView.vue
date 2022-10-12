@@ -58,11 +58,11 @@
 
                   <div  class=" row-center overflow-auto">
                     <div class="general-area-width general-area-height">
-                      <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(sport, index) in currentSeries.sports"
+                      <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(exercise, index) in currentSeries.sports"
                               :key="index">
                         <div class="text-width">
-                          <h5 class="card_text pl-3 pt-1">Name: {{sport.name}}</h5>
-                          <h5 class="card_text pl-3 pt-1">{{sport.detail}}</h5>
+                          <h5 class="card_text pl-3 pt-1">Name: {{exercise.name}}</h5>
+                          <h5 class="card_text pl-3 pt-1">{{exercise.detail}}</h5>
                         </div>
 
                         <v-btn text fab x-small color="dark-grey"
@@ -101,15 +101,13 @@
 
                 <div class="general-height overflow-auto px-4">
 
-
-                  <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(sport, index) in $items"
+                  <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(exercise, index) in $items"
                           :key="index">
                     <div class="text-width">
-                      <h5 class="card_text pl-3 pt-1">Name: {{sport.name}}</h5>
-                      <h5 class="card_text pl-3 pt-1">{{sport.detail}}</h5>
+                      <h5 class="card_text pl-3 pt-1">Name: {{exercise.name}}</h5>
                     </div>
 
-                    <v-btn text fab x-small color="dark-grey" @click="addActivity(sport.id)">
+                    <v-btn text fab x-small color="dark-grey" @click="addActivity(exercise.id)">
                       <v-icon>mdi-check</v-icon></v-btn>
                   </v-card>
                 </div>
@@ -132,13 +130,17 @@
               <div class="bottom-area">
                 <div class="overview">
                   <div>
-                    <v-text-field rounded outlined color="secondary"  hide-details
-                                  background-color="tertiary" label="Title"
-                                  class="py-2"></v-text-field>
+                    <v-form v-model="validTitle">
+                      <v-text-field rounded outlined color="secondary" :rules="textRules"
+                                    background-color="tertiary" label="Title"
+                                    class="py-2" v-model="title"></v-text-field>
+                    </v-form>
 
-                    <v-textarea rounded outlined color="secondary" hide-details
+                    <v-form v-model="validDetails">
+                    <v-textarea rounded outlined color="secondary" :rules="textRules"
                                 background-color="tertiary" label="Description" no-resize
-                                class="py-2"></v-textarea>
+                                class="py-2" v-model="details"></v-textarea>
+                    </v-form>
                   </div>
 
 
@@ -182,7 +184,8 @@
               <v-icon>chevron-left</v-icon>
             </v-btn>
 
-            <v-btn  class="align-self-center" color=" primary">finish</v-btn>
+            <v-btn  class="align-self-center" color=" primary"
+            @click="addRoutine">finish</v-btn>
           </div>
 
         </div>
@@ -200,11 +203,13 @@
 
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
-//import CreateRoutineOverview from "@/components/Routines/CreateRoutineOverview";
 import CustomCard from "@/components/CommonComponents/CustomCard";
+import { Exercise } from "@/api/exercise";
+import { useExerciseStore } from "@/stores/ExerciseStore";
+import { useSecurityStore } from "@/stores/SecurityStore";
+import { mapActions, mapState } from "pinia";
 
-
-import { Sport } from "@/api/sport";
+import { Routine,RoutineApi } from "@/api/routine";
 
 class Serie {
   name;
@@ -233,7 +238,6 @@ export default {
   },
   data: () => ({
     mode: 1,
-    sportStore: null,
 
     // routine detials
     series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
@@ -246,10 +250,23 @@ export default {
     errorMsg: null,
 
 
+
+
     //routine overview
-    dificulties: ["rookie","intermediate","adept", "advanced","pro"],
-    difficulty: "",
+    textRules: [
+      value => !!value || 'Required',
+    ],
+    dificulties: ["Rookie", "Beginner", "Intermediate", "Advanced", "Expert"],
+
+    validTitle: false,
+    validDetails: false,
+    validCategory: false,
+
+
     isPublic: true,
+    difficulty: "Rookie",
+    title: "",
+    details: "",
 
 
 
@@ -265,7 +282,22 @@ export default {
       this.errorMsg = "";
       return true;
     },
+    checkValidOverview(){
+      return this.validDetails && this.validTitle;
+    },
 
+    async addRoutine(){
+      console.log("asasdfasdfas")
+        if(this.checkValidOverview()){
+          try{
+            console.log(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
+            await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
+          }
+          catch (e) {
+            console.log(e)
+          }
+          }
+    },
     nextStep() {
       if(this.checkValidDetails())
         this.mode = 1;
@@ -275,14 +307,13 @@ export default {
         this.mode = 0;
     },
 
-
     // routine details
     updateSeries(index) {
       this.index = index;
     },
     async addActivity(id) {
-      const sport = await this.sportStore.get(new Sport(id))
-      this.series[this.index].add_activity(sport);
+      const exercise = await this.exerciseStore.get(new Exercise(id))
+      this.series[this.index].add_activity(exercise);
     },
     addSeries() {
       this.counter += 1;
@@ -311,7 +342,7 @@ export default {
     ...mapActions(useSecurityStore, {
       $checkApiOnline: 'checkApiOnline',
     }),
-    ...mapState(useSportStore,{
+    ...mapState(useExerciseStore,{
       $items: 'items',
     }),
 
@@ -340,14 +371,13 @@ export default {
     if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!
       await this.$router.push({ name: "Login" });
     }
-    this.sportStore = useSportStore();
-    await this.sportStore.updateCache();
+    this.exerciseStore = useExerciseStore();
+    await this.exerciseStore.updateCache();
   }
 };
-import { useSecurityStore } from "@/stores/SecurityStore";
-import { mapActions, mapState } from "pinia";
 
-import { useSportStore } from "@/stores/SportStore";
+
+
 </script>
 
 <style scoped>

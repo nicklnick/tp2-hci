@@ -34,6 +34,15 @@
                   ></v-text-field>
 
 
+                  <div class="space-between-row">
+                    <p>Type</p>
+                    <v-radio-group v-model="newActivityType" row>
+                      <v-radio value="exercise" label="Exercise"></v-radio>
+                      <v-radio value="rest" label="Rest"></v-radio>
+                    </v-radio-group>
+                  </div>
+
+
                   <div class="row-end">
                     <span class="error-msg">{{errorMessage}}</span>
                     <v-spacer></v-spacer>
@@ -57,6 +66,7 @@
                   <div  class="col-start pl-3 pt-1">
                     <p class="pa-0 ma-0">Name: {{exercise.name}}</p>
                     <p class="pa-0 ma-0">Details: {{exercise.detail}}</p>
+                    <p class="pa-0 ma-0">Type: {{exercise.type}}</p>
                   </div>
 
                   <div class="space-evenly-col">
@@ -117,6 +127,7 @@ export default {
     activities: [ ],
     newActivityTitle: "",
     newActivityDetails: "",
+    newActivityType: "exercise",
 
     errorMessage: null,
     editingId: null,
@@ -139,7 +150,6 @@ export default {
       $items: 'items',
     }),
     editing(){
-      console.log("hola")
       return this.editingId;
     }
   },
@@ -171,6 +181,7 @@ export default {
       this.editingId = exercise.id;
       this.newActivityTitle = exercise.name;
       this.newActivityDetails = exercise.detail;
+      this.newActivityType = exercise.type;
     },
     removeSport(exercise){
       this.$deleteExercise(exercise)
@@ -185,6 +196,9 @@ export default {
     resetNewActivity(){
       this.newActivityTitle  = "";
       this.newActivityDetails = "";
+      this.newActivityType = "exercise";
+      this.editingId = null;
+      this.errorMessage = null;
     },
     checkNewActivity(){
       if(this.newActivityTitle === "" || this.newActivityDetails === "")
@@ -205,18 +219,16 @@ export default {
       if(this.checkNewActivity()){
         try{
           if(this.mode ===1){
-            await this.$createExercise(new Exercise(null, this.newActivityTitle, this.newActivityDetails))
+            await this.$createExercise(new Exercise(null, this.newActivityTitle, this.newActivityDetails, this.newActivityType))
           }
           else{
-            await this.$modifyExercise(new Exercise(this.editingId, this.newActivityTitle, this.newActivityDetails));
+            await this.$modifyExercise(new Exercise(this.editingId, this.newActivityTitle, this.newActivityDetails, this.newActivityType));
           }
         }
         catch (e) {
             this.errorHandling(e)
             return;
         }
-        this.errorMessage = null;
-        this.editingId = null;
         this.stopCreationMode();
       }
     }

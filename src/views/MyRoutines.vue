@@ -19,7 +19,7 @@
           </div>
           <div class="row-start" >
             <RoutineButton class="mx-3" v-for="(routine, index) in myRoutines" :key="index" :routine_difficulty="routine.difficulty"
-                            :routine_author="$user.name" :routine_name="routine.name"></RoutineButton>
+                            :routine_author="routine.user.username" :routine_name="routine.name" ></RoutineButton>
           </div>
         </div>
 

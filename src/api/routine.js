@@ -29,8 +29,8 @@ class RoutineApi {
 
     for(const newSport in allRoutines.content){
       if(userId === allRoutines.content[newSport].user.id)
-        resp.push(new Routine(allRoutines.content[newSport].id, allRoutines.content[newSport].name, allRoutines.content[newSport].isPublic,
-          allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user.id))
+        resp.push(new Routine(allRoutines.content[newSport].id, allRoutines.content[newSport].name,allRoutines.content[newSport].detail ,allRoutines.content[newSport].isPublic,
+          allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user))
     }
 
     return resp;
@@ -43,13 +43,14 @@ class RoutineApi {
 }
 
 class Routine {
-  constructor(id, name, isPublic, difficulty, userId) {
+  constructor(id, name, detail, isPublic, difficulty, user) {
     if (id) {
       this.id = id;
     }
     this.name = name;
+    this.detail = detail;
     this.isPublic = isPublic;
     this.difficulty = difficulty;
-    this.userId = userId;
+    this.user = user;
   }
 }

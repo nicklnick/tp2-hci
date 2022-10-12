@@ -73,9 +73,6 @@ export default {
       routine_difficulty: {
         type: String,
       },
-      routine_stars: {
-        type: Number,
-      }
   },
   computed: {
     heart_color_comp() {
@@ -102,7 +99,7 @@ export default {
 
 .card_size {
   height: 200px;
-  width: 220px;
+  width: 250px;
 }
 
 .custom_card {

@@ -29,12 +29,12 @@ class ExerciseApi {
 }
 
 class Exercise {
-  constructor(id, name, detail) {
+  constructor(id, name, detail,type) {
     if (id) {
       this.id = id;
     }
     this.name = name;
     this.detail = detail;
-    this.type = "exercise";
+    this.type = type;
   }
 }
