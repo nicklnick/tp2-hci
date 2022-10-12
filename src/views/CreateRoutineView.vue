@@ -287,11 +287,10 @@ export default {
     },
 
     async addRoutine(){
-      console.log("asasdfasdfas")
         if(this.checkValidOverview()){
           try{
-            console.log(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
             await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
+            await this.$router.push({ name: "My Routines" })
           }
           catch (e) {
             console.log(e)
@@ -365,7 +364,6 @@ export default {
     await this.$checkApiOnline;
 
     if (!this.$online) {
-      console.log("redirecting")
       await this.$router.push({ name: "Error" });
     }
     if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!

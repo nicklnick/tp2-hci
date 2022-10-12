@@ -1,5 +1,6 @@
 <template>
-  <v-card :height="cardHeight" :width="cardWidth" class="rounded-xl" color="quaternary" raised>
+  <v-card :height="cardHeight" :width="cardWidth" class="rounded-xl"
+          color="quaternary" raised>
     <div class="space-start-col" >
 
       <div>

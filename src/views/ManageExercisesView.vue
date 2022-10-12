@@ -18,7 +18,7 @@
 
               <!-- Create new exercise -->
               <v-card elevation="20" class="general-area new-activity" v-if="mode !== 0" color="quaternary" >
-                <div class="space-between-col general-area-width general-area-height">
+                <div class="space-between-col new-exercise-box  general-area-height">
 
                   <h2>New exercise</h2>
                   <v-spacer></v-spacer>
@@ -60,28 +60,24 @@
               </v-card>
 
               <!-- View existing exercises -->
-              <div class="py-4 exercise-row-width space-between-row">
-                <v-card class="exercise-card-width my-2 quaternary" v-for="(exercise, index) in $items"
-                        :key="index" >
-                  <div v-if="exercise.id !== editing" class="d-flex justify-space-between ">
-                    <div  class="exercise-text-width col-start pl-3 pt-1">
-                      <p class="pa-0 ma-0 exercise-text-width  card_text">Name: {{exercise.name}}</p>
-                      <p class="pa-0 ma-0 exercise-text-width  card_text">Details: {{exercise.detail}}</p>
-                      <p class="pa-0 ma-0 exercise-text-width  card_text">Type: {{exercise.type[0].toUpperCase() + exercise.type.substring(1)}}</p>
-                    </div>
 
-                    <div class="space-evenly-col">
-                      <v-btn text fab x-small color="dark-grey"
-                             @click="removeSport(exercise)"
-                      ><v-icon>mdi-close</v-icon></v-btn>
-                      <v-btn text fab x-small color="dark-grey"
-                             @click="setEditingMode(exercise)"
-                      ><v-icon>mdi-pencil</v-icon></v-btn>
+
+              <v-row class="py-4 exercise-row-width">
+                <v-col cols="4" v-for="(exercise, index) in $items" :key="index">
+                  <div class="columns">
+                    <div class="exercise-card-width">
+
+                      <ExerciseCard  v-if="exercise.id !== editing"
+                                    :exer_name="exercise.name" :exer_detail="exercise.detail"
+                                    :exer_type="exercise.type"
+                                    @removeExercise="removeSport(exercise)" @editExercise="setEditingMode(exercise)"
+                      />
                     </div>
                   </div>
+                </v-col>
+              </v-row>
 
-                </v-card>
-              </div>
+
 
             </div>
           </div>
@@ -112,12 +108,14 @@ import { mapActions, mapState } from "pinia";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { useExerciseStore } from "@/stores/ExerciseStore";
 import { Exercise } from "@/api/exercise";
+import ExerciseCard from "@/components/Exercise/ExerciseCard";
 
 
 
 export default {
   name: "ManageExercisesView",
   components: {
+    ExerciseCard,
     CustomCard,
 
     SideMenu,
@@ -279,17 +277,10 @@ export default {
   width: 99%;
 }
 .exercise-card-width{
-  width: 32%;
+  width: 275px;
 }
-.exercise-text-width{
-  width: 90%;
-}
-
-.card_text {
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+.new-exercise-box{
+  width: 60%;
 }
 
 
