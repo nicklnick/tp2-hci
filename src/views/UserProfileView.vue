@@ -86,13 +86,18 @@
                   ></v-date-picker>
                 </v-menu>
                 <!-- -->
-
-                <p>{{date}}</p>
-                <InfoBar
-                         :value="this.$user.email"
-                         :label_text="this.$user.email"
-                         :is-readonly="true"
-                ></InfoBar>
+                <v-text-field
+                      dense
+                      solo
+                      rounded
+                      hide-details
+                      outlined
+                      readonly
+                      background-color="tertiary"
+                      color="secondary"
+                      label="Email"
+                      :value="this.$user.email"
+                  ></v-text-field>
                 <v-btn @click="modifyUser" class="button mt-3" color="secondary">
                  Save Changes
                 </v-btn>
@@ -108,7 +113,6 @@
 <script>
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
-import InfoBar from "@/components/UserProfile/InfoBar";
 import IconUser from "@/components/UserProfile/IconUser";
 import {mapActions, mapState} from "pinia";
 import {useSecurityStore} from "@/stores/SecurityStore";
@@ -117,7 +121,6 @@ export default {
   name: "UserProfileView",
   components: {
     TopBar,
-    InfoBar,
     SideMenu,
     IconUser
   },
