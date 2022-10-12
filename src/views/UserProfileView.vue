@@ -87,7 +87,6 @@
                   ></v-date-picker>
                 </v-menu>
                 </v-form>
-                <p>{{areFieldsValid}}</p>
                 <!-- -->
                 <v-text-field
                       dense
