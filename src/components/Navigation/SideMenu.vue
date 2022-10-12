@@ -35,8 +35,20 @@
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
         </router-link>
+
+        <router-link link class="button-link" to="/">
+          <v-list-item height="auto" class="align-content-end" link @click="logout()">
+            <v-list-item-icon>
+              <v-icon color="#000000">mdi-logout</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Log Out</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+
       </v-list>
     </v-navigation-drawer>
   </v-card>
@@ -59,7 +71,6 @@ export default {
       items2: [
         { title: "Settings", icon: "mdi-cog", to:"/settings" },
         { title: "Help", icon: "mdi-help-circle" , to:"/help"} ,
-        { title: "Log Out", icon: "mdi-logout", to:"/" },
       ],
       right: null,
     };
@@ -67,10 +78,10 @@ export default {
   methods: {
     ...mapActions(useSecurityStore, {
       $logout: 'logout',
-    })
-  },
-  async logout() {
-    await this.$logout()
+    }),
+    async logout() {
+      await this.$logout()
+    },
   },
   async created() {
     const securityStore = useSecurityStore();
