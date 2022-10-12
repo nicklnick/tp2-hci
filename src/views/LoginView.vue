@@ -121,7 +121,7 @@
                   </v-form>
 
                   <v-btn @click="signup()" class="button" color="secondary">
-                    Continuar
+                    Continue
                   </v-btn>
                   <p class="error-msg">{{errorMessage}}</p>
                   <LoadingImage v-if="loading===1"/>

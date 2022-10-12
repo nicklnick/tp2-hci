@@ -54,6 +54,9 @@ export const useSecurityStore = defineStore("security", {
             const result = await UserApi.get();
             this.setUser(result);
         },
+        async modify(user) {
+            return await UserApi.modify(user);
+        },
         async checkApiOnline(){
             try{
                 this.online = true;
