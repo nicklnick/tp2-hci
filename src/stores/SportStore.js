@@ -68,6 +68,7 @@ export const useSportStore = defineStore("sport", {
                 }
             }
             catch (e){
+                // TODO: Handle error?
                 console.log(e)
             }
         }
