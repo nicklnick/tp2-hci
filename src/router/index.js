@@ -11,6 +11,7 @@ import MyRoutines from "@/views/MyRoutines";
 import VerifyEmail from "@/views/VerifyEmail";
 import ApiErrorView from "@/views/ApiErrorView";
 import SearchView from "@/views/SearchView";
+import LostView from "@/views/LostView";
 
 Vue.use(VueRouter)
 
@@ -84,6 +85,11 @@ const routes = [
     name: 'SearchView',
     component: SearchView,
     props: true
+  },
+  {
+    path: '/*',
+    name: 'LostView',
+    component: LostView
   }
 ]
 
