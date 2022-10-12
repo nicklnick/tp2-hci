@@ -18,7 +18,7 @@
             <p class="font-weight-bold" v-else>Username</p>
           </div>
           <div class="info-fields">
-            <div class="d-flex flex-column align-center justify-center ma-2">
+            <div class="d-flex flex-column align-center justify-center mb-2">
               <v-container class="ma-2">
                 <v-form v-model="areFieldsValid">
                 <div class="flex-horizontal-container">
@@ -67,7 +67,7 @@
                         rounded
                         hide-details
                         outlined
-                        class="my-3"
+                        class="mb-3"
                         background-color="tertiary"
                         color="secondary"
                         v-model="date"
@@ -172,16 +172,15 @@ export default {
     setLocalFields() {
       this.currFirstName = this.$user.firstName
       this.currLastName = this.$user.lastName
+
+      if(this.$user.birthdate < 19500101)
+        this.$user.birthdate = 19500101
       this.currBirthdate = this.$user.birthdate
 
       this.date = this.parseDate(this.$user.birthdate)
     },
     async modifyUser() {
       try {
-        if(this.errorInFields)
-          console.log("Error")
-
-        // TODO: negate saving changes if firstName and lastName aren't valid
         await this.$modifyUser({"firstName": this.currFirstName, "lastName": this.currLastName, "birthdate": parseInt(this.currBirthdate)})
 
         await this.$getCurrentUser()
