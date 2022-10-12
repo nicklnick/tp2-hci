@@ -10,9 +10,6 @@
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-
-
-
         <!-- General -->
         <div class="space-between-col total-height py-10 width">
           <div class="space-between-row width px-10">
@@ -28,27 +25,160 @@
           </div>
 
 
-          <!-- Routine details-->
+          <!-- ROUTINE DETAILS -->
           <div v-if="mode===0" class="row-center width">
-            <CreateRoutineDetails class="pr-7"></CreateRoutineDetails>
-            <SelectExercise ></SelectExercise>
+            <div  class="pr-7 cwidth row-start">
+              <v-card id="create-routine" class="cwidth cheight rounded-xl" color="quaternary" raised>
+                <div  class=" cheight space-between-col" >
+
+                  <div>
+                    <v-card  class="cwidth rounded-b-0 rounded-t-xl row-start" color="secondary">
+                      <v-tabs class="tab-size-width rounded-tl-xl" background-color="secondary" show-arrows
+                      v-model="index">
+
+                        <v-tabs-slider color="tertiary"></v-tabs-slider>
+
+                        <v-tab v-for="(serie, index) in series" :key="index">
+
+                          <div class="flex-row justify-space-between">
+                            {{ serie.name}}
+                            <v-btn text fab x-small color="dark-grey"
+                                   @click="removeSeries(index)"
+                            ><v-icon>mdi-close</v-icon></v-btn>
+                          </div>
+
+                        </v-tab>
+
+                      </v-tabs>
+
+                      <v-tab class="add-tab-width rounded-tr-xl"
+                             @click="addSeries"><v-icon>mdi-plus</v-icon></v-tab>
+                    </v-card>
+                  </div>
+
+                  <div  class=" row-center overflow-auto">
+                    <div class="general-area-width general-area-height">
+                      <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(sport, index) in currentSeries.sports"
+                              :key="index">
+                        <div class="text-width">
+                          <h5 class="card_text pl-3 pt-1">Name: {{sport.name}}</h5>
+                          <h5 class="card_text pl-3 pt-1">{{sport.detail}}</h5>
+                        </div>
+
+                        <v-btn text fab x-small color="dark-grey"
+                               @click="removeActivity(index)"
+                        ><v-icon>mdi-close</v-icon></v-btn>
+
+                      </v-card>
+                    </div>
+                  </div>
+
+                  <div  class=" row-center">
+
+                    <div class="general-area-width">
+                      <v-divider></v-divider>
+
+                      <div class="row-start">
+                        <p class="pl-3 pt-2"> Repeat </p>
+                        <div class="repeat">
+                          <v-text-field class="text-field" hide-details
+                                        single-line v-model="currentSeries.repeat" :rules="reprules" ></v-text-field>
+                        </div>
+                        <p class="pt-2"> times</p>
+
+                        <v-spacer></v-spacer>
+                        <span class=" pt-2 error-msg">{{this.errorMsg}}</span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </v-card>
+            </div>
+
+              <!-- SELECT EXERCISE -->
+              <CustomCard card-width="400" card-height="550" card-title="Select Exercise">
+
+                <div class="general-height overflow-auto px-4">
+
+
+                  <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(sport, index) in $items"
+                          :key="index">
+                    <div class="text-width">
+                      <h5 class="card_text pl-3 pt-1">Name: {{sport.name}}</h5>
+                      <h5 class="card_text pl-3 pt-1">{{sport.detail}}</h5>
+                    </div>
+
+                    <v-btn text fab x-small color="dark-grey" @click="addActivity(sport.id)">
+                      <v-icon>mdi-check</v-icon></v-btn>
+                  </v-card>
+                </div>
+
+              </CustomCard>
+
           </div>
 
           <div v-if="mode===0" class="row-end px-10">
-            <v-btn @click="changeMode" fab color="primary">
+            <v-btn @click="nextStep" fab color="primary">
               <v-icon>chevron-right</v-icon>
             </v-btn>
           </div>
 
 
-          <!-- Routine overview -->
-          <div class="row-evenly width">
-            <CreateRoutineOverview v-if="mode===1"></CreateRoutineOverview>
+          <!-- ROUTINE OVERVIEW -->
+          <div v-if="mode===1" class="row-evenly width">
+            <CustomCard  card-title="Overview" card-width="1000" card-height="550">
+
+              <div class="bottom-area">
+                <div class="overview">
+                  <div>
+                    <v-text-field rounded outlined color="secondary"  hide-details
+                                  background-color="tertiary" label="Title"
+                                  class="py-2"></v-text-field>
+
+                    <v-textarea rounded outlined color="secondary" hide-details
+                                background-color="tertiary" label="Description" no-resize
+                                class="py-2"></v-textarea>
+                  </div>
+
+
+                  <v-divider></v-divider>
+
+
+                  <div class="space-between-row">
+                    <h4>Tags</h4>
+                    <v-btn rounded color="primary">+ Add Tags</v-btn>
+                  </div>
+
+                  <v-divider></v-divider>
+
+
+                  <div class="space-between-row">
+                    <h4>Difficulty level: </h4>
+                    <div>
+                      <v-card-actions class="py-0 my-0 justify-center">
+                        <v-select :items="dificulties" dense rounded hide-details single-line
+                                  color="secondary" item-color="secondary"
+                                  background-color="tertiary" class="select_it" v-model="difficulty"></v-select>
+                        <h4> / 5</h4>
+                      </v-card-actions>
+                    </div>
+                  </div>
+
+
+                  <div class="space-between-row">
+                    <h4>Public: </h4>
+                    <v-switch v-model="isPublic" class="pa-0 ma-0" hide-details></v-switch>
+                  </div>
+                </div>
+
+              </div>
+            </CustomCard>
           </div>
 
 
           <div v-if="mode===1" class="space-between-row width px-10">
-            <v-btn @click="changeMode" fab color="primary">
+            <v-btn @click="previousStep" fab color="primary">
               <v-icon>chevron-left</v-icon>
             </v-btn>
 
@@ -56,8 +186,6 @@
           </div>
 
         </div>
-
-        <!-- CONTENT GOES HERE -->
 
 
       </div>
@@ -72,30 +200,154 @@
 
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
-import CreateRoutineOverview from "@/components/Routines/CreateRoutineOverview";
-import CreateRoutineDetails from "@/components/Routines/CreateRoutineDetails";
-import SelectExercise from "@/components/Routines/SelectExercise";
+//import CreateRoutineOverview from "@/components/Routines/CreateRoutineOverview";
+import CustomCard from "@/components/CommonComponents/CustomCard";
+
+
+import { Sport } from "@/api/sport";
+
+class Serie {
+  name;
+  sports = [];
+  repeat = "1";
+  immortal = 0;
+  constructor(name, immortal) {
+    this.name = name;
+    this.immortal = immortal;  // si una serie se puede remover o no. Warmup, serie 1 y cooldown son obligatorios
+  }
+  add_activity(activity){
+    this.sports.push(activity);
+  }
+  remove_activiy(index){
+    this.sports.splice(index,1);
+  }
+}
 
 export default {
   name: "CreateRoutineView",
   components: {
-    SelectExercise,
-    CreateRoutineDetails,
-    CreateRoutineOverview,
-
+    CustomCard,
+    //CreateRoutineOverview,
     SideMenu,
     TopBar
   },
   data: () => ({
-    mode: 0,
+    mode: 1,
+    sportStore: null,
+
+    // routine detials
+    series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
+    index: 0,
+    counter: 1,
+    reprules: [
+      value => !!value || 'Required',
+      value => !(/[^0-9]/.test(value)) || 'Only numbers'
+    ],
+    errorMsg: null,
+
+
+    //routine overview
+    dificulties: ["rookie","intermediate","adept", "advanced","pro"],
+    difficulty: "",
+    isPublic: true,
+
+
 
   }),
   methods: {
-    changeMode() {
-      this.mode = this.mode===1 ? 0 : 1;
-    }
+    checkValidDetails(){
+      for(const serie in this.series){
+        if(this.series[serie].sports.length === 0){
+          this.errorMsg = "All series must have sports"
+          return false;
+        }
+      }
+      this.errorMsg = "";
+      return true;
+    },
+
+    nextStep() {
+      if(this.checkValidDetails())
+        this.mode = 1;
+    },
+
+    previousStep(){
+        this.mode = 0;
+    },
+
+
+    // routine details
+    updateSeries(index) {
+      this.index = index;
+    },
+    async addActivity(id) {
+      const sport = await this.sportStore.get(new Sport(id))
+      this.series[this.index].add_activity(sport);
+    },
+    addSeries() {
+      this.counter += 1;
+      this.series.splice(this.series.length -1,0,new Serie("Serie " + this.counter, 0));
+    },
+    removeSeries(index){
+      if(!this.currentSeries.immortal && this.series.length > 1) {
+
+        if(index === this.series.length - 1)
+          this.updateSeries(index - 1);
+        else
+          this.updateSeries(index + 1);
+
+        this.series.splice(index, 1);
+      }
+    },
+    removeActivity(index){
+      this.series[this.index].remove_activiy(index);
+    },
   },
+  computed: {
+    ...mapState(useSecurityStore, {
+      $isLoggedIn: 'isLoggedIn',
+      $online: 'online'
+    }),
+    ...mapActions(useSecurityStore, {
+      $checkApiOnline: 'checkApiOnline',
+    }),
+    ...mapState(useSportStore,{
+      $items: 'items',
+    }),
+
+    // routine detials
+    currentSeries() {
+      if(this.series.length > this.index)
+        return this.series[this.index];
+      return 0;
+    },
+
+    // routine overview
+    time_val() {
+      return this.time;
+    },
+  },
+  async created() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+
+    await this.$checkApiOnline;
+
+    if (!this.$online) {
+      console.log("redirecting")
+      await this.$router.push({ name: "Error" });
+    }
+    if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
+    }
+    this.sportStore = useSportStore();
+    await this.sportStore.updateCache();
+  }
 };
+import { useSecurityStore } from "@/stores/SecurityStore";
+import { mapActions, mapState } from "pinia";
+
+import { useSportStore } from "@/stores/SportStore";
 </script>
 
 <style scoped>
@@ -122,7 +374,74 @@ export default {
   zoom: 85%;
 }
 
+.text-width{
+  width: 85%;
+}
+.general-height {
+  height: 500px
+}
 
+.card_text {
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/*routine details*/
+
+.general-area-height {
+  height: 90%;
+}
+.general-area-width {
+  width: 90%;
+}
+
+.cwidth {
+  width: 800px;
+}
+.cheight {
+  height: 550px;
+}
+
+.row-start {
+  display: flex;
+  flex-direction: row;
+}
+
+.tab-size-width{
+  width: 85%;
+}
+.add-tab-width {
+  width: 5%;
+}
+.repeat{
+  width: 7%;
+}
+.text-field {
+  padding: 0;
+  margin-left: 5px;
+  margin-right: 3px;
+}
+
+/* routine overview */
+.top-area{
+  height: 8%;
+}
+.bottom-area{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 100%;
+}
+.overview{               /* !!!! COMMON !!!! */
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
 
 </style>
