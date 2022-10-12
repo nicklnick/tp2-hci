@@ -22,6 +22,20 @@ class RoutineApi {
   static async get(id, controller) {
     return await Api.get(RoutineApi.getUrl(id),true,  controller);
   }
+  static async getAllUserRoutines(userId, controller){
+    const allRoutines =  await Api.get(RoutineApi.getUrl(),true,  controller);
+
+    const resp = []
+
+    for(const newSport in allRoutines.content){
+      if(userId === allRoutines.content[newSport].user.id)
+        resp.push(new Routine(allRoutines.content[newSport].id, allRoutines.content[newSport].name, allRoutines.content[newSport].isPublic,
+          allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user.id))
+    }
+
+    return resp;
+  }
+
   // te consigue T0DOS las rutinas de todos los usuarios
   static async getAll(controller) {
     return await Api.get(RoutineApi.getUrl(), true, controller);

@@ -60,7 +60,7 @@ export const useSecurityStore = defineStore("security", {
         async checkApiOnline(){
             try{
                 this.online = true;
-                await UserApi.get();
+                await this.getCurrentUser();
             }
             catch (e) {
                 if(e.code === 98){

@@ -9,22 +9,20 @@
       <div class="w2" >
         <SideMenu></SideMenu>
       </div>
-      <div class="general-area width ">
-        <router-link link to="/create-routine">
-
+      <div  class=" general-area width ">
+        <router-link class="my-10 " link to="/create-routine">
           <BigButton button_text="Create Routine"/>
         </router-link>
-        <div class="text">
-          <h1>Your Routines</h1>
-          <v-card class="routine-box" :v-if="routine.userId === $user.id -1" v-for="(routine, index) in $items" :key="index">
-            <p>Name: {{routine.name}}</p>
-            <p>Is public: {{routine.isPublic}}</p>
-            <p>Difficulty: {{routine.difficulty}}</p>
-          </v-card>
+        <div class="pt-10 text flex-column">
+          <div class="width">
+            <h1 class="pb-10">Your Routines</h1>
+          </div>
+          <div class="row-start" >
+            <RoutineButton class="mx-3" v-for="(routine, index) in myRoutines" :key="index" :routine_difficulty="routine.difficulty"
+                            :routine_author="$user.name" :routine_name="routine.name"></RoutineButton>
+          </div>
         </div>
-        <div>
 
-        </div>
         <!-- CONTENT GOES HERE -->
       </div>
     </div>
@@ -38,16 +36,23 @@ import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import BigButton from "@/components/BigButton";
 
-import { useRoutineStore } from "@/stores/RoutineStore";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { mapActions, mapState } from "pinia";
+import { RoutineApi } from "@/api/routine";
+import RoutineButton from "@/components/Routines/RoutineButton";
 
 export default {
   name: 'HomeView',
   components: {
+    RoutineButton,
     BigButton,
     SideMenu,
     TopBar
+  },
+  data() {
+    return {
+      myRoutines: null,
+    }
   },
   computed: {
     ...mapState(useSecurityStore, {
@@ -57,10 +62,6 @@ export default {
     }),
     ...mapActions(useSecurityStore, {
       $checkApiOnline: 'checkApiOnline',
-      $getCurrentUser: 'getCurrentUser'
-    }),
-    ...mapState(useRoutineStore,{
-      $items: 'items',
     }),
   },
   async created() {
@@ -70,16 +71,12 @@ export default {
     await this.$checkApiOnline;
 
     if(!this.$online){
-      console.log("error, redirecting")
       await this.$router.push({ name: "Error" });
     }
     if(!this.$isLoggedIn){   // TODO: !!!! check !!!!
       await this.$router.push({ name: "Home" });
     }
-    await this.$getCurrentUser();
-
-    this.routineStore = useRoutineStore();
-    await this.routineStore.updateCache();
+    this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
   }
 
 
@@ -87,6 +84,7 @@ export default {
 </script>
 
 <style scoped>
+
 .total-height{
   height: 100%;
 }
@@ -103,15 +101,10 @@ export default {
   width: 15%;
 }
 
-.routine-box{
-  width: 250px;
-  height: 250px;
-}
-
 .general-area{               /* !!!! COMMON !!!! */
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: start;
   align-items: center;
   height: 100%;
   zoom: 80%;
