@@ -22,19 +22,20 @@ class RoutineApi {
   static async get(id, controller) {
     return await Api.get(RoutineApi.getUrl(id),true,  controller);
   }
-
+  // te consigue T0DOS las rutinas de todos los usuarios
   static async getAll(controller) {
     return await Api.get(RoutineApi.getUrl(), true, controller);
   }
 }
 
 class Routine {
-  constructor(id, name, isPublic, difficulty) {
+  constructor(id, name, isPublic, difficulty, userId) {
     if (id) {
       this.id = id;
     }
     this.name = name;
     this.isPublic = isPublic;
     this.difficulty = difficulty;
+    this.userId = userId;
   }
 }
