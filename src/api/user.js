@@ -27,6 +27,9 @@ class UserApi {
     static async get(controller) {
         return Api.get(UserApi.getUrl('current'), true, controller);
     }
+    static async modify(data, controller) {
+        return await Api.put(UserApi.getUrl('current'), true, data, controller);
+    }
 }
 
 class Credentials {

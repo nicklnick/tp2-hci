@@ -14,10 +14,95 @@
             <IconUser></IconUser>
           </div>
           <div class="mt-3">
-            <p class="font-weight-bold">Username</p>
+            <p class="font-weight-bold" v-if="this.$user">{{this.$user.username}}</p>
+            <p class="font-weight-bold" v-else>Username</p>
           </div>
           <div class="info-fields">
-            <InfoUser class="ma-2"></InfoUser>
+            <div class="d-flex flex-column align-center justify-center ma-2">
+              <v-container class="ma-2">
+                <div class="flex-horizontal-container">
+                  <v-text-field
+                      dense
+                      solo
+                      rounded
+                      hide-details
+                      outlined
+                      background-color="tertiary"
+                      color="secondary"
+                      append-icon="edit"
+                      label="First Name"
+                      :value="this.$user.firstName"
+                      v-model="currFirstName"
+                  ></v-text-field>
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                      dense
+                      solo
+                      rounded
+                      hide-details
+                      outlined
+                      background-color="tertiary"
+                      color="secondary"
+                      append-icon="edit"
+                      label="Last Name"
+                      :value="this.$user.lastName"
+                      v-model="currLastName"
+                  ></v-text-field>
+                </div>
+
+                <!-- Calendar -->
+                <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        dense
+                        solo
+                        rounded
+                        hide-details
+                        outlined
+                        class="my-3"
+                        background-color="tertiary"
+                        color="secondary"
+                        v-model="date"
+                        label="Birthday Date"
+                        append-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="date"
+                      :active-picker.sync="activePicker"
+                      :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                      min="1950-01-01"
+                      @change="this.save"
+                  ></v-date-picker>
+                </v-menu>
+                <!-- -->
+                <v-text-field
+                      dense
+                      solo
+                      rounded
+                      hide-details
+                      outlined
+                      readonly
+                      background-color="tertiary"
+                      color="secondary"
+                      label="Email"
+                      :value="this.$user.email"
+                  ></v-text-field>
+                <v-btn @click="modifyUser" class="button mt-3" color="secondary">
+                 Save Changes
+                </v-btn>
+              </v-container>
+            </div>
           </div>
         </div>
       </div>
@@ -28,17 +113,89 @@
 <script>
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
-import InfoUser from "@/components/UserProfile/InfoUser";
 import IconUser from "@/components/UserProfile/IconUser";
+import {mapActions, mapState} from "pinia";
+import {useSecurityStore} from "@/stores/SecurityStore";
 
 export default {
   name: "UserProfileView",
   components: {
     TopBar,
     SideMenu,
-    InfoUser,
     IconUser
-  }
+  },
+  data() {
+    return {
+      result: null,
+
+      // fields
+      currFirstName: null,
+      currLastName: null,
+      currBirthdate: null,
+
+      // calendar
+      activePicker: null,
+      date: null,
+      notParsedDate: null,
+      menu: false,
+    }
+  },
+  computed: {
+    ...mapState(useSecurityStore, {
+      $user: state => state.user,
+    }),
+  },
+  watch: {
+    menu (val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+  },
+  methods: {
+    ...mapActions(useSecurityStore, {
+      $getCurrentUser: 'getCurrentUser',
+      $modifyUser: 'modify'
+    }),
+    setLocalFields() {
+      this.currFirstName = this.$user.firstName
+      this.currLastName = this.$user.lastName
+      this.currBirthdate = this.$user.birthdate
+
+      this.date = this.parseDate(this.$user.birthdate)
+    },
+    async modifyUser() {
+      try {
+        await this.$modifyUser({"firstName": this.currFirstName, "lastName": this.currLastName, "birthdate": parseInt(this.currBirthdate)})
+        this.setLocalFields()
+      } catch(e) {
+        this.setLocalFields(e)
+      }
+    },
+    async getCurrentUser() {
+      await this.$getCurrentUser()
+    },
+    // calendar
+    save(date) {
+      this.$refs.menu.save(date)
+      this.currBirthdate = date.replace(/-/g, '')
+    },
+    parseDate(date) {
+      let day = date % 100
+      date /= 100
+      let month = date % 100
+      date /= 100
+      console.log(`${~~date}-${~~month}-${~~day}`)
+
+      return `${~~date}-${(~~month < 10? "0": "") + ~~month}-${(~~day < 10? "0": "") + ~~day}`
+    },
+  },
+  async created() {
+    // Siempre inicializarlo!!!!!
+    const securityStore = useSecurityStore()
+    await securityStore.initialize()
+
+    await this.getCurrentUser()
+    this.setLocalFields()
+  },
 }
 </script>
 
@@ -71,13 +228,19 @@ export default {
 }
 
 .info-fields {
-  width: 170%;
+  width: 100%;
 }
 
 .flex-container {
   display: flex;
   flex-flow: column;
   align-items: center;
+  justify-content: center;
+}
+
+.flex-horizontal-container {
+  display: flex;
+  flex-flow: row;
   justify-content: center;
 }
 </style>

@@ -16,7 +16,7 @@
                         <router-link
                           :to="{
                             name: 'CategoryView',
-                            params: { slug: muscles[+index + i].slug },
+                            params: { slug: muscles[+index + i].slug }
                           }"
                           tag="button"
                         >
