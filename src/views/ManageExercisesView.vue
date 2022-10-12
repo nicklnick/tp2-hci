@@ -60,27 +60,28 @@
               </v-card>
 
               <!-- View existing exercises -->
-              <v-card class="my-2 quaternary" v-for="(exercise, index) in $items"
-                      :key="index" >
-                <div v-if="exercise.id !== editing" class="d-flex justify-space-between ">
-                  <div  class="col-start pl-3 pt-1">
-                    <p class="pa-0 ma-0">Name: {{exercise.name}}</p>
-                    <p class="pa-0 ma-0">Details: {{exercise.detail}}</p>
-                    <p class="pa-0 ma-0">Type: {{exercise.type}}</p>
+              <div class="py-4 exercise-row-width space-between-row">
+                <v-card class="exercise-card-width my-2 quaternary" v-for="(exercise, index) in $items"
+                        :key="index" >
+                  <div v-if="exercise.id !== editing" class="d-flex justify-space-between ">
+                    <div  class="exercise-text-width col-start pl-3 pt-1">
+                      <p class="pa-0 ma-0 exercise-text-width  card_text">Name: {{exercise.name}}</p>
+                      <p class="pa-0 ma-0 exercise-text-width  card_text">Details: {{exercise.detail}}</p>
+                      <p class="pa-0 ma-0 exercise-text-width  card_text">Type: {{exercise.type[0].toUpperCase() + exercise.type.substring(1)}}</p>
+                    </div>
+
+                    <div class="space-evenly-col">
+                      <v-btn text fab x-small color="dark-grey"
+                             @click="removeSport(exercise)"
+                      ><v-icon>mdi-close</v-icon></v-btn>
+                      <v-btn text fab x-small color="dark-grey"
+                             @click="setEditingMode(exercise)"
+                      ><v-icon>mdi-pencil</v-icon></v-btn>
+                    </div>
                   </div>
 
-                  <div class="space-evenly-col">
-                    <v-btn text fab x-small color="dark-grey"
-                           @click="removeSport(exercise)"
-                    ><v-icon>mdi-close</v-icon></v-btn>
-                    <v-btn text fab x-small color="dark-grey"
-                           @click="setEditingMode(exercise)"
-                    ><v-icon>mdi-pencil</v-icon></v-btn>
-                  </div>
-                </div>
-
-
-              </v-card>
+                </v-card>
+              </div>
 
             </div>
           </div>
@@ -274,7 +275,22 @@ export default {
 .general-area-width {                /* !!!! COMMON !!!! */
   width: 90%;
 }
+.exercise-row-width{
+  width: 99%;
+}
+.exercise-card-width{
+  width: 32%;
+}
+.exercise-text-width{
+  width: 90%;
+}
 
+.card_text {
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
 
 </style>
