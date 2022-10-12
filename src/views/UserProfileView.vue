@@ -25,13 +25,13 @@
                       dense
                       solo
                       rounded
-                      hide-details
                       outlined
                       background-color="tertiary"
                       color="secondary"
                       append-icon="edit"
                       label="First Name"
-                      :value="this.$user.firstName"
+                      :rules="[rules.max(currFirstName), rules.invalidChar(currFirstName)]"
+                      :value="currFirstName"
                       v-model="currFirstName"
                   ></v-text-field>
                   <v-spacer></v-spacer>
@@ -39,13 +39,13 @@
                       dense
                       solo
                       rounded
-                      hide-details
                       outlined
                       background-color="tertiary"
                       color="secondary"
                       append-icon="edit"
                       label="Last Name"
-                      :value="this.$user.lastName"
+                      :rules="[rules.max(currLastName), rules.invalidChar(currLastName)]"
+                      :value="currLastName"
                       v-model="currLastName"
                   ></v-text-field>
                 </div>
@@ -126,8 +126,7 @@ export default {
   },
   data() {
     return {
-      result: null,
-
+      errorMsg: null,
       // fields
       currFirstName: null,
       currLastName: null,
@@ -136,13 +135,20 @@ export default {
       // calendar
       activePicker: null,
       date: null,
-      notParsedDate: null,
       menu: false,
+      rules: {
+        max: (value) => value.length < 32 || "Max 32 characters",
+        invalidChar: (value) => {
+          // checks that given string only contains characters
+          const pattern = /^(?!.*(\W|\d)).*$/
+          return pattern.test(value) || "Invalid characters"
+        }
+      }
     }
   },
   computed: {
     ...mapState(useSecurityStore, {
-      $user: state => state.user,
+      $user: 'user'
     }),
   },
   watch: {
@@ -164,14 +170,14 @@ export default {
     },
     async modifyUser() {
       try {
-        await this.$modifyUser({"firstName": this.currFirstName, "lastName": this.currLastName, "birthdate": parseInt(this.currBirthdate)})
+        // TODO: negate saving changes if firstName and lastName aren't valid
+        await this.$modifyUser({"firstName": this.currFirstName, "lastName": this.currLastName, "birthdate": parseInt(this.currBirthdate), "email": this.$user.email})
+
+        await this.$getCurrentUser()
         this.setLocalFields()
       } catch(e) {
-        this.setLocalFields(e)
+        this.setError(e)
       }
-    },
-    async getCurrentUser() {
-      await this.$getCurrentUser()
     },
     // calendar
     save(date) {
@@ -183,17 +189,25 @@ export default {
       date /= 100
       let month = date % 100
       date /= 100
-      console.log(`${~~date}-${~~month}-${~~day}`)
 
       return `${~~date}-${(~~month < 10? "0": "") + ~~month}-${(~~day < 10? "0": "") + ~~day}`
     },
+    // error handling
+    setError(error) {
+      console.log(error.code)
+      switch (error.code) {
+        case 1: // invalid data
+          this.errorMsg = "";
+          break;
+      }
+    }
   },
   async created() {
     // Siempre inicializarlo!!!!!
     const securityStore = useSecurityStore()
     await securityStore.initialize()
 
-    await this.getCurrentUser()
+    await this.$getCurrentUser()
     this.setLocalFields()
   },
 }

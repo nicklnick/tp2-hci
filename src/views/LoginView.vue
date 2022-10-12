@@ -10,7 +10,7 @@
           <div class="details">
             <v-form>
               <v-container>
-                <v-col align="center">
+                <v-col>
                   <v-form v-model="validUsername">
                   <v-text-field
                       v-model="username"
