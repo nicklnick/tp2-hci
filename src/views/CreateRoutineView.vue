@@ -399,7 +399,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  zoom: 85%;
+  zoom: 90%;
 }
 
 .text-width{
