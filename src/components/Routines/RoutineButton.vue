@@ -14,6 +14,7 @@
               </h5>
               <v-divider class="mx-4 mt-1 mb-4"></v-divider>
               <h5 class="card_text ml-4 pt-0">Difficulty: {{routine_difficulty}}</h5>
+              <h5 class="details_text ml-4 mr-4 pt-0">Details: {{routine_detail}}</h5>
             </div>
 
             <div>
@@ -70,8 +71,13 @@ export default {
         type: String,
         required: true
       },
+      routine_detail: {
+        type: String,
+        required: true
+      },
       routine_difficulty: {
         type: String,
+        required: true
       },
   },
   computed: {
@@ -95,6 +101,14 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.details_text{
+  text-align: left;
+  text-overflow: fade;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 100px;
 }
 
 .card_size {

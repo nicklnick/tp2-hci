@@ -131,13 +131,13 @@
                 <div class="overview">
                   <div>
                     <v-form v-model="validTitle">
-                      <v-text-field rounded outlined color="secondary" :rules="textRules"
+                      <v-text-field rounded outlined color="secondary" :rules="titleRules"
                                     background-color="tertiary" label="Title"
                                     class="py-2" v-model="title"></v-text-field>
                     </v-form>
 
                     <v-form v-model="validDetails">
-                    <v-textarea rounded outlined color="secondary" :rules="textRules"
+                    <v-textarea rounded outlined color="secondary" :rules="detailRules"
                                 background-color="tertiary" label="Description" no-resize
                                 class="py-2" v-model="details"></v-textarea>
                     </v-form>
@@ -253,8 +253,13 @@ export default {
 
 
     //routine overview
-    textRules: [
+    titleRules: [
       value => !!value || 'Required',
+      value => value.length < 100 || 'Must be 100 characters or less',
+    ],
+    detailRules: [
+      value => !!value || 'Required',
+      value => value.length < 200 || 'Must be 200 characters or less',
     ],
     dificulties: ["Rookie", "Beginner", "Intermediate", "Advanced", "Expert"],
 
