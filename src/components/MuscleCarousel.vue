@@ -8,8 +8,8 @@
         <v-row class="flex-nowrap" style="height:100%">
           <template v-for="(n,i) in columns">
             <template v-if="(+index + i) < muscles.length">
-              <v-col :key="i">
-                    <v-row align="center"
+              <v-col :key="i" align-self="center">
+                    <v-row
                            justify="center"
                     >
                       <div class="display-3">
