@@ -38,12 +38,12 @@
 
                         <v-tabs-slider color="tertiary"></v-tabs-slider>
 
-                        <v-tab v-for="(serie, index) in series" :key="index">
+                        <v-tab v-for="(cycle, index) in cycles" :key="index">
 
                           <div class="flex-row justify-space-between">
-                            {{ serie.name}}
-                            <v-btn text fab x-small color="dark-grey"
-                                   @click="removeSeries(index)"
+                            {{ cycle.cycleData.name}}
+                            <v-btn v-if="!immortalCycles(cycle.cycleData.name)" text fab x-small color="dark-grey"
+                                   @click="removeCycle(index)"
                             ><v-icon>mdi-close</v-icon></v-btn>
                           </div>
 
@@ -52,24 +52,17 @@
                       </v-tabs>
 
                       <v-tab class="add-tab-width rounded-tr-xl"
-                             @click="addSeries"><v-icon>mdi-plus</v-icon></v-tab>
+                             @click="addCycle"><v-icon>mdi-plus</v-icon></v-tab>
                     </v-card>
                   </div>
 
                   <div  class=" row-center overflow-auto">
                     <div class="general-area-width general-area-height">
-                      <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(exercise, index) in currentSeries.sports"
-                              :key="index">
-                        <div class="text-width">
-                          <h5 class="card_text pl-3 pt-1">Name: {{exercise.name}}</h5>
-                          <h5 class="card_text pl-3 pt-1">{{exercise.detail}}</h5>
-                        </div>
-
-                        <v-btn text fab x-small color="dark-grey"
-                               @click="removeActivity(index)"
-                        ><v-icon>mdi-close</v-icon></v-btn>
-
-                      </v-card>
+                          <ExerciseCard class="my-2 quaternary" v-for="(exercise, index) in currentSeries.exercises"
+                            :exer_name="exercise.name" :exer_detail="exercise.detail" :key="index"
+                                        :exer_type="exercise.type" editable="false"
+                                        @removeExercise="removeExercise(index)">
+                          </ExerciseCard>
                     </div>
                   </div>
 
@@ -81,13 +74,13 @@
                       <div class="row-start">
                         <p class="pl-3 pt-2"> Repeat </p>
                         <div class="repeat">
-                          <v-text-field class="text-field" hide-details
-                                        single-line v-model="currentSeries.repeat" :rules="reprules" ></v-text-field>
+                          <v-form v-model="currentSeries.validRepetitions">
+                            <v-text-field class="text-field" single-line v-model="currentSeries.cycleData.repetitions" :rules="reprules" ></v-text-field>
+                          </v-form>
                         </div>
                         <p class="pt-2"> times</p>
 
                         <v-spacer></v-spacer>
-                        <span class=" pt-2 error-msg">{{this.errorMsg}}</span>
                       </div>
 
                     </div>
@@ -104,10 +97,10 @@
                   <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(exercise, index) in $items"
                           :key="index">
                     <div class="text-width">
-                      <h5 class="card_text pl-3 pt-1">Name: {{exercise.name}}</h5>
+                      <h3 class="card_text pl-3 pt-1">{{exercise.name}}</h3>
                     </div>
 
-                    <v-btn text fab x-small color="dark-grey" @click="addActivity(exercise.id)">
+                    <v-btn text fab x-small color="dark-grey" @click="addExercise(exercise.id)">
                       <v-icon>mdi-check</v-icon></v-btn>
                   </v-card>
                 </div>
@@ -154,8 +147,8 @@
 
 
                   <div class="space-between-row">
-                    <h4>Tags</h4>
-                    <v-btn rounded color="primary">+ Add Tags</v-btn>
+                    <h4>Category</h4>
+                    <v-btn rounded color="primary">+ Add Category</v-btn>
                   </div>
 
                   <v-divider></v-divider>
@@ -168,7 +161,6 @@
                         <v-select :items="dificulties" dense rounded hide-details single-line
                                   color="secondary" item-color="secondary"
                                   background-color="tertiary" class="select_it" v-model="difficulty"></v-select>
-                        <h4> / 5</h4>
                       </v-card-actions>
                     </div>
                   </div>
@@ -216,49 +208,42 @@ import { mapActions, mapState } from "pinia";
 
 import { Routine,RoutineApi } from "@/api/routine";
 
+//import { useRoutineCycleStore } from "@/stores/RoutineCycleStore";
+import { Cycle } from "@/api/routineCycle";
+import ExerciseCard from "@/components/Exercise/ExerciseCard";
+
+
 class Serie {
-  name;
-  sports = [];
-  repeat = "1";
-  immortal = 0;
-  constructor(name, immortal) {
-    this.name = name;
-    this.immortal = immortal;  // si una serie se puede remover o no. Warmup, serie 1 y cooldown son obligatorios
+  cycleData= null;
+  exercises = []
+  validRepetitions = true;
+
+  constructor(id, name, detail, type, order, repetitions) {
+      this.cycleData = new Cycle(id, name,detail, type, order, repetitions)
   }
-  add_activity(activity){
-    this.sports.push(activity);
+  add_exercise(exercise){
+    console.log("pushing "+ exercise.name)
+    this.exercises.push(exercise);
   }
   remove_activiy(index){
-    this.sports.splice(index,1);
+    this.exercises.splice(index,1);
   }
 }
 
 export default {
   name: "CreateRoutineView",
   components: {
+    ExerciseCard,
     CustomCard,
     //CreateRoutineOverview,
     SideMenu,
     TopBar
   },
   data: () => ({
-    mode: 0,
+    // display mode, 0 = routine overview, 1 = routine details
+    mode: 1,
 
-    // routine detials
-    series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
-    index: 0,
-    counter: 1,
-    reprules: [
-      value => !!value || 'Required',
-      value => !(/[^0-9]/.test(value)) || 'Only numbers'
-    ],
-
-    errorMsg: null,
-    error: false,
-
-
-
-    //routine overview
+    /* --- routine overview --- */
     titleRules: [
       value => !!value || 'Required',
       value => value.length < 100 || 'Must be 100 characters or less',
@@ -273,13 +258,33 @@ export default {
     validDetails: false,
     validCategory: false,
 
-
     isPublic: true,
     difficulty: "Rookie",
     title: "",
     details: "",
 
+    routineId: null,
 
+
+    /* --- routine details --- */
+    // order lo vamos a poner al final
+    cycles: [
+      new Serie(null, "Warmup","","warmup", null, 1),
+      new Serie(null, "Cycle 1","","exercise", null, 1),
+      new Serie(null, "Cooldown","","cooldown", null, 1),
+    ],
+    counter: 1,
+    index: 0,
+    reprules: [
+      value => !!value || 'Required',
+      value => !(/[^0-9]/.test(value)) || 'Only numbers'
+    ],
+
+
+
+    /* --- error handling --- */
+    errorMsg: null,
+    error: false,
 
   }),
   methods: {
@@ -293,9 +298,14 @@ export default {
 
     },
     checkValidDetails(){
-      for(const serie in this.series){
-        if(this.series[serie].sports.length === 0){
-          this.handleError("All series must have sports")
+      for(const cycleKey in this.cycles){
+        if(this.cycles[cycleKey].exercises.length === 0){
+          this.handleError("All series must have exercises")
+          return false;
+        }
+        if(!this.cycles[cycleKey].validRepetitions){
+          this.handleError("Number of repetitions must be a number")
+          this.index = parseInt(cycleKey)
           return false;
         }
       }
@@ -308,8 +318,9 @@ export default {
     async addRoutine(){
         if(this.checkValidOverview()){
           try{
-            await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
+            const resp =  await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
             this.mode = 1
+            this.routineId = resp.id
           }
           catch (e) {
             console.log(e)
@@ -334,27 +345,31 @@ export default {
     updateSeries(index) {
       this.index = index;
     },
-    async addActivity(id) {
+    async addExercise(id) {
       const exercise = await this.exerciseStore.get(new Exercise(id))
-      this.series[this.index].add_activity(exercise);
+      this.cycles[this.index].add_exercise(exercise);
     },
-    addSeries() {
+    addCycle() {
       this.counter += 1;
-      this.series.splice(this.series.length -1,0,new Serie("Serie " + this.counter, 0));
+      this.cycles.splice(this.cycles.length -1,0,
+        new Serie(null,"Cycle " + this.counter, "","exercise",null, 1));
     },
-    removeSeries(index){
-      if(!this.currentSeries.immortal && this.series.length > 1) {
+    removeCycle(index){
+      if(this.cycles.length > 1) {
 
-        if(index === this.series.length - 1)
+        if(index === this.cycles.length - 1)
           this.updateSeries(index - 1);
         else
           this.updateSeries(index + 1);
 
-        this.series.splice(index, 1);
+        this.cycles.splice(index, 1);
       }
     },
-    removeActivity(index){
-      this.series[this.index].remove_activiy(index);
+    immortalCycles(name){
+        return name === "Warmup" || name === "Cooldown" || name === "Cycle 1";
+    },
+    removeExercise(index){
+      this.cycles[this.index].remove_activiy(index);
     },
   },
   computed: {
@@ -371,15 +386,15 @@ export default {
 
     // routine detials
     currentSeries() {
-      if(this.series.length > this.index)
-        return this.series[this.index];
-      return 0;
+      if(this.cycles.length > this.index)
+        return this.cycles[this.index];
+      return this.cycles[0];
     },
+    currentIndex(){
+      return this.index;
+    }
 
-    // routine overview
-    time_val() {
-      return this.time;
-    },
+
   },
   async created() {
     const securityStore = useSecurityStore();
@@ -468,7 +483,7 @@ export default {
   width: 5%;
 }
 .repeat{
-  width: 7%;
+  width: 12%;
 }
 .text-field {
   padding: 0;
@@ -477,6 +492,10 @@ export default {
 }
 
 /* routine overview */
+.select_it{
+  width: 175px;
+}
+
 .top-area{
   height: 8%;
 }

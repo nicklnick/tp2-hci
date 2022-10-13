@@ -12,9 +12,11 @@
         <v-btn text fab x-small color="dark-grey"
                @click="removeExercise"
         ><v-icon>mdi-close</v-icon></v-btn>
+
         <v-btn text fab x-small color="dark-grey"
-               @click="editExercise"
+           v-if="editable === 'true'"    @click="editExercise"
         ><v-icon>mdi-pencil</v-icon></v-btn>
+
       </div>
     </div>
 
@@ -37,6 +39,10 @@ export default {
       type: String,
       required: true
     },
+    editable: {
+      type: String,
+      required: true,
+    }
   },
   methods: {
     removeExercise(){

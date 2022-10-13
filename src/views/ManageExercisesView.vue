@@ -69,7 +69,7 @@
 
                       <ExerciseCard  v-if="exercise.id !== editing"
                                     :exer_name="exercise.name" :exer_detail="exercise.detail"
-                                    :exer_type="exercise.type"
+                                    :exer_type="exercise.type" editable="true"
                                     @removeExercise="removeSport(exercise)" @editExercise="setEditingMode(exercise)"
                       />
                     </div>
