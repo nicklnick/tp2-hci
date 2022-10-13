@@ -180,7 +180,7 @@
 
             <v-alert class="error-tag ma-0" :value="error" dismissible type="error">{{errorMsg}}</v-alert>
 
-            <v-btn @click="addRoutine" fab color="primary">
+            <v-btn @click="confirmOverview" fab color="primary">
               <v-icon>chevron-right</v-icon>
             </v-btn>
           </div>
@@ -209,8 +209,9 @@ import { mapActions, mapState } from "pinia";
 import { Routine,RoutineApi } from "@/api/routine";
 
 //import { useRoutineCycleStore } from "@/stores/RoutineCycleStore";
-import { Cycle } from "@/api/routineCycle";
+import { Cycle, RoutineCycleApi } from "@/api/routineCycle";
 import ExerciseCard from "@/components/Exercise/ExerciseCard";
+import { CycleExercise, CycleExerciseApi } from "@/api/cycleExercise";
 
 
 class Serie {
@@ -240,7 +241,7 @@ export default {
   },
   data: () => ({
     // display mode, 0 = routine overview, 1 = routine details
-    mode: 1,
+    mode: 0,
 
     /* --- routine overview --- */
     titleRules: [
@@ -264,7 +265,6 @@ export default {
 
     routineId: null,
 
-
     /* --- routine details --- */
     // order lo vamos a poner al final
     cycles: [
@@ -280,13 +280,14 @@ export default {
     ],
 
 
-
     /* --- error handling --- */
     errorMsg: null,
     error: false,
 
   }),
   methods: {
+
+    //  ---- common ----
     handleError(msg){
       this.errorMsg = msg
       this.error = true;
@@ -295,6 +296,33 @@ export default {
         this.errorMsg = "";
       },5000)
 
+    },
+    //  ---- overivew ----
+    checkValidOverview(){
+      if( !this.validDetails || !this.validTitle){
+        this.handleError("Missing title or details");
+        return false;
+      }
+      return true;
+    },
+    async confirmOverview(){
+      if(this.checkValidOverview()){
+        try{
+          this.mode = 1
+        }
+        catch (e) {
+          console.log(e)
+        }
+      }
+    },
+
+
+    // ---- details ----
+    previousStep(){
+      this.mode = 0;
+    },
+    updateSeries(index) {
+      this.index = index;
     },
     checkValidDetails(){
       for(const cycleKey in this.cycles){
@@ -309,40 +337,6 @@ export default {
         }
       }
       return true;
-    },
-    checkValidOverview(){
-      return this.validDetails && this.validTitle;
-    },
-
-    async addRoutine(){
-        if(this.checkValidOverview()){
-          try{
-            const resp =  await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
-            this.mode = 1
-            this.routineId = resp.id
-          }
-          catch (e) {
-            console.log(e)
-          }
-        }
-        else{
-          this.handleError("Missing title or details");
-        }
-    },
-    finish() {
-      if(this.checkValidDetails())
-        this.mode = 1;
-
-      // await this.$router.push({ name: "My Routines" })
-    },
-
-    previousStep(){
-        this.mode = 0;
-    },
-
-    // routine details
-    updateSeries(index) {
-      this.index = index;
     },
     async addExercise(id) {
       const exercise = await this.exerciseStore.get(new Exercise(id))
@@ -377,7 +371,41 @@ export default {
     removeExercise(index){
       this.cycles[this.index].remove_exercise(index);
     },
+    finish() {
+      if(this.checkValidDetails()){
+        this.createRoutine();
+        this.mode = 1;
+        this.$router.push({ name: "My Routines" })
+      }
+    },
+    async createRoutine(){
+      // creo la rutina
+      const resp =  await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
+      this.routineId = resp.id
+
+      // itero por todos los ciclos, creandolos
+      let order = 0;
+      for(const seriesKey in this.cycles){
+        order += 1;
+        this.cycles[seriesKey].cycleData.order = order;
+        let resp = await RoutineCycleApi.add(this.routineId,this.cycles[seriesKey].cycleData);
+        let cycleId = resp.id;
+
+        // agrego los ejercicios de cada ciclo
+        let exerOrder = 0;
+        for(const exerKey in this.cycles[seriesKey].exercises){
+          exerOrder += 1;
+          await CycleExerciseApi.add(cycleId,this.cycles[seriesKey].exercises[exerKey].id,
+            new CycleExercise(exerOrder,1,1))
+        }
+      }
+    }
+
+
   },
+
+
+
   computed: {
     ...mapState(useSecurityStore, {
       $isLoggedIn: 'isLoggedIn',
