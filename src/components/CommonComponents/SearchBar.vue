@@ -6,7 +6,7 @@
   <v-text-field
     v-model="InputText" @keyup.enter="search"
     class="search-bar mt-6"
-    label="Search"
+    label="Search a Specific Routine or Type &quot;All Routines&quot; "
     background-color="quaternary"
     color="black"
     append-icon="mdi-magnify"
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+
 export default {
   name: "SearchBar",
   data() {
@@ -27,6 +28,7 @@ export default {
       InputText: ''
     }
   },
+
   methods: {
     search(){
       this.$router.push({name: 'SearchView', params:{input: this.InputText}})
