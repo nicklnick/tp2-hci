@@ -26,7 +26,7 @@
 
 
           <!-- ROUTINE DETAILS -->
-          <div v-if="mode===0" class="row-center width">
+          <div v-if="mode===1" class="row-center width">
             <div  class="pr-7 cwidth row-start">
               <v-card id="create-routine" class="cwidth cheight rounded-xl" color="quaternary" raised>
                 <div  class=" cheight space-between-col" >
@@ -116,15 +116,21 @@
 
           </div>
 
-          <div v-if="mode===0" class="row-end px-10">
-            <v-btn @click="nextStep" fab color="primary">
-              <v-icon>chevron-right</v-icon>
+
+          <div v-if="mode===1" class="space-between-row width px-10">
+            <v-btn @click="previousStep" fab color="primary">
+              <v-icon>chevron-left</v-icon>
             </v-btn>
+
+            <v-alert class="error-tag ma-0" :value="error" dismissible type="error">{{errorMsg}}</v-alert>
+
+            <v-btn  class="align-self-center" color=" primary"
+                    @click="finish">finish</v-btn>
           </div>
 
 
           <!-- ROUTINE OVERVIEW -->
-          <div v-if="mode===1" class="row-evenly width">
+          <div v-if="mode===0" class="row-evenly width">
             <CustomCard  card-title="Overview" card-width="1000" card-height="550">
 
               <div class="bottom-area">
@@ -178,14 +184,13 @@
             </CustomCard>
           </div>
 
+          <div v-if="mode===0" class="row-end px-10">
 
-          <div v-if="mode===1" class="space-between-row width px-10">
-            <v-btn @click="previousStep" fab color="primary">
-              <v-icon>chevron-left</v-icon>
+            <v-alert class="error-tag ma-0" :value="error" dismissible type="error">{{errorMsg}}</v-alert>
+
+            <v-btn @click="addRoutine" fab color="primary">
+              <v-icon>chevron-right</v-icon>
             </v-btn>
-
-            <v-btn  class="align-self-center" color=" primary"
-            @click="addRoutine">finish</v-btn>
           </div>
 
         </div>
@@ -237,7 +242,7 @@ export default {
     TopBar
   },
   data: () => ({
-    mode: 1,
+    mode: 0,
 
     // routine detials
     series: [new Serie("Warmup", 1),new Serie("Series 1", 1), new Serie("Cooldown", 1)],
@@ -247,8 +252,9 @@ export default {
       value => !!value || 'Required',
       value => !(/[^0-9]/.test(value)) || 'Only numbers'
     ],
-    errorMsg: null,
 
+    errorMsg: null,
+    error: false,
 
 
 
@@ -277,14 +283,22 @@ export default {
 
   }),
   methods: {
+    handleError(msg){
+      this.errorMsg = msg
+      this.error = true;
+      setTimeout(()=>{
+        this.error=false;
+        this.errorMsg = "";
+      },5000)
+
+    },
     checkValidDetails(){
       for(const serie in this.series){
         if(this.series[serie].sports.length === 0){
-          this.errorMsg = "All series must have sports"
+          this.handleError("All series must have sports")
           return false;
         }
       }
-      this.errorMsg = "";
       return true;
     },
     checkValidOverview(){
@@ -295,16 +309,21 @@ export default {
         if(this.checkValidOverview()){
           try{
             await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
-            await this.$router.push({ name: "My Routines" })
+            this.mode = 1
           }
           catch (e) {
             console.log(e)
           }
-          }
+        }
+        else{
+          this.handleError("Missing title or details");
+        }
     },
-    nextStep() {
+    finish() {
       if(this.checkValidDetails())
         this.mode = 1;
+
+      // await this.$router.push({ name: "My Routines" })
     },
 
     previousStep(){
@@ -474,6 +493,13 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.error-tag{
+  position: fixed;
+  bottom: 50px;
+  right: 33%;
+  width: 400px;
 }
 
 
