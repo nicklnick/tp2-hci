@@ -66,7 +66,7 @@ export default {
         { title: "Home", icon: "mdi-home", to:"/home" },
         { title: "Exercises", icon: "mdi-run", to:"/exercises" },
         { title: "Routines", icon: "mdi-book", to:"/routines" },
-        { title: "Favourites", icon: "mdi-heart", to:"/favorites" },
+        { title: "Favourites", icon: "mdi-heart", to:"/favourites" },
       ],
       items2: [
         { title: "Settings", icon: "mdi-cog", to:"/settings" },
