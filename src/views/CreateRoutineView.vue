@@ -222,10 +222,9 @@ class Serie {
       this.cycleData = new Cycle(id, name,detail, type, order, repetitions)
   }
   add_exercise(exercise){
-    console.log("pushing "+ exercise.name)
     this.exercises.push(exercise);
   }
-  remove_activiy(index){
+  remove_exercise(index){
     this.exercises.splice(index,1);
   }
 }
@@ -347,6 +346,13 @@ export default {
     },
     async addExercise(id) {
       const exercise = await this.exerciseStore.get(new Exercise(id))
+
+      for(const exerciseKey in this.currentSeries.exercises){
+        if(this.currentSeries.exercises[exerciseKey].id === exercise.id){
+            this.handleError("This cycle already contains that exercise");
+            return;
+        }
+      }
       this.cycles[this.index].add_exercise(exercise);
     },
     addCycle() {
@@ -369,7 +375,7 @@ export default {
         return name === "Warmup" || name === "Cooldown" || name === "Cycle 1";
     },
     removeExercise(index){
-      this.cycles[this.index].remove_activiy(index);
+      this.cycles[this.index].remove_exercise(index);
     },
   },
   computed: {
