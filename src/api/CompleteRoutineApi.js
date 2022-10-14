@@ -3,7 +3,7 @@ import { RoutineApi } from "@/api/routine.js";
 import { RoutineCycleApi } from "@/api/routineCycle";
 import { CycleExerciseApi } from "@/api/cycleExercise";
 
-export { CompleteRoutineApi }
+export { CompleteRoutine, CompleteCycle, CompleteExercise, CompleteRoutineApi }
 
 class CompleteRoutineApi{
      static async getCompleteRoutine(routine_id) {
