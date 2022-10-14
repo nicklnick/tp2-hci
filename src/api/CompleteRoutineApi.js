@@ -1,30 +1,53 @@
-import { defineStore } from "pinia";
-import { Routine, RoutineApi } from "@/api/routine.js";
+
+import { RoutineApi } from "@/api/routine.js";
 import { RoutineCycleApi } from "@/api/routineCycle";
-import { CycleExercise, CycleExerciseApi } from "@/api/cycleExercise";
+import { CycleExerciseApi } from "@/api/cycleExercise";
 
-export const useCompleteRoutineStore = defineStore("CompleteRoutineStore", {
-  state: () => ({
-    items: [],
-  }),
-  actions: {
-     async getCompleteRoutine(routine_id) {
+export { CompleteRoutineApi }
+
+class CompleteRoutineApi{
+     static async getCompleteRoutine(routine_id) {
        const routineJson = await RoutineApi.get(routine_id)
-       const routine = new CompleteRoutine().build(routineJson)
-       const cylceJson = await RoutineCycleApi.getAllCyclesInRoutine(routine.routine_id)
-       let index = 0;
+       const complete_routine = new CompleteRoutine().build(routineJson)
+       const cylceJson = await RoutineCycleApi.getAllCyclesInRoutine(complete_routine.routine_id)
+
        for(const cylcleKey in cylceJson.content){
-          routine.cycles.push(new CompleteCycle().build(cylceJson.content[cylcleKey]))    // cycleJson
+          complete_routine.cycles.push(new CompleteCycle().build(cylceJson.content[cylcleKey]))    // cycleJson
 
-          const exerciseJson = await CycleExerciseApi.getAllExercisesInCycle(routine.cycles[index].cycle_id);
-
+          const exerciseJson = await CycleExerciseApi.getAllExercisesInCycle(complete_routine.cycles[cylcleKey].cycle_id);
           for(const exerKey in exerciseJson.content){
-              routine.cycles[index].exercises.push( new CompleteExercise().build(exerciseJson.content[exerKey]))
+              complete_routine.cycles[cylcleKey].exercises.push( new CompleteExercise().build(exerciseJson.content[exerKey]))
           }
        }
+       return complete_routine;
      }
-  },
-});
+     static async createCompleteRoutine(completeRoutine){
+       const routineJson =  await RoutineApi.add(completeRoutine.to_simple_routine());  // TODO: posible error no le paso el id y qcy
+       completeRoutine.routine_id = routineJson.id;
+
+       let order = 0;
+       for(const cycleKey in completeRoutine.cycles){
+          order += 1;
+          completeRoutine.cycles[cycleKey].order = order;
+          completeRoutine.cycles[cycleKey].repetitions = parseInt(completeRoutine.cycles[cycleKey].repetitions)
+
+         const cycleJson = await RoutineCycleApi.add(completeRoutine.routine_id, completeRoutine.cycles[cycleKey].to_simple_cylce());
+         completeRoutine.cycles[cycleKey].cycle_id = cycleJson.id;
+
+         let exerOrder = 0;
+         for(const exerKey in completeRoutine.cycles[cycleKey].exercises){
+            exerOrder += 1;
+            completeRoutine.cycles[cycleKey].exercises[exerKey].order = exerOrder;
+            completeRoutine.cycles[cycleKey].exercises[exerKey].repetitions = parseInt(completeRoutine.cycles[cycleKey].exercises[exerKey].repetitions);
+            completeRoutine.cycles[cycleKey].exercises[exerKey].duration = parseInt(completeRoutine.cycles[cycleKey].exercises[exerKey].duration);
+
+            await CycleExerciseApi.add(completeRoutine.cycles[cycleKey].cycle_id, completeRoutine.cycles[cycleKey].exercises[exerKey].exercise_id,
+              completeRoutine.cycles[cycleKey].exercises[exerKey].to_simple_exercise())
+         }
+       }
+     }
+}
+
 
 class CompleteExercise{
   exercise_id;
@@ -48,6 +71,9 @@ class CompleteExercise{
     this.exericse_duration = exerciseCylceJson.duration;
     this.exercise_repetitions = exerciseCylceJson.repetitions;
     return this
+  }
+  to_simple_exercise(){
+      return {"order": this.exercise_order, "duration":this.exericse_duration, "repetitions":this.exercise_repetitions};
   }
 }
 
@@ -117,11 +143,12 @@ class CompleteRoutine{
     }
     build(routineJson){
       this.routine_id = routineJson.id;
-      this.cycle_name = routineJson.name;
-      this.cycle_detail = routineJson.detail;
+      this.routine_name = routineJson.name;
+      this.routine_detail = routineJson.detail;
       this.routine_category = routineJson.category;
-      this.routine_is_public = routineJson.is_public;
+      this.routine_is_public = routineJson.isPublic;
       this.routine_difficulty = routineJson.difficulty;
+      this.cycles = [];
       return this;
     }
     addCycle() {
@@ -139,7 +166,7 @@ class CompleteRoutine{
       }
     }
     to_simple_routine(){
-      return {"name": this.routine_name, "detail":this.routine_detail, "is_public":this.routine_is_public,
+      return {"name": this.routine_name, "detail":this.routine_detail, "isPublic":this.routine_is_public,
         "difficulty": this.routine_difficulty, "category": this.routine_category}
     }
 }

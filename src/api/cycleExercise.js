@@ -24,7 +24,7 @@ class CycleExerciseApi {
     }
 
     static async getAllExercisesInCycle(cycleId, controller) {
-        return await Api.get(CycleExerciseApi.getUrl(cycleId), true, controller).content;
+        return await Api.get(CycleExerciseApi.getUrl(cycleId), true, controller);
     }
 }
 

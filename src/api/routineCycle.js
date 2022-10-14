@@ -24,7 +24,7 @@ class RoutineCycleApi {
     }
 
     static async getAllCyclesInRoutine(routineId, controller) {
-        return await Api.get(RoutineCycleApi.getUrl(routineId), true, controller).content;
+        return await Api.get(RoutineCycleApi.getUrl(routineId), true, controller);
     }
 }
 
