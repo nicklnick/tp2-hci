@@ -66,12 +66,18 @@
                 <v-col cols="4" v-for="(exercise, index) in $items" :key="index">
                   <div class="columns">
                     <div class="exercise-card-width">
-
-                      <ExerciseCard  v-if="exercise.id !== editing"
-                                    :exer_name="exercise.name" :exer_detail="exercise.detail"
-                                    :exer_type="exercise.type" editable="true"
-                                    @removeExercise="removeSport(exercise)" @editExercise="setEditingMode(exercise)"
-                      />
+                      <ExerciseCard2 v-if="exercise.id !== editing" :exer_name="exercise.name"
+                                     :exer_detail="exercise.detail" :key="index"
+                                     :exer_type="exercise.type" editable="false">
+                        <!-- card editing/navigation -->
+                        <div class="space-evenly-col">
+                          <v-btn text fab x-small color="dark-grey"
+                                 @click="removeSport(exercise)"
+                          ><v-icon>mdi-close</v-icon></v-btn>
+                          <v-btn text fab x-small color="dark-grey" @click="setEditingMode(exercise)"
+                          ><v-icon>mdi-pencil</v-icon></v-btn>
+                        </div>
+                      </ExerciseCard2>
                     </div>
                   </div>
                 </v-col>
@@ -108,14 +114,14 @@ import { mapActions, mapState } from "pinia";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { useExerciseStore } from "@/stores/ExerciseStore";
 import { Exercise } from "@/api/exercise";
-import ExerciseCard from "@/components/Exercise/ExerciseCard";
+import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 
 
 
 export default {
   name: "ManageExercisesView",
   components: {
-    ExerciseCard,
+    ExerciseCard2,
     CustomCard,
 
     SideMenu,
