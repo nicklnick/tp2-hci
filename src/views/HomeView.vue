@@ -46,6 +46,8 @@ import MuscleCarousel from "@/components/MuscleCarousel";
 import BigButton from "@/components/BigButton";
 import { mapActions, mapState } from "pinia";
 import { RoutineApi } from "@/api/routine";
+import muscleGroups from "@/store/MuscleGroups";
+import {CategoryApi} from "@/api/category";
 
 export default {
   name: 'HomeView',
@@ -65,6 +67,16 @@ export default {
   ...mapActions(useSecurityStore, {
     $checkApiOnline: 'checkApiOnline'
   }),
+  methods: {
+    async LoadCategories() {
+      let muscles = muscleGroups.muscles
+      console.log("muscleGroups")
+      for (const key in muscles) {
+        // let category = Category.constructor(muscles[key].id, muscles[key].name, muscles[key].name)
+        await CategoryApi.add({name: muscles[key].name, detail: muscles[key].name})
+      }
+    }
+  },
   data() {
     return {
       myRoutines: null
@@ -83,6 +95,14 @@ export default {
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({name: "Login"});
     }
+
+    let auxi = await CategoryApi.getAll()
+    if( auxi.totalCount === 0) {
+      console.log("antes")
+      await this.LoadCategories()
+      console.log("despues")
+    }
+
     this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
   }
 }

@@ -208,61 +208,61 @@ export default {
     ...mapActions(useSecurityStore, {
       $login: 'login',
     }),
-  setResult(result){
-    switch(result.code ){
-      case 4:
-        this.errorMessage = result.description
-        break;
-      case 2:
-        if(result.details[0].localeCompare("\"UNIQUE constraint failed: User.email\""))
-          this.errorMessage = "Email already in use"
-        else
-          this.errorMessage = "Username already in use"
-    }
-
-
-  },
-  clearResult() {
-    this.errorMessage = null
-  },
-  async login(rememberMe) {
-    try {
-      if(!this.validUsername || !this.validPassword){
-        this.errorMessage = "Invalid username or password"
-        return;
-      }
-      this.errorMessage = "";
-      const credentials = new Credentials(this.username, this.password)
-
-      this.loading = 1
-      await this.$login(credentials, rememberMe? rememberMe : false)
-      this.clearResult()
-
-    } catch (e) {
-      this.setResult(e)
-    }
-    this.loading = 0;
-  },
-  async signup(){
-    try {
-      if(!this.validUsername || !this.validPassword || !this.validEmail){
-        this.errorMessage = "Invalid username, password or email"
-        return;
-      }
-      this.errorMessage = "";
-
-      this.loading = 1;
-      await UserApi.signup(this.username,this.password,this.email);
-      this.$router.push({name: "Verify Email"})
-    } catch (e) {
-      this.setResult(e);
-    }
-    this.loading = 0;
-  },
-    abort() {
-        this.controller.abort()
+    setResult(result){
+      switch(result.code ){
+        case 4:
+          this.errorMessage = result.description
+          break;
+        case 2:
+          if(result.details[0].localeCompare("\"UNIQUE constraint failed: User.email\""))
+            this.errorMessage = "Email already in use"
+          else
+            this.errorMessage = "Username already in use"
       }
     },
+    clearResult() {
+      this.errorMessage = null
+    },
+    async login(rememberMe) {
+      try {
+        if(!this.validUsername || !this.validPassword){
+          this.errorMessage = "Invalid username or password"
+          return;
+        }
+        this.errorMessage = "";
+        const credentials = new Credentials(this.username, this.password)
+
+        this.loading = 1
+        await this.$login(credentials, rememberMe? rememberMe : false)
+        this.clearResult()
+
+      } catch (e) {
+        this.setResult(e)
+      }
+      this.loading = 0;
+    },
+    async signup(){
+      try {
+        if(!this.validUsername || !this.validPassword || !this.validEmail){
+          this.errorMessage = "Invalid username, password or email"
+          return;
+        }
+        this.errorMessage = "";
+
+        this.loading = 1;
+        await UserApi.signup(this.username,this.password,this.email);
+        this.$router.push({name: "Verify Email"})
+
+
+      } catch (e) {
+        this.setResult(e);
+      }
+      this.loading = 0;
+    },
+    abort() {
+        this.controller.abort()
+    },
+  },
     async created() {
       if(this.path==='/login'){
         this.tab= 0
