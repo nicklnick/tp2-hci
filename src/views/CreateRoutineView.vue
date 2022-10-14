@@ -15,7 +15,7 @@
           <div class="space-between-row width px-10">
             <router-link class="button-link" to="/routines">
               <v-btn fab color="tertiary">
-                <v-icon>chevron-left</v-icon>
+                <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
               </v-btn>
 
             </router-link>
@@ -58,11 +58,38 @@
 
                   <div  class=" row-center overflow-auto">
                     <div class="general-area-width general-area-height">
-                          <ExerciseCard class="my-2 quaternary" v-for="(exercise, index) in currentSeries.exercises"
-                            :exer_name="exercise.name" :exer_detail="exercise.detail" :key="index"
-                                        :exer_type="exercise.type" editable="false"
+                          <ExerciseCard2 class="my-2 quaternary" v-for="(exercise, index) in currentSeries.exercises"
+                            :exer_name="exercise.exercise.name" :exer_detail="exercise.exercise.detail" :key="index"
+                                        :exer_type="exercise.exercise.type" editable="false"
                                         @removeExercise="removeExercise(index)">
-                          </ExerciseCard>
+
+
+                            <!-- exercise time and series -->
+                            <div class="pt-2 space-evenly-col">
+                              <v-form v-model="exercise.validDuration">
+                                <v-text-field v-model="exercise.cycleExercise.duration" :rules="reprules" label="Time (s)"></v-text-field>
+                              </v-form>
+                              <v-form v-model="exercise.validRepetitions">
+                                <v-text-field v-model="exercise.cycleExercise.repetitions" :rules="reprules" label="Repetitions"></v-text-field>
+                              </v-form>
+                            </div>
+
+
+
+                            <!-- card editing/navigation -->
+                            <div class="space-evenly-col">
+                            <v-btn text fab x-small color="dark-grey"
+                                   @click="removeExercise"
+                            ><v-icon>mdi-close</v-icon></v-btn>
+                            <v-btn text fab x-small color="dark-grey" @click="moveExercise(index,-1)">
+                              <img width="20" height="20" src="../assets/icons/chevron-up.svg" alt="up">
+                            </v-btn>
+                            <v-btn text fab x-small color="dark-grey" @click="moveExercise(index,1)">
+                              <img width="20" height="20" src="../assets/icons/chevron-down.svg" alt="down">
+                            </v-btn>
+
+                            </div>
+                          </ExerciseCard2>
                     </div>
                   </div>
 
@@ -97,7 +124,7 @@
                   <v-card class="d-flex justify-space-between my-2 quaternary" v-for="(exercise, index) in $items"
                           :key="index">
                     <div class="text-width">
-                      <h3 class="card_text pl-3 pt-1">{{exercise.name}}</h3>
+                      <h4 class="card_text pl-3 pt-1">{{exercise.name}}</h4>
                     </div>
 
                     <v-btn text fab x-small color="dark-grey" @click="addExercise(exercise.id)">
@@ -112,7 +139,7 @@
 
           <div v-if="mode===1" class="space-between-row width px-10">
             <v-btn @click="previousStep" fab color="primary">
-              <v-icon>chevron-left</v-icon>
+              <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
             </v-btn>
 
             <v-alert class="error-tag ma-0" :value="error" dismissible type="error">{{errorMsg}}</v-alert>
@@ -181,7 +208,7 @@
             <v-alert class="error-tag ma-0" :value="error" dismissible type="error">{{errorMsg}}</v-alert>
 
             <v-btn @click="confirmOverview" fab color="primary">
-              <v-icon>chevron-right</v-icon>
+              <img width="30" height="30" src="../assets/icons/chevron-right.svg" alt="left">
             </v-btn>
           </div>
 
@@ -198,6 +225,7 @@
 <script>
 
 
+
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
 import CustomCard from "@/components/CommonComponents/CustomCard";
@@ -205,14 +233,10 @@ import { Exercise } from "@/api/exercise";
 import { useExerciseStore } from "@/stores/ExerciseStore";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { mapActions, mapState } from "pinia";
-
 import { Routine,RoutineApi } from "@/api/routine";
-
-//import { useRoutineCycleStore } from "@/stores/RoutineCycleStore";
 import { Cycle, RoutineCycleApi } from "@/api/routineCycle";
-import ExerciseCard from "@/components/Exercise/ExerciseCard";
+import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 import { CycleExercise, CycleExerciseApi } from "@/api/cycleExercise";
-
 
 class Serie {
   cycleData= null;
@@ -230,14 +254,23 @@ class Serie {
   }
 }
 
+class ExerciseAndCycleDetail {
+  validDuration = false;
+  validRepetitions = false;
+  constructor(exercise, cycleExercise) {
+    this.exercise = exercise;
+    this.cycleExercise = cycleExercise;
+  }
+}
+
 export default {
   name: "CreateRoutineView",
   components: {
-    ExerciseCard,
+    ExerciseCard2,
     CustomCard,
-    //CreateRoutineOverview,
     SideMenu,
-    TopBar
+    TopBar,
+
   },
   data: () => ({
     // display mode, 0 = routine overview, 1 = routine details
@@ -279,7 +312,6 @@ export default {
       value => !(/[^0-9]/.test(value)) || 'Only numbers'
     ],
 
-
     /* --- error handling --- */
     errorMsg: null,
     error: false,
@@ -307,16 +339,9 @@ export default {
     },
     async confirmOverview(){
       if(this.checkValidOverview()){
-        try{
           this.mode = 1
-        }
-        catch (e) {
-          console.log(e)
-        }
       }
     },
-
-
     // ---- details ----
     previousStep(){
       this.mode = 0;
@@ -324,10 +349,12 @@ export default {
     updateSeries(index) {
       this.index = index;
     },
-    checkValidDetails(){
+    checkValidCyclesAndExercises(){
+      let currentIndex = 0
       for(const cycleKey in this.cycles){
         if(this.cycles[cycleKey].exercises.length === 0){
           this.handleError("All series must have exercises")
+          this.index = parseInt(cycleKey)
           return false;
         }
         if(!this.cycles[cycleKey].validRepetitions){
@@ -335,19 +362,46 @@ export default {
           this.index = parseInt(cycleKey)
           return false;
         }
+        for(const exerKey in this.cycles[cycleKey].exercises){
+          const reps = parseInt(this.cycles[cycleKey].exercises[exerKey].cycleExercise.repetitions);
+          const dur = parseInt(this.cycles[cycleKey].exercises[exerKey].cycleExercise.duration);
+
+          if((!this.cycles[cycleKey].exercises[exerKey].validRepetitions || !this.cycles[cycleKey].exercises[exerKey].validDuration)
+            || (!(reps > 0) && !(dur > 0))){
+            this.index = currentIndex;
+            this.handleError("Exercise must have either duration > 0 or repetitions > 0");
+            return false;
+          }
+          if(reps > 999 || dur > 999){
+            this.handleError("Exercise must have duration < 999 and repetitions < 999");
+            this.index = currentIndex;
+            return false;
+          }
+        }
+        currentIndex += 1;
       }
       return true;
+    },
+    moveExercise(index, offset){
+      if(this.currentSeries.exercises.length <= index + offset ||  index + offset < 0){
+          return;
+      }
+      let auxi =  this.currentSeries.exercises[index];
+      let auxi2 = this.currentSeries.exercises[index + offset];
+
+      this.currentSeries.exercises.splice(index + offset,1 ,auxi)
+      this.currentSeries.exercises.splice(index,1 ,auxi2)
     },
     async addExercise(id) {
       const exercise = await this.exerciseStore.get(new Exercise(id))
 
       for(const exerciseKey in this.currentSeries.exercises){
-        if(this.currentSeries.exercises[exerciseKey].id === exercise.id){
+        if(this.currentSeries.exercises[exerciseKey].exercise.id === exercise.id){
             this.handleError("This cycle already contains that exercise");
             return;
         }
       }
-      this.cycles[this.index].add_exercise(exercise);
+      this.cycles[this.index].add_exercise(new ExerciseAndCycleDetail(exercise, new CycleExercise(null, "0", "0")));
     },
     addCycle() {
       this.counter += 1;
@@ -372,7 +426,7 @@ export default {
       this.cycles[this.index].remove_exercise(index);
     },
     finish() {
-      if(this.checkValidDetails()){
+      if(this.checkValidCyclesAndExercises()){
         this.createRoutine();
         this.mode = 1;
         this.$router.push({ name: "My Routines" })
@@ -388,24 +442,25 @@ export default {
       for(const seriesKey in this.cycles){
         order += 1;
         this.cycles[seriesKey].cycleData.order = order;
-        let resp = await RoutineCycleApi.add(this.routineId,this.cycles[seriesKey].cycleData);
+        this.cycles[seriesKey].cycleData.repetitions = parseInt(this.cycles[seriesKey].cycleData.repetitions)
+        let resp = await RoutineCycleApi.add(this.routineId, this.cycles[seriesKey].cycleData);
         let cycleId = resp.id;
 
         // agrego los ejercicios de cada ciclo
+
         let exerOrder = 0;
         for(const exerKey in this.cycles[seriesKey].exercises){
           exerOrder += 1;
-          await CycleExerciseApi.add(cycleId,this.cycles[seriesKey].exercises[exerKey].id,
-            new CycleExercise(exerOrder,1,1))
+          this.cycles[seriesKey].exercises[exerKey].cycleExercise.order = exerOrder;
+          this.cycles[seriesKey].exercises[exerKey].cycleExercise.repetitions = parseInt(this.cycles[seriesKey].exercises[exerKey].cycleExercise.repetitions);
+          this.cycles[seriesKey].exercises[exerKey].cycleExercise.duration = parseInt(this.cycles[seriesKey].exercises[exerKey].cycleExercise.duration);
+          await CycleExerciseApi.add(cycleId,this.cycles[seriesKey].exercises[exerKey].exercise.id, this.cycles[seriesKey].exercises[exerKey].cycleExercise)
         }
       }
     }
 
 
   },
-
-
-
   computed: {
     ...mapState(useSecurityStore, {
       $isLoggedIn: 'isLoggedIn',
@@ -550,7 +605,7 @@ export default {
 
 .error-tag{
   position: fixed;
-  bottom: 50px;
+  bottom: 30px;
   right: 33%;
   width: 400px;
 }

@@ -14,7 +14,7 @@
                   >
                     <div class="display-3">
                       <routine-button :routine_author="myRoutines[+index +i].user.username"
-                                      :routine_category="myRoutines[+index +i].category.name"
+                                      :routine_category="myRoutines[+index +i].category?.name"
                                       :routine_detail="myRoutines[+index +i].detail"
                                       :routine_difficulty="myRoutines[+index +i].difficulty"
                                       :routine_name="myRoutines[+index +i].name"

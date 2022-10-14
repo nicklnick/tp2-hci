@@ -7,22 +7,9 @@
         <v-list-item-subtitle class="pa-0 ma-0 exercise-text-width card_text">Details: {{exer_detail}}</v-list-item-subtitle>
         <v-list-item-subtitle class="pa-0 ma-0 exercise-text-width card_text">Type: {{exer_type[0].toUpperCase() + exer_type.substring(1)}}</v-list-item-subtitle>
       </div>
-
-      <div class="space-evenly-col">
-        <v-btn text fab x-small color="dark-grey"
-               @click="removeExercise"
-        ><v-icon>mdi-close</v-icon></v-btn>
-
-        <v-btn text fab x-small color="dark-grey"
-           v-if="editable === 'true'"    @click="editExercise"
-        ><v-icon>mdi-pencil</v-icon></v-btn>
         <slot>
-
         </slot>
-
       </div>
-    </div>
-
   </v-card>
 </template>
 
@@ -42,18 +29,8 @@ export default {
       type: String,
       required: true
     },
-    editable: {
-      type: String,
-      required: true,
-    }
   },
   methods: {
-    removeExercise(){
-      this.$emit("removeExercise");
-    },
-    editExercise() {
-      this.$emit("editExercise");
-    }
   }
 };
 </script>
