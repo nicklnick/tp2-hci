@@ -24,6 +24,7 @@
                              :routine_stars="favRoutine.score"
                              :routine_id="favRoutine.id"
                              :routine_category="favRoutine.category?.name"
+                             :routine_detail="favRoutine.detail"
               ></RoutineButton>
           </v-col>
         </v-row>

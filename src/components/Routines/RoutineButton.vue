@@ -1,9 +1,10 @@
 <template>
-    <v-btn color="quaternary" height="200px" width="250px">
-      <v-card color="quaternary" height="200px" width="250px">
+    <v-btn color="quaternary" height="200px" width="350px">
+      <v-card color="quaternary" height="200px" width="350px">
         <div class="flex-container pt-2">
-          <v-card-title> {{routine_name}} </v-card-title>
-          <v-card-subtitle>By: {{routine_author}}</v-card-subtitle>
+          <v-list-item-title class="align-self-start headline pb-3 pl-3 card-text">{{routine_name}}</v-list-item-title>
+        <!-- <v-card-title class="card-text" height="1em"> {{routine_name}} </v-card-title> -->
+          <v-list-item-subtitle class="align-self-start pb-3 pl-3 card-text">By: {{routine_author}}</v-list-item-subtitle>
           <v-card-text class="text-start">
             <div class="align-content-start justify-content-start">
               {{routine_detail}}
@@ -15,14 +16,14 @@
             <v-chip small color="tertiary">
               {{routine_category}}
             </v-chip>
-            <v-chip small color="tertiary">
+            <v-chip small :color="difficulty_color">
               {{routine_difficulty}}
             </v-chip>
 
           </v-chip-group>
-          <v-btn @click="update()" icon v-model="favourite">
-            <v-icon :color="heart_color_comp"
-            >mdi-heart</v-icon>
+          <v-btn @click="update()" icon>
+            <v-icon :color="this.heart_color"
+            >favorite</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -38,8 +39,8 @@ import {mapActions} from "pinia";
 export default {
   name: "RoutineButton",
   data: () => ({
-      heart_color: "white",
-      favourite: 0
+    heart_color: "grey darken-2",
+    difficulty_color: null
   }),
   props:{
       routine_name: {
@@ -68,9 +69,6 @@ export default {
       }
   },
   computed: {
-    heart_color_comp() {
-      return this.heart_color;
-    },
     ...mapActions(useFavouriteStore, {
       $addToFavourites: 'addToFavourites',
       $removeFromFavourites: 'remove',
@@ -83,29 +81,42 @@ export default {
     },
     switchColor() {
       // TODO: Para ustedes ta bueno este blanco?
-      this.heart_color = this.heart_color === "primary" ? "white" : "primary";
+      this.heart_color = this.heart_color === "primary" ? "grey darken-2" : "primary";
     },
-    async alternateFavourite() {
-      if (parseInt(this.favourite) === 0) {
-        this.favourite = 1;
-        await FavouriteApi.markAsFavourite(parseInt(this.routine_id))
-        this.heart_color = "primary"
-      } else {
-        this.favourite = 0;
-        await FavouriteApi.removeAsFavourite(parseInt(this.routine_id))
-        this.heart_color = "white"
+    getDifficultyColor() {
+      if(this.routine_difficulty === "rookie")
+        this.difficulty_color = "blue lighten-4"
+      else if(this.routine_difficulty === "beginner")
+        this.difficulty_color = "blue lighten-1"
+      else if(this.routine_difficulty === "intermediate")
+        this.difficulty_color =  "yellow"
+      else if(this.routine_difficulty === "advanced")
+        this.difficulty_color = "orange"
+      else
+        this.difficulty_color = "red"
+    },
+  async alternateFavourite() {
+     if(parseInt(this.favourite) === 0) {
+       this.favourite = 1;
+       await FavouriteApi.markAsFavourite(parseInt(this.routine_id));
+       this.heart_color = "primary"
+     } else {
+       this.favourite = 0;
+       await FavouriteApi.removeAsFavourite(parseInt(this.routine_id));
+       this.heart_color = "grey darken-2";
       }
     }
   },
   async created() {
     // Siempre inicializarlo!!!!!
-    const securityStore = useSecurityStore()
-    await securityStore.initialize()
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
 
-    const Fav = await FavouriteApi.checkFavourite(parseInt(this.routine_id))
-    if( Fav === true){
-      this.favourite = 1
-      this.heart_color = "primary"
+    this.getDifficultyColor();
+    const isFavourite = await FavouriteApi.checkFavourite(parseInt(this.routine_id));
+    if(isFavourite === true){
+      this.favourite = 1;
+      this.heart_color = "primary";
     }
   }
 };
@@ -124,4 +135,13 @@ export default {
   height: 150px;
   width: 200px;
 }
+
+.card-text {
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
 </style>
