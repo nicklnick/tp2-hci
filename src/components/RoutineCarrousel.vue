@@ -1,5 +1,8 @@
 <template>
-  <div class="carousel">
+  <div v-if="myRoutines.length === 0">
+    <h2>Looks like you don't have any routines. Make Some!</h2>
+  </div>
+  <div v-else class="carousel">
     <v-carousel hide-delimiters height="100%">
       <template v-for="(item, index) in myRoutines">
         <v-carousel-item v-if="(index + 1) % columns === 1 || columns === 1"

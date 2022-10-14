@@ -13,7 +13,10 @@
           <h1 class="PageTitle">Favourites</h1>
         </div>
         <!-- CONTENT GOES HERE -->
-        <v-row class="width">
+        <div v-if="favouriteRoutines.length === 0" class="flex-container">
+          <h2>Looks like you haven't liked any routines. I'm sure you'll find one you enjoy! ʕ•ᴥ•ʔ</h2>
+        </div>
+        <v-row v-else class="width">
           <v-col cols="3" v-for="(favRoutine, index) in favouriteRoutines" :key="index">
               <RoutineButton :routine_author="favRoutine.user.username"
                              :routine_name="favRoutine.name"

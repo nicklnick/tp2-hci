@@ -17,7 +17,10 @@
           <div class="width">
             <h1 class="pb-10">Your Routines</h1>
           </div>
-          <v-row>
+          <div v-if="myRoutines.length === 0">
+            <h2>Routines that you created will appear here!</h2>
+          </div>
+          <v-row v-else>
             <v-col cols="3" v-for="(routine, index) in myRoutines" :key="index">
               <RoutineButton :routine_difficulty="routine.difficulty"
                              :routine_detail="routine.detail"

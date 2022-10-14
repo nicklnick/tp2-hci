@@ -15,7 +15,6 @@
           <div class="cheight cwidth row-center ">
             <div  class="cheight general-area-width overflow-auto">
 
-
               <!-- Create new exercise -->
               <v-card elevation="20" class="general-area new-activity" v-if="mode !== 0" color="quaternary" >
                 <div class="space-between-col new-exercise-box  general-area-height">
@@ -60,9 +59,11 @@
               </v-card>
 
               <!-- View existing exercises -->
+              <div v-if="$items.length === 0">
+                <h3>Make Some Exercises of Your Own!</h3>
+              </div>
 
-
-              <v-row class="py-4 exercise-row-width">
+              <v-row v-else class="py-4 exercise-row-width">
                 <v-col cols="4" v-for="(exercise, index) in $items" :key="index">
                   <div class="columns">
                     <div class="exercise-card-width">
@@ -288,6 +289,5 @@ export default {
 .new-exercise-box{
   width: 60%;
 }
-
 
 </style>
