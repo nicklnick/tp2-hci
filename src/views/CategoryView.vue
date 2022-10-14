@@ -18,9 +18,20 @@
           </v-btn>
           </router-link>
 
-        <h1 class="text">{{muscles.name}}</h1>
+        <h1 class="text">{{ muscle.name }}</h1>
         </div>
         <!-- CONTENT GOES HERE -->
+        <v-row class="width">
+          <v-col cols="3" v-for="(routine, index) in routines" :key="index">
+            <RoutineButton :routine_author="routine.user.username"
+                           :routine_name="routine.name"
+                           :routine_difficulty="routine.difficulty"
+                           :routine_stars="routine.score"
+                           :routine_id="routine.id"
+                           :routine_category="routine.category.name"
+            ></RoutineButton>
+          </v-col>
+        </v-row>
       </div>
     </div>
   </div>
@@ -31,11 +42,23 @@
 import store from "@/store/MuscleGroups"
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
+import RoutineButton from "@/components/Routines/RoutineButton";
+import {RoutineApi} from "@/api/routine";
+
+import {mapActions, mapState} from "pinia";
+import { useSecurityStore } from "@/stores/SecurityStore";
+
 export default {
   name:"CategoryView",
   components: {
     SideMenu,
-    TopBar
+    TopBar,
+    RoutineButton
+  },
+  data(){
+    return {
+      routines: null
+    }
   },
   props: {
     slug: {
@@ -44,11 +67,45 @@ export default {
     },
   },
   computed: {
-    muscles() {
+    muscle() {
       return store.muscles.find(
         (muscles) => muscles.slug === this.slug
       );
     },
+    ...mapState(useSecurityStore, {
+      $isLoggedIn: 'isLoggedIn',
+      $online: 'online'
+    }),
+    ...mapActions(useSecurityStore, {
+      $checkApiOnline: 'checkApiOnline'
+    }),
+  },
+  methods: {
+    async filteredCategory(CategoryID) {
+      const resp = []
+      let auxi = await RoutineApi.getAll()
+      auxi = auxi.content
+      for( const key in auxi){
+        if( parseInt(auxi[key].category.id) === parseInt(CategoryID) && auxi[key].isPublic === true)
+          resp.push(auxi[key])
+      }
+      return resp
+    }
+  },
+  async created() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+
+    await this.$checkApiOnline;
+
+    if(!this.$online){
+      console.log("redirecting")
+      await this.$router.push({ name: "Error" });
+    }
+    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
+      await this.$router.push({name: "Login"});
+    }
+    this.routines = await this.filteredCategory(this.muscle.id)
   },
 }
 </script>
