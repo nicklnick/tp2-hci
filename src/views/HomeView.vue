@@ -3,21 +3,18 @@
     <div class="top-height">
       <TopBar></TopBar>
     </div>
-
-
     <div class="bottom-heigh d-flex  width">
       <div class="w2" >
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-        <div class="width row-center">
+        <div class="width row-center mt-1">
 
           <router-link link to="/create-routine">
             <BigButton button_text="Create Routine"/>
           </router-link>
           <div class="px-7"></div>
           <router-link link to="/exercises">
-
             <BigButton button_text="Manage Exercises"/>
           </router-link>
         </div>
@@ -25,7 +22,13 @@
             <h1>Search Routines by Category</h1>
           </div>
           <MuscleCarousel/>
-        <!-- CONTENT GOES HERE -->
+
+        <div class="text">
+          <h1>Your Routines</h1>
+        </div>
+        <RoutineCarrousel></RoutineCarrousel>
+
+
       </div>
     </div>
   </div>
@@ -35,15 +38,19 @@
 // @ is an alias to /src
 
 import { useSecurityStore } from "@/stores/SecurityStore";
+import RoutineCarrousel from "@/components/RoutineCarrousel";
 
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import MuscleCarousel from "@/components/MuscleCarousel";
 import BigButton from "@/components/BigButton";
 import { mapActions, mapState } from "pinia";
+import { RoutineApi } from "@/api/routine";
+
 export default {
   name: 'HomeView',
   components: {
+    RoutineCarrousel,
     BigButton,
     MuscleCarousel,
     SideMenu,
@@ -52,13 +59,16 @@ export default {
   computed: {
     ...mapState(useSecurityStore, {
       $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
+      $online: 'online',
+      $user: 'user'
     })},
   ...mapActions(useSecurityStore, {
     $checkApiOnline: 'checkApiOnline'
   }),
-  watch: {
-
+  data() {
+    return {
+      myRoutines: null
+    }
   },
   async created() {
     const securityStore = useSecurityStore();
@@ -73,7 +83,7 @@ export default {
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({name: "Login"});
     }
-
+    this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
   }
 }
 </script>

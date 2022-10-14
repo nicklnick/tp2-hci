@@ -15,7 +15,7 @@
     <v-navigation-drawer width="auto" :permanent="$vuetify.breakpoint.mdAndUp" app v-model="drawer" color="secondary">
       <div class="flex-container">
         <v-list dense nav>
-          <v-list-item-group style="width: 100%" v-model="selectedItem">
+          <v-list-item-group width="100%"  v-model="selectedItem">
 
             <v-spacer class="mt-6"></v-spacer>
 

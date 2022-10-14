@@ -1,11 +1,10 @@
 <template>
     <v-btn color="quaternary" height="200px" width="250px">
       <v-card color="quaternary" height="200px" width="250px">
-        <div class="flex-container">
+        <div class="flex-container pt-2">
           <v-card-title> {{routine_name}} </v-card-title>
           <v-card-subtitle>By: {{routine_author}}</v-card-subtitle>
           <v-card-text class="text-start">
-
             <div class="align-content-start justify-content-start">
               {{routine_detail}}
             </div>
@@ -68,6 +67,7 @@ export default {
   },
   methods: {
     switchColor() {
+      // TODO: Para ustedes ta bueno este blanco?
       this.heart_color = this.heart_color === "primary" ? "white" : "primary";
     }
   },
@@ -88,29 +88,8 @@ export default {
   justify-content: flex-start;
 }
 
-.card_text {
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.details_text{
-  text-align: left;
-  text-overflow: fade;
-  white-space: nowrap;
-  overflow: hidden;
-  height: 100px;
-}
-
 .card_size {
-  height: 200px;
-  width: 250px;
-}
-
-.custom_card {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
+  height: 150px;
+  width: 200px;
 }
 </style>

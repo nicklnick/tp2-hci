@@ -19,7 +19,7 @@
           </div>
           <v-row>
             <v-col cols="3" v-for="(routine, index) in myRoutines" :key="index">
-              <RoutineButton :routine_difficulty="routine.difficulty" :routine_detail="routine.detail" :routine_author="routine.user.username" :routine_name="routine.name"></RoutineButton>
+              <RoutineButton :routine_difficulty="routine.difficulty" :routine_detail="routine.detail" :routine_author="routine.user.username" :routine_name="routine.name" :routine_category="routine.category.name"></RoutineButton>
             </v-col>
           </v-row>
 <!--          <div class="row-start" >-->
