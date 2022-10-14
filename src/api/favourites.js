@@ -18,4 +18,15 @@ class FavouriteApi {
     static async getFavourites(controller){
         return await Api.get(FavouriteApi.getUrl(), true, controller)
     }
+
+    static async checkFavourite(routineID, controller){
+        let favourites = await this.getFavourites(controller)
+        favourites = favourites.content
+        let routine;
+        for( routine in favourites){
+            if(favourites[routine].id=== routineID)
+                return true
+        }
+        return false
+    }
 }

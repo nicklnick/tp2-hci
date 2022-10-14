@@ -18,6 +18,7 @@
                                       :routine_detail="myRoutines[+index +i].detail"
                                       :routine_difficulty="myRoutines[+index +i].difficulty"
                                       :routine_name="myRoutines[+index +i].name"
+                                      :routine_id="myRoutines[+index + i].id"
                       ></routine-button>
                     </div>
                   </v-row>

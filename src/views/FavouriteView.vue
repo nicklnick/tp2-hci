@@ -15,7 +15,13 @@
         <!-- CONTENT GOES HERE -->
         <v-row class="width">
           <v-col cols="3" v-for="(favRoutine, index) in favouriteRoutines" :key="index">
-              <RoutineButton :routine_author="favRoutine.user.username" :routine_name="favRoutine.name" :routine_difficulty="favRoutine.difficulty" :routine_stars="favRoutine.score"></RoutineButton>
+              <RoutineButton :routine_author="favRoutine.user.username"
+                             :routine_name="favRoutine.name"
+                             :routine_difficulty="favRoutine.difficulty"
+                             :routine_stars="favRoutine.score"
+                             :routine_id="favRoutine.id"
+                             :routine_category="favRoutine.category?.name"
+              ></RoutineButton>
           </v-col>
         </v-row>
       </div>

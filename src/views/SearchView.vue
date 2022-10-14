@@ -21,7 +21,13 @@
         <v-row class="width">
           <v-col cols="3" v-for="(routine, index) in routines" :key="index">
             <div class="columns">
-              <RoutineButton :routine_author="routine.user.username" :routine_name="routine.name" :routine_difficulty="routine.difficulty" :routine_stars="routine.score"></RoutineButton>
+              <RoutineButton :routine_author="routine.user.username"
+                             :routine_name="routine.name"
+                             :routine_difficulty="routine.difficulty"
+                             :routine_stars="routine.score"
+                             :routine_id="routine.id"
+                             :routine_category="routine.category?.name"
+              ></RoutineButton>
             </div>
           </v-col>
         </v-row>
