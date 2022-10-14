@@ -172,10 +172,11 @@
 
                   <v-divider></v-divider>
 
-
                   <div class="space-between-row">
                     <h4>Category</h4>
-                    <v-btn rounded color="primary">+ Add Category</v-btn>
+                    <v-chip-group v-model="category" mandatory>
+                      <v-chip color="tertiary" v-for="(cat, index) in $categoryItems" :key="index">{{cat.name}}</v-chip>
+                    </v-chip-group>
                   </div>
 
                   <v-divider></v-divider>
@@ -237,6 +238,7 @@ import { Routine,RoutineApi } from "@/api/routine";
 import { Cycle, RoutineCycleApi } from "@/api/routineCycle";
 import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 import { CycleExercise, CycleExerciseApi } from "@/api/cycleExercise";
+import { useCategoryStore } from "@/stores/CategoryStore";
 
 class Serie {
   cycleData= null;
@@ -270,7 +272,49 @@ export default {
     CustomCard,
     SideMenu,
     TopBar,
+  },
+  async created() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
 
+    await this.$checkApiOnline;
+
+    if (!this.$online) {
+      await this.$router.push({ name: "Error" });
+    }
+    if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
+    }
+    this.exerciseStore = useExerciseStore();
+    await this.exerciseStore.updateCache();
+
+    this.categoryStore = useCategoryStore();
+    await this.categoryStore.updateCache();
+  },
+  computed: {
+    ...mapState(useSecurityStore, {
+      $isLoggedIn: 'isLoggedIn',
+      $online: 'online'
+    }),
+    ...mapActions(useSecurityStore, {
+      $checkApiOnline: 'checkApiOnline',
+    }),
+    ...mapState(useExerciseStore,{
+      $items: 'items',
+    }),
+    ...mapState(useCategoryStore,{
+      $categoryItems: 'items',
+    }),
+
+    // routine detials
+    currentSeries() {
+      if(this.cycles.length > this.index)
+        return this.cycles[this.index];
+      return this.cycles[0];
+    },
+    currentIndex(){
+      return this.index;
+    }
   },
   data: () => ({
     // display mode, 0 = routine overview, 1 = routine details
@@ -295,6 +339,7 @@ export default {
     difficulty: "Rookie",
     title: "",
     details: "",
+    category: "",
 
     routineId: null,
 
@@ -434,7 +479,12 @@ export default {
     },
     async createRoutine(){
       // creo la rutina
-      const resp =  await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic,this.difficulty.toLowerCase()))
+
+
+      const aux = new Routine(null, this.title, this.details,this.isPublic, this.difficulty.toLowerCase(),null, this.$categoryItems[this.category])
+      console.log(aux)
+
+      const resp =  await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic, this.difficulty.toLowerCase(),null, this.$categoryItems[this.category]))
       this.routineId = resp.id
 
       // itero por todos los ciclos, creandolos
@@ -461,45 +511,7 @@ export default {
 
 
   },
-  computed: {
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
-    }),
-    ...mapState(useExerciseStore,{
-      $items: 'items',
-    }),
 
-    // routine detials
-    currentSeries() {
-      if(this.cycles.length > this.index)
-        return this.cycles[this.index];
-      return this.cycles[0];
-    },
-    currentIndex(){
-      return this.index;
-    }
-
-
-  },
-  async created() {
-    const securityStore = useSecurityStore();
-    await securityStore.initialize();
-
-    await this.$checkApiOnline;
-
-    if (!this.$online) {
-      await this.$router.push({ name: "Error" });
-    }
-    if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!
-      await this.$router.push({ name: "Login" });
-    }
-    this.exerciseStore = useExerciseStore();
-    await this.exerciseStore.updateCache();
-  }
 };
 
 
