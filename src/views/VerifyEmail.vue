@@ -2,8 +2,8 @@
   <div class="screen">
     <v-card class="verify">
       <h1 class="pt-3">Verify Email</h1>
-      <div class="px-10 space-evenly-col">
-        <v-form v-model="validEmail">
+      <div class="px-10 space-evenly-col center">
+        <v-form v-model="validEmail" class="otpWidth pt-8">
 
           <v-text-field
             v-model="email"
@@ -14,14 +14,14 @@
           ></v-text-field>
 
         </v-form>
-        <v-form v-model="validCode">
-        <v-text-field v-model="code" :rules="[rules.required]" label="Code"
+        <v-form v-model="validCode" class="otpWidth pb-6">
+        <v-otp-input v-model="code" length="6" :rules="[rules.required]" label="Code"
                       outlined color="secondary">
 
-        </v-text-field>
+        </v-otp-input>
         </v-form>
 
-        <v-btn @click="verify()" class="button" color="secondary"> Continuar </v-btn>
+        <v-btn @click="verify()" class="button otpWidth" color="secondary"> Continuar </v-btn>
         <p class="error-msg">{{errorMessage}}</p>
         <LoadingImage class="align-self-center" v-if="loading===1"/>
       </div>
@@ -95,6 +95,18 @@ export default {
 .verify {
   width: 50%;
   height: 400px;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-items: center;
+  justify-content: center;
+}
+
+.otpWidth {
+  width: 80%;
 }
 
 
