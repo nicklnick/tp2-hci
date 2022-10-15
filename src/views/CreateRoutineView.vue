@@ -38,11 +38,11 @@
 
                         <v-tabs-slider color="tertiary"></v-tabs-slider>
 
-                        <v-tab v-for="(cycle, index) in cycles" :key="index">
+                        <v-tab v-for="(cycle, index) in routine.cycles" :key="index">
 
                           <div class="flex-row justify-space-between">
-                            {{ cycle.cycleData.name}}
-                            <v-btn v-if="!immortalCycles(cycle.cycleData.name)" text fab x-small color="dark-grey"
+                            {{ cycle.cycle_name}}
+                            <v-btn v-if="!immortalCycles(cycle.cycle_name)" text fab x-small color="dark-grey"
                                    @click="removeCycle(index)"
                             ><v-icon>mdi-close</v-icon></v-btn>
                           </div>
@@ -59,18 +59,18 @@
                   <div  class=" row-center overflow-auto">
                     <div class="general-area-width general-area-height">
                           <ExerciseCard2 class="my-2 quaternary" v-for="(exercise, index) in currentSeries.exercises"
-                            :exer_name="exercise.exercise.name" :exer_detail="exercise.exercise.detail" :key="index"
-                                        :exer_type="exercise.exercise.type" editable="false"
+                            :exer_name="exercise.exercise_name" :exer_detail="exercise.exercise_detail" :key="index"
+                                        :exer_type="exercise.exercise_type" editable="false"
                                         @removeExercise="removeExercise(index)">
 
 
                             <!-- exercise time and series -->
                             <div class="pt-2 space-evenly-col">
                               <v-form v-model="exercise.validDuration">
-                                <v-text-field v-model="exercise.cycleExercise.duration" :rules="reprules" label="Time (s)"></v-text-field>
+                                <v-text-field v-model="exercise.exericse_duration" :rules="reprules" label="Time (s)"></v-text-field>
                               </v-form>
                               <v-form v-model="exercise.validRepetitions">
-                                <v-text-field v-model="exercise.cycleExercise.repetitions" :rules="reprules" label="Repetitions"></v-text-field>
+                                <v-text-field v-model="exercise.exercise_repetitions" :rules="reprules" label="Repetitions"></v-text-field>
                               </v-form>
                             </div>
 
@@ -102,7 +102,7 @@
                         <p class="pl-3 pt-2"> Repeat </p>
                         <div class="repeat">
                           <v-form v-model="currentSeries.validRepetitions">
-                            <v-text-field class="text-field" single-line v-model="currentSeries.cycleData.repetitions" :rules="reprules" ></v-text-field>
+                            <v-text-field class="text-field" single-line v-model="currentSeries.cycle_repetitions" :rules="reprules" ></v-text-field>
                           </v-form>
                         </div>
                         <p class="pt-2"> times</p>
@@ -159,13 +159,13 @@
                     <v-form v-model="validTitle">
                       <v-text-field rounded outlined color="secondary" :rules="titleRules"
                                     background-color="tertiary" label="Title"
-                                    class="py-2" v-model="title"></v-text-field>
+                                    class="py-2" v-model="routine.routine_name"></v-text-field>
                     </v-form>
 
                     <v-form v-model="validDetails">
                     <v-textarea rounded outlined color="secondary" :rules="detailRules"
                                 background-color="tertiary" label="Description" no-resize
-                                class="py-2" v-model="details"></v-textarea>
+                                class="py-2" v-model="routine.routine_detail"></v-textarea>
                     </v-form>
                   </div>
 
@@ -174,7 +174,7 @@
 
                   <div class="space-between-row">
                     <h4>Category</h4>
-                    <v-chip-group v-model="category" mandatory>
+                    <v-chip-group v-model="routine.routine_category" mandatory>
                       <v-chip color="tertiary" v-for="(cat, index) in $categoryItems" :key="index">{{cat.name}}</v-chip>
                     </v-chip-group>
                   </div>
@@ -188,7 +188,7 @@
                       <v-card-actions class="py-0 my-0 justify-center">
                         <v-select :items="dificulties" dense rounded hide-details single-line
                                   color="secondary" item-color="secondary"
-                                  background-color="tertiary" class="select_it" v-model="difficulty"></v-select>
+                                  background-color="tertiary" class="select_it" v-model="routine.routine_difficulty"></v-select>
                       </v-card-actions>
                     </div>
                   </div>
@@ -196,7 +196,7 @@
 
                   <div class="space-between-row">
                     <h4>Public: </h4>
-                    <v-switch v-model="isPublic" class="pa-0 ma-0" hide-details></v-switch>
+                    <v-switch v-model="routine.routine_is_public" class="pa-0 ma-0" hide-details></v-switch>
                   </div>
                 </div>
 
@@ -215,7 +215,6 @@
 
         </div>
 
-
       </div>
     </div>
 
@@ -225,8 +224,6 @@
 
 <script>
 
-
-
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
 import CustomCard from "@/components/CommonComponents/CustomCard";
@@ -234,36 +231,10 @@ import { Exercise } from "@/api/exercise";
 import { useExerciseStore } from "@/stores/ExerciseStore";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { mapActions, mapState } from "pinia";
-import { Routine,RoutineApi } from "@/api/routine";
-import { Cycle, RoutineCycleApi } from "@/api/routineCycle";
 import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
-import { CycleExercise, CycleExerciseApi } from "@/api/cycleExercise";
 import { useCategoryStore } from "@/stores/CategoryStore";
+import { CompleteCycle, CompleteExercise, CompleteRoutine, CompleteRoutineApi } from "@/api/CompleteRoutineApi";
 
-class Serie {
-  cycleData= null;
-  exercises = []
-  validRepetitions = true;
-
-  constructor(id, name, detail, type, order, repetitions) {
-      this.cycleData = new Cycle(id, name,detail, type, order, repetitions)
-  }
-  add_exercise(exercise){
-    this.exercises.push(exercise);
-  }
-  remove_exercise(index){
-    this.exercises.splice(index,1);
-  }
-}
-
-class ExerciseAndCycleDetail {
-  validDuration = false;
-  validRepetitions = false;
-  constructor(exercise, cycleExercise) {
-    this.exercise = exercise;
-    this.cycleExercise = cycleExercise;
-  }
-}
 
 export default {
   name: "CreateRoutineView",
@@ -287,9 +258,11 @@ export default {
     }
     this.exerciseStore = useExerciseStore();
     await this.exerciseStore.updateCache();
-
     this.categoryStore = useCategoryStore();
     await this.categoryStore.updateCache();
+  },
+  mounted() {
+
   },
   computed: {
     ...mapState(useSecurityStore, {
@@ -308,15 +281,18 @@ export default {
 
     // routine detials
     currentSeries() {
-      if(this.cycles.length > this.index)
-        return this.cycles[this.index];
-      return this.cycles[0];
+      if(this.routine.cycles.length > this.index)
+        return this.routine.cycles[this.index];
+      return this.routine.cycles[0];
     },
     currentIndex(){
       return this.index;
     }
   },
   data: () => ({
+
+    routine: new CompleteRoutine("","",true,"Rookie"),
+
     // display mode, 0 = routine overview, 1 = routine details
     mode: 0,
 
@@ -335,21 +311,9 @@ export default {
     validDetails: false,
     validCategory: false,
 
-    isPublic: true,
-    difficulty: "Rookie",
-    title: "",
-    details: "",
-    category: "",
-
-    routineId: null,
-
     /* --- routine details --- */
     // order lo vamos a poner al final
-    cycles: [
-      new Serie(null, "Warmup","","warmup", null, 1),
-      new Serie(null, "Cycle 1","","exercise", null, 1),
-      new Serie(null, "Cooldown","","cooldown", null, 1),
-    ],
+
     counter: 1,
     index: 0,
     reprules: [
@@ -363,7 +327,6 @@ export default {
 
   }),
   methods: {
-
     //  ---- common ----
     handleError(msg){
       this.errorMsg = msg
@@ -384,6 +347,8 @@ export default {
     },
     async confirmOverview(){
       if(this.checkValidOverview()){
+          this.routine.routine_difficulty = this.routine.routine_difficulty.toLowerCase();
+          this.routine.routine_category = this.$categoryItems[this.routine.routine_category]
           this.mode = 1
       }
     },
@@ -396,22 +361,28 @@ export default {
     },
     checkValidCyclesAndExercises(){
       let currentIndex = 0
-      for(const cycleKey in this.cycles){
-        if(this.cycles[cycleKey].exercises.length === 0){
+      for(const cycleKey in this.routine.cycles){
+        if(this.routine.cycles[cycleKey].exercises.length === 0){
           this.handleError("All series must have exercises")
           this.index = parseInt(cycleKey)
           return false;
         }
-        if(!this.cycles[cycleKey].validRepetitions){
+        if(!this.routine.cycles[cycleKey].validRepetitions){
           this.handleError("Number of repetitions must be a number")
           this.index = parseInt(cycleKey)
           return false;
         }
-        for(const exerKey in this.cycles[cycleKey].exercises){
-          const reps = parseInt(this.cycles[cycleKey].exercises[exerKey].cycleExercise.repetitions);
-          const dur = parseInt(this.cycles[cycleKey].exercises[exerKey].cycleExercise.duration);
+        currentIndex += 1;
+        this.routine.cycles[cycleKey].cycle_repetitions = parseInt(this.routine.cycles[cycleKey].cycle_repetitions);
+        this.routine.cycles[cycleKey].cycle_order = currentIndex;
 
-          if((!this.cycles[cycleKey].exercises[exerKey].validRepetitions || !this.cycles[cycleKey].exercises[exerKey].validDuration)
+        let routIndex = 0;
+        for(const exerKey in this.routine.cycles[cycleKey].exercises){
+          routIndex += 1;
+          const reps = parseInt(this.routine.cycles[cycleKey].exercises[exerKey].exercise_repetitions);
+          const dur = parseInt(this.routine.cycles[cycleKey].exercises[exerKey].exericse_duration);
+
+          if((!this.routine.cycles[cycleKey].exercises[exerKey].validRepetitions || !this.routine.cycles[cycleKey].exercises[exerKey].validDuration)
             || (!(reps > 0) && !(dur > 0))){
             this.index = currentIndex;
             this.handleError("Exercise must have either duration > 0 or repetitions > 0");
@@ -422,8 +393,12 @@ export default {
             this.index = currentIndex;
             return false;
           }
+
+          this.routine.cycles[cycleKey].exercises[exerKey].exercise_order = routIndex;
+          this.routine.cycles[cycleKey].exercises[exerKey].exercise_repetitions = reps;
+          this.routine.cycles[cycleKey].exercises[exerKey].exericse_duration = dur;
         }
-        currentIndex += 1;
+
       }
       return true;
     },
@@ -441,80 +416,45 @@ export default {
       const exercise = await this.exerciseStore.get(new Exercise(id))
 
       for(const exerciseKey in this.currentSeries.exercises){
-        if(this.currentSeries.exercises[exerciseKey].exercise.id === exercise.id){
+        if(this.currentSeries.exercises[exerciseKey].exercise_id === exercise.id){
             this.handleError("This cycle already contains that exercise");
             return;
         }
       }
-      this.cycles[this.index].add_exercise(new ExerciseAndCycleDetail(exercise, new CycleExercise(null, "0", "0")));
+      this.routine.cycles[this.index].add_exercise(new CompleteExercise(exercise.id, exercise.name, exercise.detail, exercise.type));
     },
     addCycle() {
       this.counter += 1;
-      this.cycles.splice(this.cycles.length -1,0,
-        new Serie(null,"Cycle " + this.counter, "","exercise",null, 1));
+      this.routine.cycles.splice(this.routine.cycles.length -1,0,
+        new CompleteCycle("Cycle " + this.counter, "","exercise"));
     },
     removeCycle(index){
-      if(this.cycles.length > 1) {
+      if(this.routine.cycles.length > 1) {
 
-        if(index === this.cycles.length - 1)
+        if(index === this.routine.cycles.length - 1)
           this.updateSeries(index - 1);
         else
           this.updateSeries(index + 1);
 
-        this.cycles.splice(index, 1);
+        this.routine.cycles.splice(index, 1);
       }
     },
     immortalCycles(name){
         return name === "Warmup" || name === "Cooldown" || name === "Cycle 1";
     },
     removeExercise(index){
-      this.cycles[this.index].remove_exercise(index);
+      this.routine.cycles[this.index].remove_exercise(index);
     },
     finish() {
       if(this.checkValidCyclesAndExercises()){
-        this.createRoutine();
+        CompleteRoutineApi.createCompleteRoutine(this.routine);
         this.mode = 1;
         this.$router.push({ name: "My Routines" })
       }
     },
-    async createRoutine(){
-      // creo la rutina
-
-
-      const aux = new Routine(null, this.title, this.details,this.isPublic, this.difficulty.toLowerCase(),null, this.$categoryItems[this.category])
-      console.log(aux)
-
-      const resp =  await RoutineApi.add(new Routine(null, this.title, this.details,this.isPublic, this.difficulty.toLowerCase(),null, this.$categoryItems[this.category]))
-      this.routineId = resp.id
-
-      // itero por todos los ciclos, creandolos
-      let order = 0;
-      for(const seriesKey in this.cycles){
-        order += 1;
-        this.cycles[seriesKey].cycleData.order = order;
-        this.cycles[seriesKey].cycleData.repetitions = parseInt(this.cycles[seriesKey].cycleData.repetitions)
-        let resp = await RoutineCycleApi.add(this.routineId, this.cycles[seriesKey].cycleData);
-        let cycleId = resp.id;
-
-        // agrego los ejercicios de cada ciclo
-
-        let exerOrder = 0;
-        for(const exerKey in this.cycles[seriesKey].exercises){
-          exerOrder += 1;
-          this.cycles[seriesKey].exercises[exerKey].cycleExercise.order = exerOrder;
-          this.cycles[seriesKey].exercises[exerKey].cycleExercise.repetitions = parseInt(this.cycles[seriesKey].exercises[exerKey].cycleExercise.repetitions);
-          this.cycles[seriesKey].exercises[exerKey].cycleExercise.duration = parseInt(this.cycles[seriesKey].exercises[exerKey].cycleExercise.duration);
-          await CycleExerciseApi.add(cycleId,this.cycles[seriesKey].exercises[exerKey].exercise.id, this.cycles[seriesKey].exercises[exerKey].cycleExercise)
-        }
-      }
-    }
-
-
   },
 
 };
-
-
 
 </script>
 
@@ -596,10 +536,6 @@ export default {
 .select_it{
   width: 175px;
 }
-
-.top-area{
-  height: 8%;
-}
 .bottom-area{
   display: flex;
   justify-content: center;
@@ -607,7 +543,7 @@ export default {
   height: 500px;
   width: 100%;
 }
-.overview{               /* !!!! COMMON !!!! */
+.overview{
   width: 90%;
   height: 90%;
   display: flex;
@@ -621,6 +557,5 @@ export default {
   right: 33%;
   width: 400px;
 }
-
 
 </style>

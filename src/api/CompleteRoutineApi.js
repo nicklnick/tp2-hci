@@ -56,11 +56,18 @@ class CompleteExercise{
   exercise_order;
   exericse_duration;
   exercise_repetitions;
+  exercise_type;
 
-  constructor(id, name,detail) {
+  validDuration;
+  validRepetitions;
+
+  constructor(id, name,detail, type) {
     this.exercise_id = id;
     this.exercise_name = name;
     this.exercise_detail = detail;
+    this.exercise_type = type;
+    this.exericse_duration = "0";
+    this.exercise_repetitions = "0";
   }
 
   build(exerciseCylceJson){
@@ -85,13 +92,17 @@ class CompleteCycle {
   cycle_order;
   cycle_repetitions;
 
+  validRepetitions = true;
+
   exercises = []
+
 
   // datos que necesito para mandar el pedido de CREACION
   constructor(name,detail,type) {
     this.cycle_name = name;
     this.cycle_detail = detail;
     this.cycle_type = type;
+    this.cycle_repetitions = "1";
   }
   build(cycleJson){
     this.cycle_id = cycleJson.id;
