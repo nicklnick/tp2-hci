@@ -1,6 +1,6 @@
 <template>
-    <v-btn color="quaternary" height="190px" width="300px" link :to="`/routines/view/${routine_id}`">
-      <v-card color="quaternary" height="190px" width="300px">
+    <v-btn color="quaternary" height="190px" width="315px" link :to="`/routines/view/${routine_id}`">
+      <v-card color="quaternary" height="190px" width="315px">
         <div class="flex-container pt-2">
           <v-list-item-title class="align-self-start headline pb-3 pl-3 card-text">{{routine_name}}</v-list-item-title>
         <!-- <v-card-title class="card-text" height="1em"> {{routine_name}} </v-card-title> -->
@@ -14,7 +14,7 @@
         <div>
         <v-card-actions class="justify-end">
           <v-chip-group>
-            <v-chip small color="tertiary">
+            <v-chip small color="#7AE6F8">
               {{routine_category}}
             </v-chip>
             <v-chip small :color="difficulty_color">
