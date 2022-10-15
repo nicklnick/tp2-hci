@@ -192,10 +192,10 @@
                   </div>
 
 
-                  <div class="space-between-row">
-                    <h4>Public: </h4>
-                    <v-switch v-model="routine.routine_is_public" class="pa-0 ma-0" hide-details></v-switch>
-                  </div>
+<!--                  <div class="space-between-row">-->
+<!--                    <h4>Public: </h4>-->
+<!--                    <v-switch v-model="routine.routine_is_public" class="pa-0 ma-0" hide-details></v-switch>-->
+<!--                  </div>-->
                 </div>
 
               </div>

@@ -216,15 +216,17 @@ export default {
           this.errorMessage = result.description
           break;
         case 2:
-          if(result.details[0].localeCompare("\"UNIQUE constraint failed: User.email\""))
-            this.errorMessage = "Email already in use"
-          else
-            this.errorMessage = "Username already in use"
+          if(result.details[0].localeCompare("\"UNIQUE constraint failed: User.email\"") === 0){
+            this.errorMessage = "Email already in use";
+          }
+          else{
+            this.errorMessage = "Username already in use";
+          }
+          break;
       }
     },
     async LoadCategories() {
       let muscles = muscleGroups.muscles
-      console.log("muscleGroups")
       for (const key in muscles) {
         // let category = Category.constructor(muscles[key].id, muscles[key].name, muscles[key].name)
         await CategoryApi.add({name: muscles[key].name, detail: muscles[key].name})
@@ -290,7 +292,6 @@ export default {
       await this.$checkApiOnline;
 
       if(!this.$online){
-        console.log("error, redirecting")
         await this.$router.push({ name: "Error" });
       }
       if(this.$isLoggedIn){   // TODO: !!!! check !!!!
