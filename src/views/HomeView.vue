@@ -111,7 +111,7 @@ export default {
   justify-content: space-evenly;
   align-items: center;
   height: 100%;
-  zoom: 80%;
+  zoom: 70%;
 }
 .text {
   width: 90%;

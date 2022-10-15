@@ -1,16 +1,17 @@
 <template>
-    <v-btn color="quaternary" height="200px" width="350px" link :to="`/routines/view/${routine_id}`">
-      <v-card color="quaternary" height="200px" width="350px">
+    <v-btn color="quaternary" height="190px" width="300px" link :to="`/routines/view/${routine_id}`">
+      <v-card color="quaternary" height="190px" width="300px">
         <div class="flex-container pt-2">
           <v-list-item-title class="align-self-start headline pb-3 pl-3 card-text">{{routine_name}}</v-list-item-title>
         <!-- <v-card-title class="card-text" height="1em"> {{routine_name}} </v-card-title> -->
           <v-list-item-subtitle class="align-self-start pb-3 pl-3 card-text">By: {{routine_author}}</v-list-item-subtitle>
           <v-card-text class="text-start">
-            <div class="align-content-start justify-content-start">
+            <div class="align-content-start justify-content-start card-text">
               {{routine_detail}}
             </div>
           </v-card-text>
         </div>
+        <div>
         <v-card-actions class="justify-end">
           <v-chip-group>
             <v-chip small color="tertiary">
@@ -26,6 +27,7 @@
             >favorite</v-icon>
           </v-btn>
         </v-card-actions>
+          </div>
       </v-card>
     </v-btn>
 </template>
