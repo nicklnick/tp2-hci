@@ -349,4 +349,5 @@ export default {
 .twidth {
   width: 90%;
 }
+
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100%" width="100%"  color="secondary">
+  <v-card tile height="100%" width="100%"  color="secondary">
     <div class="bar">
 
       <router-link class="button-link" to="/home">

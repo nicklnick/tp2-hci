@@ -1,5 +1,5 @@
 <template>
-  <v-card class="navDrawer" height="100%" width="100%">
+  <v-card tile class="navDrawer" height="100%" width="100%">
     <v-navigation-drawer height="100%" permanent color="secondary" width="100%">
       <v-list class="navbar" dense nav height="70%">
         <v-list-item-group class="button" >

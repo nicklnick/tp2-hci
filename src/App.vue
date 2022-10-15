@@ -92,6 +92,36 @@ nav {
   color: red;
 }
 
+// scrollbar
+body::-webkit-scrollbar {
+  width: 12px
+}
+
+body::-webkit-scrollbar-track {
+  background: #14C38E;        /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #b8f1b0;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #14C38E;  /* creates padding around scroll thumb */
+}
+
+
+div::-webkit-scrollbar {
+  width: 12px;
+}
+
+div::-webkit-scrollbar-track {
+  background: #E3FCBF;        /* color of the tracking area */
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #B8F1B0;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #14C38E;  /* creates padding around scroll thumb */
+}
+
 
 </style>
 <script>
