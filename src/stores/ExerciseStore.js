@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Exercise, ExerciseApi } from "@/api/exercise";
+import { ExerciseApi } from "@/api/exercise";
 
 export const useExerciseStore = defineStore("exercise", {
   state: () => ({
@@ -59,18 +59,7 @@ export const useExerciseStore = defineStore("exercise", {
       return result;
     },
     async updateCache(controller){
-      try{
-        const res = await ExerciseApi.getAll(controller);
-        this.items = [];
-        for(const newexercise in res.content){
-          this.push(new Exercise(res.content[newexercise].id,
-            res.content[newexercise].name, res.content[newexercise].detail,res.content[newexercise].type ))
-        }
-      }
-      catch (e){
-        // TODO: Handle error?
-        console.log(e)
-      }
+        this.items =  await ExerciseApi.getAll(controller);
     }
   },
 });

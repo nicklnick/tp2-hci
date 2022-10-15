@@ -84,7 +84,6 @@ export default {
     async filteredCategory(CategoryID) {
       const resp = []
       let auxi = await RoutineApi.getAll()
-      auxi = auxi.content
       for( const key in auxi){
         if( parseInt(auxi[key].category.id) === parseInt(CategoryID) && auxi[key].isPublic === true)
           resp.push(auxi[key])

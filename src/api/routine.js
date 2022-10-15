@@ -23,22 +23,34 @@ class RoutineApi {
     return await Api.get(RoutineApi.getUrl(id),true,  controller);
   }
   static async getAllUserRoutines(userId, controller){
-    const allRoutines =  await Api.get(RoutineApi.getUrl(),true,  controller);
-
+    let page = 0, url = `${Api.baseUrl}/routines?userId=${userId}&page=${page}`,allRoutines;
     const resp = []
-
-    for(const newSport in allRoutines.content){
-      if(userId === allRoutines.content[newSport].user.id)
-        resp.push(new Routine(allRoutines.content[newSport].id, allRoutines.content[newSport].name,allRoutines.content[newSport].detail ,allRoutines.content[newSport].isPublic,
-          allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user, allRoutines.content[newSport].category))
+    do{
+      allRoutines = await Api.get(url,true,  controller);
+      for(const newSport in allRoutines.content){
+          resp.push(new Routine(allRoutines.content[newSport].id, allRoutines.content[newSport].name,allRoutines.content[newSport].detail ,allRoutines.content[newSport].isPublic,
+            allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user, allRoutines.content[newSport].category))
+      }
+      page++;
     }
-
+    while(allRoutines.isLastPage === false);
     return resp;
   }
 
   // te consigue T0DOS las rutinas de todos los usuarios
   static async getAll(controller) {
-    return await Api.get(RoutineApi.getUrl(), true, controller);
+    let page = 0, url = `${Api.baseUrl}/routines?page=${page}`,allRoutines;
+    const resp = []
+    do{
+      allRoutines = await Api.get(url,true,  controller);
+      for(const newSport in allRoutines.content){
+        resp.push(new Routine(allRoutines.content[newSport].id, allRoutines.content[newSport].name,allRoutines.content[newSport].detail ,allRoutines.content[newSport].isPublic,
+          allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user, allRoutines.content[newSport].category))
+      }
+      page++;
+    }
+    while(allRoutines.isLastPage === false);
+    return resp;
   }
 }
 

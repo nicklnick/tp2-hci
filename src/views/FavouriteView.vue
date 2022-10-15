@@ -76,7 +76,6 @@ export default {
       await this.$router.push({name: "Login"});
     }
     this.favouriteRoutines = await FavouriteApi.getFavourites();
-    this.favouriteRoutines = this.favouriteRoutines.content;
   },
 }
 </script>

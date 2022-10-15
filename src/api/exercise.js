@@ -24,7 +24,18 @@ class ExerciseApi {
   }
 
   static async getAll(controller) {
-    return await Api.get(ExerciseApi.getUrl(), true, controller);
+    let page = 0, url = `${Api.baseUrl}/exercises?page=${page}`,allExer;
+    const resp = []
+    do{
+      allExer = await Api.get(url, true, controller);
+      for(const newSport in allExer.content){
+        resp.push(new Exercise(allExer.content[newSport].id, allExer.content[newSport].name,
+          allExer.content[newSport].detail,allExer.content[newSport].type))
+      }
+      page++;
+    }
+    while(allExer.isLastPage === false);
+    return resp;
   }
 }
 

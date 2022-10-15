@@ -1,4 +1,5 @@
 import {Api} from "./api.js";
+import { Routine } from "@/api/routine";
 
 export { FavouriteApi }
 
@@ -16,12 +17,22 @@ class FavouriteApi {
     }
 
     static async getFavourites(controller){
-        return await Api.get(FavouriteApi.getUrl(), true, controller)
+        let page = 0, url = `${Api.baseUrl}/favourites?page=${page}`,allFav;
+        const resp = []
+        do{
+            allFav = await Api.get(url, true, controller);
+            for(const newSport in allFav.content){
+                resp.push(new Routine(allFav.content[newSport].id, allFav.content[newSport].name,allFav.content[newSport].detail ,allFav.content[newSport].isPublic,
+                  allFav.content[newSport].difficulty, allFav.content[newSport].user, allFav.content[newSport].category))
+            }
+            page++;
+        }
+        while(allFav.isLastPage === false);
+        return resp;
     }
 
     static async checkFavourite(routineID, controller){
         let favourites = await this.getFavourites(controller)
-        favourites = favourites.content
         let routine;
         for( routine in favourites){
             if(favourites[routine].id=== routineID)

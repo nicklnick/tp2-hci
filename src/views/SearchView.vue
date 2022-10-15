@@ -78,7 +78,6 @@ export default {
     async filteredSearch() {
       const resp = []
       let auxi = await RoutineApi.getAll()
-      auxi = auxi.content
       for (const key in auxi){
         if( (auxi[key].name === this.$route.params.input || this.$route.params.input === 'All Routines' )&& auxi[key].isPublic === true)
           resp.push(auxi[key])
