@@ -74,9 +74,10 @@ class CompleteExercise{
     this.exercise_id = exerciseCylceJson.exercise.id;
     this.exercise_name = exerciseCylceJson.exercise.name;
     this.exercise_detail = exerciseCylceJson.exercise.detail;
+    this.exercise_type = exerciseCylceJson.exercise.type;
     this.exercise_order = exerciseCylceJson.order;
-    this.exericse_duration = exerciseCylceJson.duration;
-    this.exercise_repetitions = exerciseCylceJson.repetitions;
+    this.exericse_duration = exerciseCylceJson.duration.toString();
+    this.exercise_repetitions = exerciseCylceJson.repetitions.toString();
     return this
   }
   to_simple_exercise(){
@@ -110,7 +111,7 @@ class CompleteCycle {
     this.cycle_detail = cycleJson.detail;
     this.cycle_type = cycleJson.type;
     this.cycle_order = cycleJson.order;
-    this.cycle_repetitions = cycleJson.repetitions;
+    this.cycle_repetitions = cycleJson.repetitions.toString();
     return this;
   }
   add_exercise(exercise){
@@ -133,6 +134,8 @@ class CompleteRoutine{
     routine_is_public;
     routine_difficulty;
     routine_category;
+
+    user;
 
     cycles = [];
     cycle_counter = 1;
@@ -159,6 +162,7 @@ class CompleteRoutine{
       this.routine_category = routineJson.category;
       this.routine_is_public = routineJson.isPublic;
       this.routine_difficulty = routineJson.difficulty;
+      this.user = routineJson.user;
       this.cycles = [];
       return this;
     }
