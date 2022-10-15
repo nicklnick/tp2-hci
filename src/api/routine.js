@@ -49,7 +49,7 @@ class RoutineApi {
           allRoutines.content[newSport].difficulty, allRoutines.content[newSport].user, allRoutines.content[newSport].category))
       }
       page++;
-      url = `${Api.baseUrl}/routines?page=${page}`
+      url = `${Api.baseUrl}/routines?page=${page}`;
     }
     while(allRoutines.isLastPage === false);
     return resp;
