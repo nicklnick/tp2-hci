@@ -145,13 +145,6 @@ export default {
     ],
   }),
   computed: {
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
-    }),
     ...mapState(useExerciseStore,{
       $items: 'items',
     }),
@@ -159,21 +152,21 @@ export default {
       return this.editingId;
     }
   },
-  async created() {
+  async mounted() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
-
-    if(!this.$online){
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      await this.$router.push({name: "Login"});
+    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
     }
-
-    this.exerciseStore = useExerciseStore();
-    await this.exerciseStore.updateCache();
+    else{
+      this.exerciseStore = useExerciseStore();
+      await this.exerciseStore.updateCache();
+    }
   },
   methods: {
     ...mapActions(useExerciseStore, {
