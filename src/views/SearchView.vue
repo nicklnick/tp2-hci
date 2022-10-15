@@ -24,9 +24,9 @@
               <RoutineButton :routine_author="routine.user.username"
                              :routine_name="routine.name"
                              :routine_difficulty="routine.difficulty"
-                             :routine_stars="routine.score"
                              :routine_id="routine.id"
                              :routine_category="routine.category?.name"
+                             :routine_detail="routine.detail"
               ></RoutineButton>
             </div>
           </v-col>

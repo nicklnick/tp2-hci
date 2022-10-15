@@ -13,7 +13,7 @@
           <h1 class="PageTitle">Favourites</h1>
         </div>
         <!-- CONTENT GOES HERE -->
-        <div v-if="favouriteRoutines.length === 0" class="flex-container">
+        <div v-if="favouriteRoutines === null || favouriteRoutines.length === 0" class="flex-container">
           <h2>Looks like you haven't liked any routines. I'm sure you'll find one you enjoy! ʕ•ᴥ•ʔ</h2>
         </div>
         <v-row v-else class="width">
@@ -21,7 +21,6 @@
               <RoutineButton :routine_author="favRoutine.user.username"
                              :routine_name="favRoutine.name"
                              :routine_difficulty="favRoutine.difficulty"
-                             :routine_stars="favRoutine.score"
                              :routine_id="favRoutine.id"
                              :routine_category="favRoutine.category?.name"
                              :routine_detail="favRoutine.detail"

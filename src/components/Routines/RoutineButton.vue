@@ -22,7 +22,7 @@
             </v-chip>
 
           </v-chip-group>
-          <v-btn @click="update()" icon>
+          <v-btn @click.prevent="update()" icon>
             <v-icon :color="this.heart_color"
             >favorite</v-icon>
           </v-btn>
@@ -42,7 +42,8 @@ export default {
   name: "RoutineButton",
   data: () => ({
     heart_color: "grey darken-2",
-    difficulty_color: null
+    difficulty_color: null,
+    favourite: 0
   }),
   props:{
       routine_name: {
@@ -66,7 +67,7 @@ export default {
         required: true
       },
       routine_id: {
-        type: String,
+        type: Number,
         required: true
       }
   },
@@ -100,11 +101,11 @@ export default {
   async alternateFavourite() {
      if(parseInt(this.favourite) === 0) {
        this.favourite = 1;
-       await FavouriteApi.markAsFavourite(parseInt(this.routine_id));
+       await FavouriteApi.markAsFavourite(this.routine_id);
        this.heart_color = "primary"
      } else {
        this.favourite = 0;
-       await FavouriteApi.removeAsFavourite(parseInt(this.routine_id));
+       await FavouriteApi.removeAsFavourite(this.routine_id);
        this.heart_color = "grey darken-2";
       }
     }
@@ -115,7 +116,7 @@ export default {
     await securityStore.initialize();
 
     this.getDifficultyColor();
-    const isFavourite = await FavouriteApi.checkFavourite(parseInt(this.routine_id));
+    const isFavourite = await FavouriteApi.checkFavourite(this.routine_id);
     if(isFavourite === true){
       this.favourite = 1;
       this.heart_color = "primary";

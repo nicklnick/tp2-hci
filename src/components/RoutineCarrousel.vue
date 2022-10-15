@@ -1,5 +1,5 @@
 <template>
-  <div v-if="myRoutines.length === 0">
+  <div v-if="myRoutines===null || myRoutines.length === 0">
     <h2>Looks like you don't have any routines. Make Some!</h2>
   </div>
   <div v-else class="carousel">

@@ -17,7 +17,7 @@
           <div class="width">
             <h1 class="pb-10">Your Routines</h1>
           </div>
-          <div v-if="myRoutines.length === 0">
+          <div v-if="myRoutines===null || myRoutines.length === 0">
             <h2>Routines that you created will appear here!</h2>
           </div>
           <v-row v-else>
