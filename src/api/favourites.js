@@ -26,6 +26,7 @@ class FavouriteApi {
                   allFav.content[newSport].difficulty, allFav.content[newSport].user, allFav.content[newSport].category))
             }
             page++;
+            url = `${Api.baseUrl}/favourites?page=${page}`;
         }
         while(allFav.isLastPage === false);
         return resp;

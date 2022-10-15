@@ -33,6 +33,7 @@ class ExerciseApi {
           allExer.content[newSport].detail,allExer.content[newSport].type))
       }
       page++;
+      url = `${Api.baseUrl}/exercises?page=${page}`
     }
     while(allExer.isLastPage === false);
     return resp;
