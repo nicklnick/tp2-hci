@@ -20,17 +20,7 @@
           <div v-if="myRoutines===null || myRoutines.length === 0">
             <h2>Routines that you created will appear here!</h2>
           </div>
-          <v-row v-else>
-            <v-col cols="3" v-for="(routine, index) in myRoutines" :key="index">
-              <RoutineButton :routine_difficulty="routine.difficulty"
-                             :routine_detail="routine.detail"
-                             :routine_author="routine.user.username"
-                             :routine_name="routine.name"
-                             :routine_category="routine.category?.name"
-                             :routine_id="routine.id"
-              ></RoutineButton>
-            </v-col>
-          </v-row>
+          <PaginationGrid v-else :routine-array="myRoutines"/>
         </div>
         <!-- CONTENT GOES HERE -->
       </div>
@@ -48,15 +38,15 @@ import BigButton from "@/components/BigButton";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { mapActions, mapState } from "pinia";
 import { RoutineApi } from "@/api/routine";
-import RoutineButton from "@/components/Routines/RoutineButton";
+import PaginationGrid from "@/components/Navigation/PaginationGrid";
 
 export default {
   name: 'HomeView',
   components: {
-    RoutineButton,
+    PaginationGrid,
     BigButton,
     SideMenu,
-    TopBar
+    TopBar,
   },
   data() {
     return {

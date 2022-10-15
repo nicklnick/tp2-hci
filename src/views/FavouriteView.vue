@@ -16,22 +16,14 @@
           <div class="width">
             <h1 class="pb-10">Favorite Routines</h1>
           </div>
-          <div v-if="favouriteRoutines===null || favouriteRoutines.length === 0">
-            <h2>Looks like you haven't liked any routines. I'm sure you'll find one you enjoy! ʕ•ᴥ•ʔ</h2>
-          </div>
-          <v-row v-else>
-            <v-col cols="3" v-for="(routine, index) in favouriteRoutines" :key="index">
-              <RoutineButton :routine_difficulty="routine.difficulty"
-                             :routine_detail="routine.detail"
-                             :routine_author="routine.user.username"
-                             :routine_name="routine.name"
-                             :routine_category="routine.category?.name"
-                             :routine_id="routine.id"
-              ></RoutineButton>
-            </v-col>
-          </v-row>
-        </div>
         <!-- CONTENT GOES HERE -->
+        <div v-if="favouriteRoutines === null || favouriteRoutines.length === 0" class="flex-container">
+          <h2>Looks like you haven't liked any routines. I'm sure you'll find one you enjoy! ʕ•ᴥ•ʔ</h2>
+        </div>
+        <div v-else class="width">
+          <PaginationGrid  :routine-array="favouriteRoutines"/>
+        </div>
+        </div>
       </div>
     </div>
   </div>
@@ -43,19 +35,18 @@
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import BigButton from "@/components/BigButton";
-
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { mapActions, mapState } from "pinia";
 import { FavouriteApi } from "@/api/favourites";
-import RoutineButton from "@/components/Routines/RoutineButton";
+import PaginationGrid from "@/components/Navigation/PaginationGrid";
 
 export default {
   name: 'HomeView',
   components: {
-    RoutineButton,
     BigButton,
     SideMenu,
-    TopBar
+    TopBar,
+    PaginationGrid
   },
   data() {
     return {

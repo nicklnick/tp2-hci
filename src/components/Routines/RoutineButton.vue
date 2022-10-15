@@ -71,6 +71,18 @@ export default {
         required: true
       }
   },
+  watch: {
+    async routine_id() {
+      const isFavourite = await FavouriteApi.checkFavourite(this.routine_id);
+      if (isFavourite === true) {
+        this.favourite = 1;
+        this.heart_color = "primary";
+      }else {
+        this.favourite = 0;
+        this.heart_color = "grey darken-2";
+      }
+    }
+  },
   computed: {
     ...mapActions(useFavouriteStore, {
       $addToFavourites: 'addToFavourites',

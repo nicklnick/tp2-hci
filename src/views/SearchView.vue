@@ -18,20 +18,9 @@
           </div>
         </div>
         <!-- CONTENT GOES HERE -->
-        <v-row class="width">
-          <v-col cols="3" v-for="(routine, index) in routines" :key="index">
-            <div class="columns">
-              <RoutineButton :routine_author="routine.user.username"
-                             :routine_name="routine.name"
-                             :routine_difficulty="routine.difficulty"
-                             :routine_id="routine.id"
-                             :routine_category="routine.category?.name"
-                             :routine_detail="routine.detail"
-              ></RoutineButton>
-            </div>
-          </v-col>
-        </v-row>
-
+        <div class="width">
+          <PaginationGrid  :routine-array="routines"/>
+        </div>
       </div>
     </div>
   </div>
@@ -41,18 +30,18 @@
 <script>
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
-import RoutineButton from "@/components/Routines/RoutineButton";
 import {RoutineApi} from "@/api/routine";
 import {mapActions, mapState} from "pinia";
 import { useSecurityStore } from "@/stores/SecurityStore";
+import PaginationGrid from "@/components/Navigation/PaginationGrid";
 
 
 export default {
   name:"SearchView",
   components: {
+    PaginationGrid,
     SideMenu,
     TopBar,
-    RoutineButton
   },
   data() {
     return{
@@ -103,10 +92,9 @@ export default {
     }
     // this.routines = await RoutineApi.getAll()
     // this.routines = this.routines.content
-  },
-  async mounted() {
     this.routines = await this.filteredSearch()
-  }
+
+  },
 }
 </script>
 

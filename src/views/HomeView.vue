@@ -19,7 +19,7 @@
           </router-link>
         </div>
           <div class="text">
-            <h1>Search Routines by Category</h1>
+            <h1>By Category</h1>
           </div>
           <MuscleCarousel/>
 
