@@ -20,6 +20,8 @@
         </div>
           <div class="text">
             <h1>By Category</h1>
+            <v-spacer/>
+            <router-link to="/allroutines" >View All Routines</router-link>
           </div>
           <MuscleCarousel/>
 

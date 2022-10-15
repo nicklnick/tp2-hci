@@ -20,7 +20,9 @@
           <div v-if="myRoutines===null || myRoutines.length === 0">
             <h2>Routines that you created will appear here!</h2>
           </div>
-          <PaginationGrid v-else :routine-array="myRoutines"/>
+          <div v-else class="width">
+            <PaginationGrid  :routine-array="myRoutines"/>
+          </div>
         </div>
         <!-- CONTENT GOES HERE -->
       </div>

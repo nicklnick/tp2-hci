@@ -11,14 +11,14 @@
       <div class="general-area width ">
         <div class="header">
           <router-link to="/home" tag="button">
-          <v-btn
-          color="secondary"
-          >
-            Go Back
-          </v-btn>
+            <v-btn
+                color="secondary"
+            >
+              Go Back
+            </v-btn>
           </router-link>
 
-        <h1 class="text">{{ muscle.name }}</h1>
+          <h1 class="text">All Routines</h1>
         </div>
         <!-- CONTENT GOES HERE -->
         <div class="width">
@@ -31,7 +31,6 @@
 
 
 <script>
-import store from "@/store/MuscleGroups"
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import {RoutineApi} from "@/api/routine";
@@ -40,29 +39,18 @@ import {mapActions, mapState} from "pinia";
 import { useSecurityStore } from "@/stores/SecurityStore";
 
 export default {
-  name:"CategoryView",
+  name:"AllRoutinesView",
   components: {
     SideMenu,
     TopBar,
     PaginationGrid
   },
-  data(){
+  data() {
     return {
       routines: null
     }
   },
-  props: {
-    slug: {
-      type: String,
-      required: true,
-    },
-  },
   computed: {
-    muscle() {
-      return store.muscles.find(
-        (muscles) => muscles.slug === this.slug
-      );
-    },
     ...mapState(useSecurityStore, {
       $isLoggedIn: 'isLoggedIn',
       $online: 'online'
@@ -70,17 +58,6 @@ export default {
     ...mapActions(useSecurityStore, {
       $checkApiOnline: 'checkApiOnline'
     }),
-  },
-  methods: {
-    async filteredCategory(CategoryID) {
-      const resp = []
-      let auxi = await RoutineApi.getAll()
-      for( const key in auxi){
-        if( parseInt(auxi[key].category.id) === parseInt(CategoryID) && auxi[key].isPublic === true)
-          resp.push(auxi[key])
-      }
-      return resp
-    }
   },
   async created() {
     const securityStore = useSecurityStore();
@@ -95,7 +72,7 @@ export default {
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({name: "Login"});
     }
-    this.routines = await this.filteredCategory(this.muscle.id)
+    this.routines = await RoutineApi.getAll();
   },
 }
 </script>

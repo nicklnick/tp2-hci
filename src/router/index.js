@@ -16,6 +16,7 @@ import FavouriteView from "@/views/FavouriteView";
 import OverviewRoutineView from "@/views/OverviewRoutineView";
 import HelpView from "@/views/HelpView";
 import EditRoutineView from "@/views/EditRoutineView";
+import AllRoutinesView from "@/views/AllRoutinesView";
 
 Vue.use(VueRouter)
 
@@ -89,6 +90,11 @@ const routes = [
     name: 'SearchView',
     component: SearchView,
     props: true
+  },
+  {
+    path: '/allroutines',
+    name: 'AllRoutinesView',
+    component: AllRoutinesView
   },
   {
     path: '/favourites',

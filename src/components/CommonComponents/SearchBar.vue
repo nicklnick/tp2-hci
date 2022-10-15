@@ -7,7 +7,7 @@
   <v-text-field
     v-model="InputText" @keyup.enter="search"
     class="search-bar mt-6 my-text-style"
-    label="Search a Specific Routine or Type &quot;All Routines&quot; "
+    label="Search"
     background-color="quaternary"
     append-icon="mdi-magnify"
     hide-no-data

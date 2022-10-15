@@ -68,7 +68,7 @@ export default {
       const resp = []
       let auxi = await RoutineApi.getAll()
       for (const key in auxi){
-        if( (auxi[key].name === this.$route.params.input || this.$route.params.input === 'All Routines' )&& auxi[key].isPublic === true)
+        if( auxi[key].name === this.$route.params.input && auxi[key].isPublic === true)
           resp.push(auxi[key])
       }
       return resp
@@ -90,8 +90,6 @@ export default {
     if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({name: "Login"});
     }
-    // this.routines = await RoutineApi.getAll()
-    // this.routines = this.routines.content
     this.routines = await this.filteredSearch()
 
   },
