@@ -59,7 +59,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 50%;
   width: 100%;
   zoom: 80%;
 }
