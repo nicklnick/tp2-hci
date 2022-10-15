@@ -22,7 +22,7 @@ class CompleteRoutineApi{
        return complete_routine;
      }
      static async createCompleteRoutine(completeRoutine){
-       const routineJson =  await RoutineApi.add(completeRoutine.to_simple_routine());  // TODO: posible error no le paso el id y qcy
+       const routineJson =  await RoutineApi.add(completeRoutine.to_simple_routine());
        completeRoutine.routine_id = routineJson.id;
 
        let order = 0;
@@ -45,6 +45,15 @@ class CompleteRoutineApi{
               completeRoutine.cycles[cycleKey].exercises[exerKey].to_simple_exercise())
          }
        }
+     }
+     static async deleteCompleteRoutine(completeRoutine){
+       for(const cycleKey in completeRoutine.cycles){
+         for(const exerKey in completeRoutine.cycles[cycleKey].exercises){
+            await CycleExerciseApi.delete(completeRoutine.cycles[cycleKey].cycle_id,completeRoutine.cycles[cycleKey].exercises[exerKey].exercise_id);
+         }
+         await RoutineCycleApi.delete(completeRoutine.routine_id,completeRoutine.cycles[cycleKey].cycle_id );
+       }
+       await RoutineApi.delete(completeRoutine.routine_id);
      }
 }
 
@@ -71,6 +80,8 @@ class CompleteExercise{
   }
 
   build(exerciseCylceJson){
+    this.validRepetitions = true;
+    this.validDuration = true;
     this.exercise_id = exerciseCylceJson.exercise.id;
     this.exercise_name = exerciseCylceJson.exercise.name;
     this.exercise_detail = exerciseCylceJson.exercise.detail;
@@ -106,6 +117,7 @@ class CompleteCycle {
     this.cycle_repetitions = "1";
   }
   build(cycleJson){
+    this.validRepetitions = true;
     this.cycle_id = cycleJson.id;
     this.cycle_name = cycleJson.name;
     this.cycle_detail = cycleJson.detail;
@@ -159,7 +171,7 @@ class CompleteRoutine{
       this.routine_id = routineJson.id;
       this.routine_name = routineJson.name;
       this.routine_detail = routineJson.detail;
-      this.routine_category = routineJson.category;
+      this.routine_category = JSON.parse(JSON.stringify(routineJson.category));
       this.routine_is_public = routineJson.isPublic;
       this.routine_difficulty = routineJson.difficulty;
       this.user = routineJson.user;

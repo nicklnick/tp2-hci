@@ -15,6 +15,7 @@ import LostView from "@/views/LostView";
 import FavouriteView from "@/views/FavouriteView";
 import OverviewRoutineView from "@/views/OverviewRoutineView";
 import HelpView from "@/views/HelpView";
+import EditRoutineView from "@/views/EditRoutineView";
 
 Vue.use(VueRouter)
 
@@ -103,6 +104,11 @@ const routes = [
     path: '/help',
     name: 'HelpView',
     component: HelpView
+  },
+  {
+    path: '/routines/edit/:id',
+    name: 'Edit Routine',
+    component: EditRoutineView
   },
   {
     path: '/*',
