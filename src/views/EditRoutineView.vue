@@ -226,7 +226,7 @@ import CustomCard from "@/components/CommonComponents/CustomCard";
 import { Exercise } from "@/api/exercise";
 import { useExerciseStore } from "@/stores/ExerciseStore";
 import { useSecurityStore } from "@/stores/SecurityStore";
-import { mapActions, mapState } from "pinia";
+import { mapState } from "pinia";
 import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 import { useCategoryStore } from "@/stores/CategoryStore";
 import { CompleteCycle, CompleteExercise, CompleteRoutine, CompleteRoutineApi } from "@/api/CompleteRoutineApi";
@@ -244,35 +244,29 @@ export default {
   async created() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
-
-    if (!this.$online) {
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!
+    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({ name: "Login" });
     }
-    this.exerciseStore = useExerciseStore();
-    await this.exerciseStore.updateCache();
-    this.categoryStore = useCategoryStore();
-    await this.categoryStore.updateCache();
+    else{
+      this.exerciseStore = useExerciseStore();
+      await this.exerciseStore.updateCache();
+      this.categoryStore = useCategoryStore();
+      await this.categoryStore.updateCache();
 
-    // setup del ejercicio que ya existe
-    this.routine = await CompleteRoutineApi.getCompleteRoutine(this.$route.params.id);
+      // setup del ejercicio que ya existe
+      this.routine = await CompleteRoutineApi.getCompleteRoutine(this.$route.params.id);
 
-    this.setupValues();
+      this.setupValues();
 
-    this.oldVersion = await CompleteRoutineApi.getCompleteRoutine(this.$route.params.id);
+      this.oldVersion = await CompleteRoutineApi.getCompleteRoutine(this.$route.params.id);
+    }
   },
   computed: {
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
-    }),
     ...mapState(useExerciseStore,{
       $items: 'items',
     }),
@@ -339,8 +333,6 @@ export default {
       }
       this.routine.routine_difficulty = this.routine.routine_difficulty.charAt(0).toUpperCase() + this.routine.routine_difficulty.slice(1);
     },
-
-
     //  ---- common ----
     handleError(msg){
       this.errorMsg = msg

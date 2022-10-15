@@ -46,7 +46,7 @@ import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import MuscleCarousel from "@/components/MuscleCarousel";
 import BigButton from "@/components/BigButton";
-import { mapActions, mapState } from "pinia";
+import { mapState } from "pinia";
 import { RoutineApi } from "@/api/routine";
 
 export default {
@@ -60,32 +60,27 @@ export default {
   },
   computed: {
     ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online',
       $user: 'user'
     })},
-  ...mapActions(useSecurityStore, {
-    $checkApiOnline: 'checkApiOnline'
-  }),
+  async mounted() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+    await securityStore.checkApiOnline();
+
+    if(securityStore.online === false){
+      await this.$router.push({ name: "Error" });
+    }
+    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
+    }
+    else{
+      this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
+    }
+  },
   data() {
     return {
       myRoutines: null
     }
-  },
-  async created() {
-    const securityStore = useSecurityStore();
-    await securityStore.initialize();
-
-    await this.$checkApiOnline;
-
-    if(!this.$online){
-      console.log("redirecting")
-      await this.$router.push({ name: "Error" });
-    }
-    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      await this.$router.push({name: "Login"});
-    }
-    this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
   }
 }
 </script>

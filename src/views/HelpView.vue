@@ -27,12 +27,25 @@
 <script>
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
+import { useSecurityStore } from "@/stores/SecurityStore";
 
 export default {
   name: 'HelpView',
   components: {
     SideMenu,
     TopBar
+  },
+  async mounted() {
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+    await securityStore.checkApiOnline();
+
+    if (securityStore.online === false) {
+      await this.$router.push({ name: "Error" });
+    }
+    if (securityStore.isLoggedIn === false) {   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
+    }
   }
 }
 </script>

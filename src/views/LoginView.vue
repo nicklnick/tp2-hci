@@ -148,6 +148,33 @@ import {CategoryApi} from "@/api/category";
 export default {
   name: 'LoginView',
   components: { LoadingImage  },
+  async mounted() {
+    if(this.path==='/login'){
+      this.tab= 0
+    }
+    else{
+      this.tab = 1
+    }
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+    await securityStore.checkApiOnline();
+
+    if(securityStore.online === false){
+      await this.$router.push({ name: "Error" });
+    }
+    if(securityStore.isLoggedIn === true){
+      await this.$router.push({ name: "Home" });
+    }
+
+  },
+  computed: {
+    ...mapState(useSecurityStore, {
+      $user: state => state.user,
+    }),
+    ...mapState(useSecurityStore, {
+      $isLoggedIn: 'isLoggedIn',
+    }),
+  },
   data() {
     return {
       show1: false,
@@ -188,18 +215,6 @@ export default {
         },
       },
     };
-  },
-  computed: {
-    ...mapState(useSecurityStore, {
-      $user: state => state.user,
-    }),
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline'
-    })
   },
   watch: {
     $isLoggedIn(newValue){
@@ -283,27 +298,7 @@ export default {
       },5000)
 
     },
-  },
-    async created() {
-      if(this.path==='/login'){
-        this.tab= 0
-      }
-      else{
-        this.tab = 1
-      }
-      const securityStore = useSecurityStore();
-      await securityStore.initialize();
-
-      await this.$checkApiOnline;
-
-      if(!this.$online){
-        await this.$router.push({ name: "Error" });
-      }
-      if(this.$isLoggedIn){   // TODO: !!!! check !!!!
-        await this.$router.push({ name: "Home" });
-      }
-
-    }
+  }
 }
 </script>
 

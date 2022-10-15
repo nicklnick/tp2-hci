@@ -161,7 +161,6 @@ import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
 import {useSecurityStore} from "@/stores/SecurityStore";
 import {CompleteRoutine, CompleteRoutineApi} from "@/api/CompleteRoutineApi";
-import {mapActions, mapState} from "pinia";
 import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 import CustomCard from "@/components/CommonComponents/CustomCard";
 
@@ -182,14 +181,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online',
-      $user: 'user'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
-    }),
     currentCycle() {
       if(this.routine.cycles.length > this.index)
         return this.routine.cycles[this.index];
@@ -210,21 +201,21 @@ export default {
         this.difficulty_color = "red"
     },
   },
-  async created() {
+  async mounted() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
-
-    if(!this.$online){
-      console.log("redirecting")
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      await this.$router.push({name: "Login"});
+    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
     }
-    this.routine = await CompleteRoutineApi.getCompleteRoutine(this.$route.params.id);
-    this.getDifficultyColor();
+    else{
+      this.routine = await CompleteRoutineApi.getCompleteRoutine(this.$route.params.id);
+      this.getDifficultyColor();
+    }
   }
 };
 </script>
@@ -254,20 +245,6 @@ export default {
   zoom: 82%;
 }
 
-.text-width{
-  width: 85%;
-}
-.general-height {
-  height: 500px
-}
-
-.card_text {
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
 /*routine details*/
 
 .general-area-height {
@@ -292,12 +269,7 @@ export default {
 .tab-size-width{
   width: 85%;
 }
-.add-tab-width {
-  width: 5%;
-}
-.repeat{
-  width: 12%;
-}
+
 .text-field {
   padding: 0;
   margin-left: 5px;
@@ -305,34 +277,6 @@ export default {
 }
 
 /* routine overview */
-.select_it{
-  width: 175px;
-}
-
-.top-area{
-  height: 8%;
-}
-.bottom-area{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 500px;
-  width: 100%;
-}
-.overview{               /* !!!! COMMON !!!! */
-  width: 90%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.error-tag{
-  position: fixed;
-  bottom: 30px;
-  right: 33%;
-  width: 400px;
-}
 
 .flex-container {
   display: flex;

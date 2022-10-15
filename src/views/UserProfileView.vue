@@ -214,11 +214,20 @@ export default {
   },
   async created() {
     // Siempre inicializarlo!!!!!
-    const securityStore = useSecurityStore()
-    await securityStore.initialize()
+    const securityStore = useSecurityStore();
+    await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$getCurrentUser()
-    this.setLocalFields()
+
+    if(securityStore.online === false){
+      await this.$router.push({ name: "Error" });
+    }
+    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Login" });
+    }
+    else {
+      this.setLocalFields()
+    }
   },
 }
 </script>

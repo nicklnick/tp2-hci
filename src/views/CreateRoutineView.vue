@@ -228,7 +228,7 @@ import CustomCard from "@/components/CommonComponents/CustomCard";
 import { Exercise } from "@/api/exercise";
 import { useExerciseStore } from "@/stores/ExerciseStore";
 import { useSecurityStore } from "@/stores/SecurityStore";
-import { mapActions, mapState } from "pinia";
+import { mapState } from "pinia";
 import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 import { useCategoryStore } from "@/stores/CategoryStore";
 import { CompleteCycle, CompleteExercise, CompleteRoutine, CompleteRoutineApi } from "@/api/CompleteRoutineApi";
@@ -242,34 +242,27 @@ export default {
     SideMenu,
     TopBar,
   },
-  async created() {
+  async mounted() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
 
-    if (!this.$online) {
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if (this.$isLoggedIn === false) {   // TODO: !!!! check !!!!
+    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
       await this.$router.push({ name: "Login" });
     }
-    this.exerciseStore = useExerciseStore();
-    await this.exerciseStore.updateCache();
-    this.categoryStore = useCategoryStore();
-    await this.categoryStore.updateCache();
+    else{
+      this.exerciseStore = useExerciseStore();
+      await this.exerciseStore.updateCache();
+      this.categoryStore = useCategoryStore();
+      await this.categoryStore.updateCache();
+    }
   },
-  mounted() {
 
-  },
   computed: {
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
-    }),
     ...mapState(useExerciseStore,{
       $items: 'items',
     }),
