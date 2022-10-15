@@ -7,7 +7,7 @@
         <!-- Login -->
         <v-tab class="section" color="primary"> Log In </v-tab>
         <v-tab-item>
-          <div class="details">
+          <div class="size-signin">
             <v-form>
               <v-container>
                 <v-col>
@@ -47,7 +47,6 @@
                     ></v-checkbox>
                   </div>
 
-                  <p class="error-msg">{{errorMessage}}</p>
                   <LoadingImage v-if="loading===1"></LoadingImage>
                 </v-col>
               </v-container>
@@ -58,7 +57,7 @@
         <!-- Signup -->
         <v-tab class="section">Sign Up</v-tab>
         <v-tab-item>
-          <div class="details">
+          <div class="size-signup">
             <v-form>
               <v-container>
                 <v-col align="center">
@@ -123,7 +122,6 @@
                   <v-btn @click="signup()" class="button" color="secondary">
                     Continue
                   </v-btn>
-                  <p class="error-msg">{{errorMessage}}</p>
                   <LoadingImage v-if="loading===1"/>
                 </v-col>
               </v-container>
@@ -132,6 +130,7 @@
         </v-tab-item>
       </v-tabs>
     </v-card>
+    <v-alert class="error-tag ma-0" :value="error" dismissible type="error">{{errorMsg}}</v-alert>
   </div>
 </template>
 
@@ -166,9 +165,11 @@ export default {
       rememberMe: false,
 
       //messaging
-      errorMessage: "",
-      msg: "LOADING...",
+      errorMsg: null,
+      error: false,
       loading: 0 ,
+
+
 
       path: this.$route.path,
       rules: {
@@ -213,14 +214,14 @@ export default {
     setResult(result){
       switch(result.code ){
         case 4:
-          this.errorMessage = result.description
+          this.handleError(result.description)
           break;
         case 2:
           if(result.details[0].localeCompare("\"UNIQUE constraint failed: User.email\"") === 0){
-            this.errorMessage = "Email already in use";
+            this.handleError("Email already in use");
           }
           else{
-            this.errorMessage = "Username already in use";
+            this.handleError("Username already in use");
           }
           break;
       }
@@ -232,21 +233,17 @@ export default {
         await CategoryApi.add({name: muscles[key].name, detail: muscles[key].name})
       }
     },
-    clearResult() {
-      this.errorMessage = null
-    },
     async login(rememberMe) {
       try {
         if(!this.validUsername || !this.validPassword){
-          this.errorMessage = "Invalid username or password"
+          this.handleError("Invalid username or password")
           return;
         }
-        this.errorMessage = "";
+
         const credentials = new Credentials(this.username, this.password)
 
         this.loading = 1
         await this.$login(credentials, rememberMe? rememberMe : false)
-        this.clearResult()
 
         let auxi = await CategoryApi.getAll()
         if( auxi.totalCount === 0) {
@@ -261,10 +258,9 @@ export default {
     async signup(){
       try {
         if(!this.validUsername || !this.validPassword || !this.validEmail){
-          this.errorMessage = "Invalid username, password or email"
+          this.handleError("Invalid username, password or email")
           return;
         }
-        this.errorMessage = "";
 
         this.loading = 1;
         await UserApi.signup(this.username,this.password,this.email);
@@ -277,6 +273,15 @@ export default {
     },
     abort() {
         this.controller.abort()
+    },
+    handleError(msg){
+      this.errorMsg = msg
+      this.error = true;
+      setTimeout(()=>{
+        this.error=false;
+        this.errorMsg = "";
+      },5000)
+
     },
   },
     async created() {
@@ -308,7 +313,7 @@ export default {
   display: flex;
   justify-content: center;
   align-content: center;
-  padding-top: 50px;
+  padding-top: 75px;
 }
 .verify {
   width: 50%;
@@ -318,8 +323,18 @@ export default {
   width: 50%;
 }
 
-.details {
-  height: 75vh;
+.size-signin{
+  height: 450px
+}
+.size-signup{
+  height: 565px;
+}
+
+.error-tag{
+  position: fixed;
+  bottom: 30px;
+  right: 35%;
+  width: 400px;
 }
 
 </style>
