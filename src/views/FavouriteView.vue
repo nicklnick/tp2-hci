@@ -8,45 +8,54 @@
       <div class="w2" >
         <SideMenu></SideMenu>
       </div>
-      <div class="general-area width ">
-        <div class="flex-container">
-          <h1 class="PageTitle">Favourites</h1>
+      <div  class=" general-area width ">
+        <router-link class="my-10 " link to="/create-routine">
+          <BigButton button_text="Create Routine"/>
+        </router-link>
+        <div class="pt-10 text flex-column">
+          <div class="width">
+            <h1 class="pb-10">Favorite Routines</h1>
+          </div>
+          <div v-if="favouriteRoutines===null || favouriteRoutines.length === 0">
+            <h2>Looks like you haven't liked any routines. I'm sure you'll find one you enjoy! ʕ•ᴥ•ʔ</h2>
+          </div>
+          <v-row v-else>
+            <v-col cols="3" v-for="(routine, index) in favouriteRoutines" :key="index">
+              <RoutineButton :routine_difficulty="routine.difficulty"
+                             :routine_detail="routine.detail"
+                             :routine_author="routine.user.username"
+                             :routine_name="routine.name"
+                             :routine_category="routine.category?.name"
+                             :routine_id="routine.id"
+              ></RoutineButton>
+            </v-col>
+          </v-row>
         </div>
         <!-- CONTENT GOES HERE -->
-        <div v-if="favouriteRoutines === null || favouriteRoutines.length === 0" class="flex-container">
-          <h2>Looks like you haven't liked any routines. I'm sure you'll find one you enjoy! ʕ•ᴥ•ʔ</h2>
-        </div>
-        <v-row v-else class="width">
-          <v-col cols="3" v-for="(favRoutine, index) in favouriteRoutines" :key="index">
-              <RoutineButton :routine_author="favRoutine.user.username"
-                             :routine_name="favRoutine.name"
-                             :routine_difficulty="favRoutine.difficulty"
-                             :routine_id="favRoutine.id"
-                             :routine_category="favRoutine.category?.name"
-                             :routine_detail="favRoutine.detail"
-              ></RoutineButton>
-          </v-col>
-        </v-row>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
+// @ is an alias to /src
+
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
-import RoutineButton from "@/components/Routines/RoutineButton";
-import {FavouriteApi} from "@/api/favourites.js";
-import {mapActions, mapState} from "pinia";
+import BigButton from "@/components/BigButton";
+
 import { useSecurityStore } from "@/stores/SecurityStore";
+import { mapActions, mapState } from "pinia";
+import { FavouriteApi } from "@/api/favourites";
+import RoutineButton from "@/components/Routines/RoutineButton";
 
 export default {
-  name: 'FavouriteView',
+  name: 'HomeView',
   components: {
-    SideMenu,
-    TopBar,
     RoutineButton,
+    BigButton,
+    SideMenu,
+    TopBar
   },
   data() {
     return {
@@ -56,10 +65,11 @@ export default {
   computed: {
     ...mapState(useSecurityStore, {
       $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
+      $online: 'online',
+      $user: 'user'
     }),
     ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline'
+      $checkApiOnline: 'checkApiOnline',
     }),
   },
   async created() {
@@ -69,18 +79,20 @@ export default {
     await this.$checkApiOnline;
 
     if(!this.$online){
-      console.log("redirecting")
       await this.$router.push({ name: "Error" });
     }
-    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      await this.$router.push({name: "Login"});
+    if(!this.$isLoggedIn){   // TODO: !!!! check !!!!
+      await this.$router.push({ name: "Home" });
     }
     this.favouriteRoutines = await FavouriteApi.getFavourites();
-  },
+  }
+
+
 }
 </script>
 
 <style scoped>
+
 .total-height{
   height: 100%;
 }
@@ -101,21 +113,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: start;
+  align-items: center;
   height: 100%;
-  zoom: 80%;
+  zoom: 70%;
 }
-
-
-.flex-container {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  width: 30%;
+.text {
+  width: 90%;
+  display: flex;
+  justify-content: start;
 }
-
-.PageTitle {
-  font-size: 3rem;
-}
-
 
 </style>
