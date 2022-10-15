@@ -81,6 +81,7 @@ export default {
         this.favourite = 0;
         this.heart_color = "grey darken-2";
       }
+      this.getDifficultyColor();
     }
   },
   computed: {

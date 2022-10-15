@@ -30,7 +30,7 @@
 
 
           <!-- Overview -->
-            <div  class="row-center twidth">
+            <div  class="row-center width">
               <div class="pr-7 cwidth row-start">
                 <v-card id="main-panel" class="cwidth cheight rounded-xl" color="quaternary" raised>
                   <div class="cheight space-between-col">
@@ -59,7 +59,7 @@
                                        :exer_type="exercise.exercise_type"
                         >
                           <!-- exercise time and series -->
-                          <div class="flex-container py-2 space-evenly-col">
+                          <div class="flex-container py-2 space-evenly-col pr-3">
                             <div v-if="exercise.exericse_duration > 0">
                               <v-text-field readonly v-model="exercise.exericse_duration" label="Time (s)"></v-text-field>
                             </div>
@@ -137,11 +137,26 @@
             <!-- General -->
             <div class="space-between-row width px-10">
               <v-spacer></v-spacer>
-              <router-link to="/routines">
+              <router-link v-if="isMyRoutine()" :to="`/routines/edit/${this.routine.routine_id}`">
                 <v-btn fab x-large color="primary">
                   <v-icon>edit</v-icon>
                 </v-btn>
               </router-link>
+
+              <v-dialog v-if="isMyRoutine()" v-model="dialog" persistent max-width="290">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn class="ml-4" color="primary" dark v-bind="attrs" fab x-large v-on="on"><v-icon>delete</v-icon></v-btn>
+                </template>
+                <v-card>
+                  <v-card-title class="text-h5">Do you wish to delete the routine?</v-card-title>
+                  <v-card-text>This action cannot be undone. Confirm deletion.</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="dialog = false">Don't delete</v-btn>
+                    <v-btn color="red" text @click="deleteRoutine()">Delete</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
               </div>
 
             </div>
@@ -163,6 +178,7 @@ import {useSecurityStore} from "@/stores/SecurityStore";
 import {CompleteRoutine, CompleteRoutineApi} from "@/api/CompleteRoutineApi";
 import ExerciseCard2 from "@/components/Exercise/ExerciseCard2";
 import CustomCard from "@/components/CommonComponents/CustomCard";
+import { mapState } from "pinia";
 
 export default {
   name: "OverviewRoutineView",
@@ -177,7 +193,10 @@ export default {
       routine: new CompleteRoutine("", "", false, "", ""),
       tab: 0,
       isPublic: true,
-      difficulty_color: null
+      difficulty_color: null,
+
+      confirm_delete: false,
+      dialog: false,
     }
   },
   computed: {
@@ -186,6 +205,9 @@ export default {
         return this.routine.cycles[this.index];
       return this.routine.cycles[0];
     },
+    ...mapState(useSecurityStore,{
+      $user: 'user'
+    })
   },
   methods: {
     getDifficultyColor() {
@@ -200,6 +222,14 @@ export default {
       else
         this.difficulty_color = "red"
     },
+    isMyRoutine(){
+      return this.routine.user.id  === this.$user.id;
+    },
+    async deleteRoutine(){
+      this.dialog = false;
+      await CompleteRoutineApi.deleteCompleteRoutine(this.routine)
+      await this.$router.push({ name: "My Routines" });
+    }
   },
   async mounted() {
     const securityStore = useSecurityStore();
@@ -292,6 +322,13 @@ export default {
 
 .twidth {
   width: 90%;
+}
+
+.error-tag{
+  position: fixed;
+  bottom: 30px;
+  right: 33%;
+  width: 400px;
 }
 
 </style>
