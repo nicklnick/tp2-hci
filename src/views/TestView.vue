@@ -11,7 +11,7 @@
         </div>
         <div class="general-area width ">
 
-          <!-- CONTENT GOES HERE -->
+          <OverviewRoutineView routine_id="14"></OverviewRoutineView>
 
 
         </div>
@@ -26,10 +26,12 @@
 
 import TopBar from "@/components/Navigation/TopBar";
 import SideMenu from "@/components/Navigation/SideMenu";
+import OverviewRoutineView from "@/views/OverviewRoutineView";
 
 export default {
   name: "TestView",
   components: {
+    OverviewRoutineView,
 
     SideMenu,
     TopBar

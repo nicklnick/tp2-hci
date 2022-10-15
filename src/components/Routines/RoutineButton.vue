@@ -1,5 +1,5 @@
 <template>
-    <v-btn color="quaternary" height="200px" width="350px">
+    <v-btn color="quaternary" height="200px" width="350px" link :to="`/routines/view/${routine_id}`">
       <v-card color="quaternary" height="200px" width="350px">
         <div class="flex-container pt-2">
           <v-list-item-title class="align-self-start headline pb-3 pl-3 card-text">{{routine_name}}</v-list-item-title>

@@ -94,12 +94,11 @@
                   </div>
 
                   <div  class=" row-center">
-
                     <div class="general-area-width">
                       <v-divider></v-divider>
 
                       <div class="row-start">
-                        <p class="pl-3 pt-2"> Repeat </p>
+                        <p class="pl-3 pt-2">Repeat</p>
                         <div class="repeat">
                           <v-form v-model="currentSeries.validRepetitions">
                             <v-text-field class="text-field" single-line v-model="currentSeries.cycle_repetitions" :rules="reprules" ></v-text-field>
@@ -109,7 +108,6 @@
 
                         <v-spacer></v-spacer>
                       </div>
-
                     </div>
                   </div>
                 </div>
@@ -151,7 +149,7 @@
 
           <!-- ROUTINE OVERVIEW -->
           <div v-if="mode===0" class="row-evenly width">
-            <CustomCard  card-title="Overview" card-width="1000" card-height="550">
+            <CustomCard card-title="Overview" card-width="1000" card-height="550">
 
               <div class="bottom-area">
                 <div class="overview">

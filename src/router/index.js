@@ -13,6 +13,7 @@ import ApiErrorView from "@/views/ApiErrorView";
 import SearchView from "@/views/SearchView";
 import LostView from "@/views/LostView";
 import FavouriteView from "@/views/FavouriteView";
+import OverviewRoutineView from "@/views/OverviewRoutineView";
 import HelpView from "@/views/HelpView";
 
 Vue.use(VueRouter)
@@ -92,6 +93,11 @@ const routes = [
     path: '/favourites',
     name: 'FavouriteView',
     component: FavouriteView
+  },
+  {
+    path: '/routines/view/:id',
+    name: 'OverviewRoutineView',
+    component: OverviewRoutineView
   },
   {
     path: '/help',
