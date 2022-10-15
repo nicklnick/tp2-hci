@@ -143,6 +143,8 @@ import { useSecurityStore } from "@/stores/SecurityStore";
 import { Credentials } from "@/api/user";
 import { UserApi } from "@/api/user"
 import LoadingImage from "@/components/CommonComponents/LoadingImage";
+import muscleGroups from "@/store/MuscleGroups";
+import {CategoryApi} from "@/api/category";
 
 export default {
   name: 'LoginView',
@@ -220,6 +222,14 @@ export default {
             this.errorMessage = "Username already in use"
       }
     },
+    async LoadCategories() {
+      let muscles = muscleGroups.muscles
+      console.log("muscleGroups")
+      for (const key in muscles) {
+        // let category = Category.constructor(muscles[key].id, muscles[key].name, muscles[key].name)
+        await CategoryApi.add({name: muscles[key].name, detail: muscles[key].name})
+      }
+    },
     clearResult() {
       this.errorMessage = null
     },
@@ -235,6 +245,11 @@ export default {
         this.loading = 1
         await this.$login(credentials, rememberMe? rememberMe : false)
         this.clearResult()
+
+        let auxi = await CategoryApi.getAll()
+        if( auxi.totalCount === 0) {
+          await this.LoadCategories()
+        }
 
       } catch (e) {
         this.setResult(e)
@@ -252,7 +267,6 @@ export default {
         this.loading = 1;
         await UserApi.signup(this.username,this.password,this.email);
         this.$router.push({name: "Verify Email"})
-
 
       } catch (e) {
         this.setResult(e);
