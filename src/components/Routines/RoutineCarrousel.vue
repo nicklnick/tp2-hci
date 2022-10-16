@@ -37,9 +37,9 @@
 
 <script>
 import {mapState} from "pinia";
-import {RoutineApi} from "@/api/routine";
 import {useSecurityStore} from "@/stores/SecurityStore";
 import RoutineButton from "@/components/Routines/RoutineButton";
+import { FavouriteApi } from "@/api/favourites";
 
 export default {
   name: 'RoutineCarrousel',
@@ -83,7 +83,7 @@ export default {
       await this.$router.push({ name: "Login" });
     }
     else {
-      this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
+      this.myRoutines = await FavouriteApi.getFavourites();
     }
   }
 }

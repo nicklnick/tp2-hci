@@ -15,7 +15,7 @@
         </router-link>
         <div class="pt-10 text flex-column">
           <div class="width">
-            <h1 class="pb-10">Your Routines</h1>
+            <h1 class="pb-10">My Routines</h1>
           </div>
           <div v-if="myRoutines===null || myRoutines.length === 0">
             <h2>Routines that you created will appear here!</h2>

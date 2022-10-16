@@ -11,17 +11,16 @@
       <div class="general-area width ">
         <div class="header">
           <router-link to="/home" tag="button">
-          <v-btn
-          color="secondary"
-          >
-            Go Back
-          </v-btn>
+            <v-btn fab color="tertiary">
+              <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
+            </v-btn>
+
           </router-link>
 
         <h1 class="text">{{ muscle.name }}</h1>
         </div>
         <!-- CONTENT GOES HERE -->
-        <div class="width" v-if="routines != null && routines.length > 0">
+        <div class="pt-15 pl-5 width" v-if="routines != null && routines.length > 0">
           <PaginationGrid  :routine-array="routines"/>
         </div>
       </div>

@@ -14,7 +14,7 @@
         </router-link>
         <div class="pt-10 text flex-column">
           <div class="width">
-            <h1 class="pb-10">Favorite Routines</h1>
+            <h1 class="pb-10">Favourite Routines</h1>
           </div>
         <!-- CONTENT GOES HERE -->
         <div v-if="favouriteRoutines === null || favouriteRoutines.length === 0" class="flex-container">

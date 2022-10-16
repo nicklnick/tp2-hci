@@ -26,7 +26,7 @@
           <MuscleCarousel/>
 
         <div class="text">
-          <h1>Your Routines</h1>
+          <h1>Favourite Routines</h1>
         </div>
         <RoutineCarrousel></RoutineCarrousel>
 
