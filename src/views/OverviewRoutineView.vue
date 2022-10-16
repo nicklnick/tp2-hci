@@ -107,7 +107,7 @@
                       <h4>Category</h4>
                       <v-chip-group>
                         <v-chip color="tertiary">
-                          {{this.routine.routine_category.name.toUpperCase()}}
+                          {{this.routine.routine_category.name?.toUpperCase()}}
                         </v-chip>
                       </v-chip-group>
                     </div>
@@ -223,7 +223,7 @@ export default {
         this.difficulty_color = "red"
     },
     isMyRoutine(){
-      return this.routine.user.id  === this.$user.id;
+      return this.routine.user?.id  === this.$user.id;
     },
     async deleteRoutine(){
       this.dialog = false;
