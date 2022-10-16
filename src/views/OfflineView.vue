@@ -1,8 +1,8 @@
 <template>
-  <div className="screen">
+  <div class="screen">
     <div>
       <h1>Uh Oh</h1>
-      <h1>Our API is not working</h1>
+      <h1>You are offline</h1>
       <h1>(._.) ( l: ) ( .-. ) ( :l ) (._.)</h1>
     </div>
     <router-link to="/home" tag="button">
@@ -14,7 +14,7 @@
 <script>
 
 export default {
-  name: 'ApiErrorView'
+  name: 'OfflineView'
 }
 </script>
 

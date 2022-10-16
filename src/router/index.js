@@ -17,6 +17,7 @@ import OverviewRoutineView from "@/views/OverviewRoutineView";
 import HelpView from "@/views/HelpView";
 import EditRoutineView from "@/views/EditRoutineView";
 import AllRoutinesView from "@/views/AllRoutinesView";
+import OfflineView from "@/views/OfflineView";
 
 Vue.use(VueRouter)
 
@@ -116,6 +117,12 @@ const routes = [
     name: 'Edit Routine',
     component: EditRoutineView
   },
+  {
+    path: '/offline',
+    name: 'Offline',
+    component: OfflineView
+  },
+
   {
     path: '/*',
     name: 'LostView',

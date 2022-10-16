@@ -18,7 +18,6 @@
   background-image: url('~@/assets/Background.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-
 }
 
 nav {
@@ -128,5 +127,13 @@ div::-webkit-scrollbar-thumb {
 
 export default {
   components: { },
+  methods:{
+    async offlineHandle() {
+      await this.$router.push({ name: "Offline" });
+    }
+  },
+  created() {
+    window.addEventListener('offline',this.offlineHandle)
+  }
 }
 </script>
