@@ -69,8 +69,8 @@ export default {
         { title: "Favourites", icon: "mdi-heart", to:"/favourites" },
       ],
       items2: [
-        { title: "Settings", icon: "mdi-cog", to:"/settings" },
-        { title: "Help", icon: "mdi-help-circle" , to:"/help"} ,
+        // { title: "Settings", icon: "mdi-cog", to:"/settings" },
+         { title: "Help", icon: "mdi-help-circle" , to:"/help"} ,
       ],
       right: null,
     };

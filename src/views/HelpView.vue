@@ -13,10 +13,31 @@
         <h1 class="text">Help</h1>
       </div>
       <div class="general-area width ">
-        <div class="help">
-          <h2>We don't really know how to help. ¯\_(ツ)_/¯</h2>
-          <h2>This is awkward</h2>
-        </div>
+        <v-card color="quaternary" rounded class="help ">
+          <div class="text-area py-3">
+            <h1 class="my-2">FAQ</h1>
+            <h2>How do I create an exercise?</h2>
+            <v-divider></v-divider>
+            <h3>1) Click on the "Exercises" tab. There you will be presented with your exercises.</h3>
+            <h3>2) Click on the + sign on the bottom right of the creation tool.</h3>
+            <h3>3) Choose a name, a description and the what type of exercise it is.</h3>
+
+            <h2 class="pt-4">How do I create a routine?</h2>
+            <v-divider></v-divider>
+            <h3>1) Before you can begin, you must create a few exercises so as to put them in your routines.
+              You can do so by clicking on the "Exercises" tab in the sidebar.</h3>
+            <h3>2) Once you've created a few exercises, you can now begin creating your routine. You can do so by
+              clicking on the "Routines" tab of the sidebar.</h3>
+            <h3>3) There, you will have to choose a name, give it a description, choose the general muscle group
+              you will be targeting and finally choosing a difficulty.</h3>
+            <h3>4) Having done that, you will be presented with the routine creation tool. On the top bar, you can
+              see the different cycles your routine has. You can add one by clicking the + sign on the top right.
+              On the right hand side, you will see the exercises you created. By clicking on the tick icon, you
+              can add directly to the selected cycle. Keep in mind that within a cycle, an exercise can only appear once.</h3>
+            <h3>5) Both cycles and exercises can be repeated by changing the repeat field. Additionally, exercises must
+            either have a number of repetitions or a duration (in seconds)</h3>
+          </div>
+        </v-card>
       </div>
       </div>
     </div>
@@ -72,7 +93,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 50%;
+  height: 70%;
   width: 100%;
   zoom: 80%;
 }
@@ -91,9 +112,16 @@ export default {
 .text {
   font-size: 3rem;
 }
+.text-area{
+  width: 95%;
+}
 
 .help {
-  width: 50%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 </style>

@@ -18,7 +18,7 @@
       </div>
     <div>
       <h3>Get Routines Now!</h3>
-      <v-btn class="button black--text" color="primary" rounded>Enter as a Guest</v-btn>
+<!--      <v-btn class="button black&#45;&#45;text" color="primary" rounded>Enter as a Guest</v-btn>-->
     </div>
   </div>
 </template>
