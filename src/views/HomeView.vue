@@ -40,12 +40,12 @@
 // @ is an alias to /src
 
 import { useSecurityStore } from "@/stores/SecurityStore";
-import RoutineCarrousel from "@/components/RoutineCarrousel";
+import RoutineCarrousel from "@/components/Routines/RoutineCarrousel";
 
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import MuscleCarousel from "@/components/MuscleCarousel";
-import BigButton from "@/components/BigButton";
+import BigButton from "@/components/CommonComponents/BigButton";
 import { mapState } from "pinia";
 import { RoutineApi } from "@/api/routine";
 

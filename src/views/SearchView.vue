@@ -32,7 +32,7 @@ import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import {RoutineApi} from "@/api/routine";
 import { useSecurityStore } from "@/stores/SecurityStore";
-import PaginationGrid from "@/components/Navigation/PaginationGrid";
+import PaginationGrid from "@/components/Routines/PaginationGrid";
 
 
 export default {

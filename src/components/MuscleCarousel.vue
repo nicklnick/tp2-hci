@@ -36,7 +36,7 @@
 
 <script>
 import ButtonWithIcon from "@/components/CommonComponents/ButtonWithIcon";
-import store from "@/store/MuscleGroups";
+import store from "@/stores/MuscleGroups";
 export default {
   name: 'MuscleCarousel',
   components: { ButtonWithIcon },

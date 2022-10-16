@@ -31,11 +31,11 @@
 
 
 <script>
-import store from "@/store/MuscleGroups"
+import store from "@/stores/MuscleGroups"
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import {RoutineApi} from "@/api/routine";
-import PaginationGrid from "@/components/Navigation/PaginationGrid";
+import PaginationGrid from "@/components/Routines/PaginationGrid";
 import { useSecurityStore } from "@/stores/SecurityStore";
 
 export default {

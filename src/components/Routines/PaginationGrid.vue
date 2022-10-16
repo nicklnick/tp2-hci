@@ -86,7 +86,6 @@ export default {
       }
     },
     inputPage(number){
-      debugger
       this.pageNumber = number -1;
       this.updateVisibleRoutines()
     }

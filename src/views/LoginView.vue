@@ -142,7 +142,7 @@ import { useSecurityStore } from "@/stores/SecurityStore";
 import { Credentials } from "@/api/user";
 import { UserApi } from "@/api/user"
 import LoadingImage from "@/components/CommonComponents/LoadingImage";
-import muscleGroups from "@/store/MuscleGroups";
+import muscleGroups from "@/stores/MuscleGroups";
 import {CategoryApi} from "@/api/category";
 
 export default {

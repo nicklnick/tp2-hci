@@ -34,11 +34,11 @@
 
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
-import BigButton from "@/components/BigButton";
+import BigButton from "@/components/CommonComponents/BigButton";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import { mapState } from "pinia";
 import { FavouriteApi } from "@/api/favourites";
-import PaginationGrid from "@/components/Navigation/PaginationGrid";
+import PaginationGrid from "@/components/Routines/PaginationGrid";
 
 export default {
   name: 'HomeView',

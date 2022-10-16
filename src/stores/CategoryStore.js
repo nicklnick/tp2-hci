@@ -68,7 +68,6 @@ export const useCategoryStore = defineStore("sport", {
                 }
             }
             catch(e) {
-                // TODO: Handle error?
                 console.log(e)
             }
         }
