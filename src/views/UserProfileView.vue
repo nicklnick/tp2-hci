@@ -212,8 +212,7 @@ export default {
       }
     }
   },
-  async created() {
-    // Siempre inicializarlo!!!!!
+  async mounted() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
     await securityStore.checkApiOnline();
@@ -222,7 +221,7 @@ export default {
     if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(securityStore.isLoggedIn === false){   // TODO: !!!! check !!!!
+    if(securityStore.isLoggedIn === false){
       await this.$router.push({ name: "Login" });
     }
     else {

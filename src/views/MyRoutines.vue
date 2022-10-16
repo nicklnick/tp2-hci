@@ -38,7 +38,7 @@ import TopBar from "@/components/Navigation/TopBar";
 import BigButton from "@/components/CommonComponents/BigButton";
 
 import { useSecurityStore } from "@/stores/SecurityStore";
-import { mapActions, mapState } from "pinia";
+import { mapState } from "pinia";
 import { RoutineApi } from "@/api/routine";
 import PaginationGrid from "@/components/Routines/PaginationGrid";
 
@@ -57,27 +57,23 @@ export default {
   },
   computed: {
     ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online',
       $user: 'user'
-    }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
     }),
   },
   async created() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
-
-    if(!this.$online){
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(!this.$isLoggedIn){   // TODO: !!!! check !!!!
-      await this.$router.push({ name: "Home" });
+    if(securityStore.isLoggedIn === false){
+      await this.$router.push({ name: "Login" });
     }
-    this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
+    else {
+      this.myRoutines = await RoutineApi.getAllUserRoutines(this.$user.id);
+    }
   }
 
 
