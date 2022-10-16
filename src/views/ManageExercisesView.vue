@@ -11,7 +11,7 @@
       <div class="general-area width ">
 
         <!-- CONTENT GOES HERE -->
-        <CustomCard card-title="Your Exercises" card-height="600" card-width="1000" >
+        <CustomCard card-title="My Exercises" card-height="600" card-width="1000" >
           <div class="cheight cwidth row-center ">
             <div  class="cheight general-area-width overflow-auto">
 
