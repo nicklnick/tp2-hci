@@ -222,6 +222,9 @@ export default {
     }),
     setResult(result){
       switch(result.code ){
+        case 8:
+          this.handleError("Email not verified");
+          break;
         case 4:
           this.handleError(result.description)
           break;
@@ -233,6 +236,8 @@ export default {
             this.handleError("Username already in use");
           }
           break;
+        default:
+          this.handleError("An error has occurred");
       }
     },
     async LoadCategories() {
