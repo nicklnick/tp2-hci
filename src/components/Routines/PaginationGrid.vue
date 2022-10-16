@@ -75,13 +75,11 @@ export default {
     },
     nextPage() {
       if(this.pageNumber + 1 < this.amountPages){
-        this.pageNumber += 1;
         this.updateVisibleRoutines()
       }
     },
     previousPage(){
       if( this.pageNumber > 0){
-        this.pageNumber -= 1;
         this.updateVisibleRoutines()
       }
     },
