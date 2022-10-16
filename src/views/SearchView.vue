@@ -9,7 +9,7 @@
         <SideMenu></SideMenu>
       </div>
       <div class="general-area width ">
-        <div class="flex-container">
+        <div class="pt-4 flex-container">
           <div class="content">
             <h1 class="PageTitle">Search Result:</h1>
           </div>
@@ -18,7 +18,7 @@
           </div>
         </div>
         <!-- CONTENT GOES HERE -->
-        <div class="width" v-if="routines != null && routines.length > 0">
+        <div class="pt-15 pl-5 width" v-if="routines != null && routines.length > 0">
           <PaginationGrid  :routine-array="routines"/>
         </div>
       </div>
