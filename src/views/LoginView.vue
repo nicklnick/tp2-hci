@@ -162,10 +162,6 @@ export default {
     if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(securityStore.isLoggedIn === true){
-      await this.$router.push({ name: "Home" });
-    }
-
   },
   computed: {
     ...mapState(useSecurityStore, {
@@ -195,8 +191,6 @@ export default {
       errorMsg: null,
       error: false,
       loading: 0 ,
-
-
 
       path: this.$route.path,
       rules: {
