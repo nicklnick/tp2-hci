@@ -21,7 +21,7 @@
         <h1 class="text">{{ muscle.name }}</h1>
         </div>
         <!-- CONTENT GOES HERE -->
-        <div class="width">
+        <div class="width" v-if="routines != null && routines.length > 0">
           <PaginationGrid  :routine-array="routines"/>
         </div>
       </div>

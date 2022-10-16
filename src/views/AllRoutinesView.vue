@@ -21,7 +21,7 @@
           <h1 class="text">All Routines</h1>
         </div>
         <!-- CONTENT GOES HERE -->
-        <div class="width">
+        <div class="width" v-if="routines != null && routines.length > 0">
           <PaginationGrid  :routine-array="routines"/>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default {
   },
   computed: {
   },
-  async mounted() {
+  async created() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
     await securityStore.checkApiOnline();
