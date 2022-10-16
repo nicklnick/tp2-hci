@@ -11,6 +11,9 @@
       <div class="general-area width ">
         <div class="pt-4 flex-container">
           <div class="content">
+          <v-btn fab color="tertiary" @click="goBack">
+            <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
+          </v-btn>
             <h1 class="PageTitle">Search Result:</h1>
           </div>
           <div class="content2">
@@ -67,6 +70,9 @@ export default {
     },
     async refresh(){
       this.routines = await this.filteredSearch()
+    },
+    goBack() {
+      window.history.back()
     }
   },
   async mounted() {

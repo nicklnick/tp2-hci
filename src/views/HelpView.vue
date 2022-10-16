@@ -10,6 +10,9 @@
       </div>
       <div class="content">
       <div class="header">
+        <v-btn fab color="tertiary" @click="goBack">
+          <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
+        </v-btn>
         <h1 class="text">Help</h1>
       </div>
       <div class="general-area width ">
@@ -55,6 +58,11 @@ export default {
   components: {
     SideMenu,
     TopBar
+  },
+  methods: {
+    goBack() {
+      window.history.back()
+    }
   },
   async mounted() {
     const securityStore = useSecurityStore();

@@ -15,11 +15,9 @@
 
           <!-- General -->
           <div class="space-between-row px-10">
-            <router-link class="button-link" to="/routines">
-              <v-btn fab color="tertiary">
+              <v-btn fab color="tertiary" @click="goBack()">
                 <img width="30" height="30" src="@/assets/icons/chevron-left.svg" alt="left">
               </v-btn>
-            </router-link>
             <div class="justify-self-center title_text">
               <!-- conditional rendering -->
               <h1>{{this.routine.routine_name}}</h1>
@@ -224,6 +222,9 @@ export default {
       this.dialog = false;
       await CompleteRoutineApi.deleteCompleteRoutine(this.routine)
       await this.$router.push({ name: "My Routines" });
+    },
+    goBack() {
+      window.history.back();
     }
   },
   async mounted() {

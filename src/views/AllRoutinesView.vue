@@ -10,12 +10,9 @@
       </div>
       <div class="general-area width ">
         <div class="header">
-          <router-link to="/home" tag="button">
-            <v-btn fab color="tertiary">
+            <v-btn fab color="tertiary" @click="goBack">
               <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
             </v-btn>
-
-          </router-link>
 
           <h1 class="text">All Routines</h1>
         </div>
@@ -49,6 +46,11 @@ export default {
     }
   },
   computed: {
+  },
+  methods: {
+    goBack() {
+      window.history.back()
+    }
   },
   async created() {
     const securityStore = useSecurityStore();

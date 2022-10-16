@@ -13,12 +13,10 @@
         <!-- General -->
         <div class="space-between-col total-height py-10 width">
           <div class="space-between-row width px-10">
-            <router-link class="button-link" to="/routines">
-              <v-btn fab color="tertiary">
+              <v-btn fab color="tertiary" @click="goBack">
                 <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
               </v-btn>
 
-            </router-link>
               <h1>Create Routine</h1>
             <v-card></v-card>
 
@@ -443,6 +441,9 @@ export default {
         this.$router.push({ name: "My Routines" })
       }
     },
+    goBack() {
+      window.history.back();
+    }
   },
 
 };

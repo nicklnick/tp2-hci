@@ -10,12 +10,9 @@
       </div>
       <div class="general-area width ">
         <div class="header">
-          <router-link to="/home" tag="button">
-            <v-btn fab color="tertiary">
+            <v-btn fab @click="goBack" color="tertiary">
               <img width="30" height="30" src="../assets/icons/chevron-left.svg" alt="left">
             </v-btn>
-
-          </router-link>
 
         <h1 class="text">{{ muscle.name }}</h1>
         </div>
@@ -71,6 +68,9 @@ export default {
           resp.push(auxi[key])
       }
       return resp
+    },
+    goBack() {
+      window.history.back();
     }
   },
   async mounted() {
