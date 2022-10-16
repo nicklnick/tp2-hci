@@ -31,7 +31,6 @@
 import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import {RoutineApi} from "@/api/routine";
-import {mapActions, mapState} from "pinia";
 import { useSecurityStore } from "@/stores/SecurityStore";
 import PaginationGrid from "@/components/Navigation/PaginationGrid";
 
@@ -55,13 +54,6 @@ export default {
       }
   },
   computed: {
-    ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online'
-    }),
-    ...mapActions(useSecurityStore, {
-    $checkApiOnline: 'checkApiOnline'
-  }),
   },
   methods: {
     async filteredSearch() {
@@ -77,21 +69,20 @@ export default {
       this.routines = await this.filteredSearch()
     }
   },
-  async created() {
+  async mounted() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
-
-    if(!this.$online){
-      console.log("redirecting")
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(this.$isLoggedIn === false){   // TODO: !!!! check !!!!
-      await this.$router.push({name: "Login"});
+    if(securityStore.isLoggedIn === false){
+      await this.$router.push({ name: "Login" });
     }
-    this.routines = await this.filteredSearch()
-
+    else {
+      this.routines = await this.filteredSearch()
+    }
   },
 }
 </script>

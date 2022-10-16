@@ -36,7 +36,7 @@ import SideMenu from "@/components/Navigation/SideMenu";
 import TopBar from "@/components/Navigation/TopBar";
 import BigButton from "@/components/BigButton";
 import { useSecurityStore } from "@/stores/SecurityStore";
-import { mapActions, mapState } from "pinia";
+import { mapState } from "pinia";
 import { FavouriteApi } from "@/api/favourites";
 import PaginationGrid from "@/components/Navigation/PaginationGrid";
 
@@ -55,27 +55,23 @@ export default {
   },
   computed: {
     ...mapState(useSecurityStore, {
-      $isLoggedIn: 'isLoggedIn',
-      $online: 'online',
       $user: 'user'
     }),
-    ...mapActions(useSecurityStore, {
-      $checkApiOnline: 'checkApiOnline',
-    }),
   },
-  async created() {
+  async mounted() {
     const securityStore = useSecurityStore();
     await securityStore.initialize();
+    await securityStore.checkApiOnline();
 
-    await this.$checkApiOnline;
-
-    if(!this.$online){
+    if(securityStore.online === false){
       await this.$router.push({ name: "Error" });
     }
-    if(!this.$isLoggedIn){   // TODO: !!!! check !!!!
-      await this.$router.push({ name: "Home" });
+    if(securityStore.isLoggedIn === false){
+      await this.$router.push({ name: "Login" });
     }
-    this.favouriteRoutines = await FavouriteApi.getFavourites();
+    else {
+      this.favouriteRoutines = await FavouriteApi.getFavourites();
+    }
   }
 
 

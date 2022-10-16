@@ -96,7 +96,6 @@ export default {
       this.alternateFavourite()
     },
     switchColor() {
-      // TODO: Para ustedes ta bueno este blanco?
       this.heart_color = this.heart_color === "primary" ? "grey darken-2" : "primary";
     },
     getDifficultyColor() {
