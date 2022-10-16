@@ -124,11 +124,6 @@
                         </v-chip>
                       </div>
                     </div>
-                    <div class="mt-2 space-between-row">
-                      <h4>Public: </h4>
-                      <v-switch v-if="!this.routine" readonly></v-switch>
-                      <v-switch v-else readonly v-model="this.routine.routine_is_public" class="pa-0 ma-0" hide-details></v-switch>
-                    </div>
                   </div>
                 </div>
               </CustomCard>
