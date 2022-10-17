@@ -107,7 +107,7 @@
                     rules.required,
                     !!ConfirmPassword || 'type confirm password',
                     password === ConfirmPassword ||
-                      'The password confirmation does not match.',
+                      'The password confirmation does not match',
                   ]"
                       :type="show1 ? 'text' : 'password'"
                       hint="Same password"
@@ -194,18 +194,18 @@ export default {
 
       path: this.$route.path,
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || "Required",
         confirmPasswordRules: [
           (value) => !!value || "type confirm password",
           (value) =>
             value === this.password ||
-            "The password confirmation does not match.",
+            "The password confirmation does not match",
         ],
         min: (v) => v.length >= 8 || "Min 8 characters",
         email: (value) => {
           const pattern =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(value) || "Invalid e-mail.";
+          return pattern.test(value) || "Invalid email";
         },
       },
     };
